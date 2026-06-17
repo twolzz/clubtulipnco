@@ -14,7 +14,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
     <div className="min-h-screen flex flex-col bg-cream text-ink">
       {/* Announcement bar */}
       <div className="bg-poppy text-white text-center text-sm md:text-base font-semibold py-2.5 px-4 border-b-4 border-ink">
-        NEW: San Diego Pop-up Calendar Announced! <span aria-hidden>📍</span> Little Italy Mercato
+        NEW: San Diego Pop-up Calendar Announced!
       </div>
 
       {/* Header */}

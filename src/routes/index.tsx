@@ -52,7 +52,7 @@ function Home() {
         <div className="max-w-6xl mx-auto grid lg:grid-cols-[1.3fr_1fr] gap-10 items-center">
           <div>
             <span className="inline-block px-3 py-1 mb-6 rounded-full bg-sun border-[3px] border-ink text-sm font-bold">
-              Coming to Southern California
+              {"\n"}
             </span>
             <h1 className="text-5xl md:text-7xl font-extrabold leading-[1.02] tracking-tight">
               Authentic Dutch Heritage is{" "}
