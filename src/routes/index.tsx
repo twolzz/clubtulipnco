@@ -95,7 +95,7 @@ function Home() {
           <div className="flex items-end justify-between flex-wrap gap-4 mb-10">
             <div>
               <h2 className="text-4xl md:text-5xl font-extrabold">Curated Collections</h2>
-              <p className="mt-2 text-ink/80">Three shelves. No filler.</p>
+              <p className="mt-2 text-ink/80">{"\n"}</p>
             </div>
             <Link to="/shop" className="tc-btn tc-btn-cream">Shop All</Link>
           </div>
