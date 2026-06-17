@@ -77,10 +77,10 @@ function Home() {
           {/* Hero card cluster */}
           <div className="grid grid-cols-2 gap-5">
             <div className="tc-card tc-card-poppy aspect-[3/4] flex items-end p-5 bg-sun">
-              <span className="font-display text-2xl">Miffy.</span>
+              <span className="font-display text-2xl">Holland.</span>
             </div>
             <div className="tc-card tc-card-denim aspect-[3/4] flex items-end p-5 mt-8 bg-poppy text-white">
-              <span className="font-display text-2xl">Nijntje.</span>
+              <span className="font-display text-2xl">Tulip & Co.</span>
             </div>
             <div className="tc-card tc-card-sage aspect-square flex items-end p-5 bg-denim text-white col-span-2">
               <span className="font-display text-xl">De Stijl, brought home.</span>
