@@ -132,7 +132,7 @@ function Home() {
                 Find Us Live in San Diego.
               </h2>
               <p className="mt-4 text-white/90 max-w-xl text-lg">
-                📍 Little Italy Mercato — Select Saturdays. Feel the corduroy, test the pens,
+                Select Saturdays. Feel the corduroy, test the pens,
                 and meet Miffy in person.
               </p>
             </div>
