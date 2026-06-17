@@ -21,11 +21,6 @@ export function SiteLayout({ children }: { children: ReactNode }) {
       <header className="bg-cream border-b-4 border-ink">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-4 px-5 md:px-8 py-4">
           <Link to="/" className="flex items-center gap-3">
-            <img
-              src="https://i.imgur.com/ZFYdjIv.png"
-              alt="Tulip & Co. logo"
-              className="h-12 w-12 rounded-xl border-4 border-ink bg-white object-contain"
-            />
             <span className="font-display text-2xl md:text-3xl font-extrabold tracking-tight">
               Tulip &amp; Co.
             </span>
