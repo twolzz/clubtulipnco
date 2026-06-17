@@ -51,7 +51,7 @@ function Home() {
       <section className="px-5 md:px-8 py-16 md:py-24">
         <div className="max-w-6xl mx-auto grid lg:grid-cols-[1.3fr_1fr] gap-10 items-center">
           <div>
-            <span className="inline-block px-3 py-1 mb-6 rounded-full bg-sun border-3 border-ink text-sm font-bold">
+            <span className="inline-block px-3 py-1 mb-6 rounded-full bg-sun border-[3px] border-ink text-sm font-bold">
               Coming to Southern California
             </span>
             <h1 className="text-5xl md:text-7xl font-extrabold leading-[1.02] tracking-tight">
@@ -125,7 +125,7 @@ function Home() {
         <div className="max-w-5xl mx-auto tc-card tc-card-sage p-8 md:p-12 bg-sage text-white">
           <div className="grid md:grid-cols-[1fr_auto] gap-8 items-center">
             <div>
-              <span className="inline-block px-3 py-1 mb-4 rounded-full bg-sun border-3 border-ink text-ink text-sm font-bold">
+              <span className="inline-block px-3 py-1 mb-4 rounded-full bg-sun border-[3px] border-ink text-ink text-sm font-bold">
                 This Weekend
               </span>
               <h2 className="text-4xl md:text-5xl font-extrabold">
