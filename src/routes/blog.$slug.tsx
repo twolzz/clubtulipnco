@@ -1,5 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/SiteLayout";
+import { JoinClubDialog } from "@/components/JoinClubDialog";
 
 type Article = {
   slug: string;
@@ -126,12 +127,9 @@ function ArticlePage() {
           <p className="mt-3 text-white/90">
             Join the Club for new essays, drops, and pop-up dates.
           </p>
-          <a
-            href="https://formspree.io/f/mqeowzez"
-            className="tc-btn tc-btn-sun mt-6 inline-block"
-          >
+          <JoinClubDialog className="tc-btn tc-btn-sun mt-6 inline-flex">
             Join the Club!
-          </a>
+          </JoinClubDialog>
         </div>
       </section>
     </SiteLayout>
