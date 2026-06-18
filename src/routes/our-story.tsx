@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/SiteLayout";
+import { JoinClubDialog } from "@/components/JoinClubDialog";
 
 export const Route = createFileRoute("/our-story")({
   head: () => ({
@@ -78,12 +79,9 @@ function OurStoryPage() {
           <p className="mt-3 text-white/90 max-w-xl mx-auto">
             Find our next San Diego pop-up — or join the Club for early access to drops.
           </p>
-          <a
-            href="https://formspree.io/f/mqeowzez"
-            className="tc-btn tc-btn-sun mt-6 inline-block"
-          >
+          <JoinClubDialog className="tc-btn tc-btn-sun mt-6 inline-flex">
             Join the Club!
-          </a>
+          </JoinClubDialog>
         </div>
       </section>
     </SiteLayout>

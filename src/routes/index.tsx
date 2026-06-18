@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/SiteLayout";
+import { JoinClubDialog } from "@/components/JoinClubDialog";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -63,13 +64,9 @@ function Home() {
               plushies, and quiet design objects — sourced directly from the Netherlands.
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
-              <a
-                href="https://formspree.io/f/mqeowzez"
-                className="tc-btn"
-                style={{ background: "#F2B73F", color: "#333" }}
-              >
+              <JoinClubDialog className="tc-btn tc-btn-sun inline-flex">
                 Join the Club!
-              </a>
+              </JoinClubDialog>
               <Link to="/shop" className="tc-btn tc-btn-cream">Browse the Shop →</Link>
             </div>
           </div>

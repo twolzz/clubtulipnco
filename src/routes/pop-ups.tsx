@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/SiteLayout";
+import { JoinClubDialog } from "@/components/JoinClubDialog";
 
 export const Route = createFileRoute("/pop-ups")({
   head: () => ({
@@ -64,12 +65,9 @@ function PopUpsPage() {
             <p className="mt-2 text-ink/80">
               Locals: get pop-up dates and early access to drops.
             </p>
-            <a
-              href="https://formspree.io/f/mqeowzez"
-              className="tc-btn tc-btn-sun mt-5 inline-block"
-            >
+            <JoinClubDialog className="tc-btn tc-btn-sun mt-5 inline-flex">
               Join the Club!
-            </a>
+            </JoinClubDialog>
           </div>
         </div>
       </section>
@@ -102,12 +100,9 @@ function PopUpsPage() {
                     <p className="text-ink/60 text-sm font-semibold mt-0.5">{e.time}</p>
                   </div>
 
-                  <a
-                    href="https://formspree.io/f/mqeowzez"
-                    className="tc-btn tc-btn-cream whitespace-nowrap"
-                  >
+                  <JoinClubDialog className="tc-btn tc-btn-cream whitespace-nowrap inline-flex">
                     Notify Me
-                  </a>
+                  </JoinClubDialog>
                 </li>
               );
             })}
@@ -124,12 +119,9 @@ function PopUpsPage() {
           <p className="mt-4 text-white/90 text-lg max-w-xl mx-auto">
             Club members get pop-up dates a week early — plus first dibs on limited drops.
           </p>
-          <a
-            href="https://formspree.io/f/mqeowzez"
-            className="tc-btn tc-btn-sun mt-7 inline-block"
-          >
+          <JoinClubDialog className="tc-btn tc-btn-sun mt-7 inline-flex">
             Join the Club!
-          </a>
+          </JoinClubDialog>
         </div>
       </section>
     </SiteLayout>
