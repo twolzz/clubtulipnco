@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import type { ReactNode } from "react";
+import { SubscribeForm } from "./SubscribeForm";
 
 const NAV = [
   { to: "/", label: "Home" },
