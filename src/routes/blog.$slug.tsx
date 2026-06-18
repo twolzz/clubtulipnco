@@ -114,7 +114,7 @@ function ArticlePage() {
 
       <section className="px-5 md:px-8 py-14 md:py-20">
         <article className="max-w-2xl mx-auto text-lg md:text-xl leading-relaxed text-ink/85 space-y-6">
-          {article.body.map((p, i) => (
+          {article.body.map((p: string, i: number) => (
             <p key={i}>{p}</p>
           ))}
         </article>
