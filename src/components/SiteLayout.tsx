@@ -70,17 +70,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
                   Pop-up dates, fresh drops, and quiet Dutch design — straight to your inbox.
                 </p>
               </div>
-              <form
-                action="https://formspree.io/f/mqeowzez"
-                method="POST"
-                className="flex flex-col gap-3"
-              >
-                <label className="sr-only" htmlFor="fname">Name</label>
-                <input id="fname" name="name" required placeholder="Your name" className="tc-input" />
-                <label className="sr-only" htmlFor="femail">Email</label>
-                <input id="femail" type="email" name="email" required placeholder="you@example.com" className="tc-input" />
-                <button type="submit" className="tc-btn tc-btn-sun mt-1">Join the Club</button>
-              </form>
+              <SubscribeForm variant="inline" />
             </div>
           </div>
 
