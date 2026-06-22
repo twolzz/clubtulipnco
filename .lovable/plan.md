@@ -1,46 +1,52 @@
-## Goal
+## Plan: `/support` Customer Care & Legal Hub
 
-Rebuild the site's structural frame — sticky top navigation and a trust-focused footer — in `src/components/SiteLayout.tsx`, strictly following the De Stijl / Bruna constraints (thick black borders, hard zero-blur shadows, no gradients, no blur, all-lowercase headings, pill interactive shapes). No middle-page content or backend changes.
+Confirmed — strict De Stijl/Bruna constraints, all-lowercase headings, pill shapes, hard 4px ink borders + zero-blur offset shadows, no gradients/blur, Poppy Red reserved for the primary CTA. Global nav/footer (SiteLayout) untouched.
 
-I confirm the aesthetic constraints: warm cream background, 4px `#333` borders, hard offset shadows with zero blur, pill-shaped buttons/inputs, all-lowercase nav, Denim Blue hover, Poppy Red reserved for the cart CTA.
+### Files
+- **Create** `src/routes/support.tsx` — new route at `/support`, wrapped in `SiteLayout`, with `head()` metadata (title: "support — tulip & co.", description, og:title, og:description).
+- **No other files modified.** Route tree regenerates automatically.
 
-## Task 1 — Sticky Primary Navigation
+### Layout
+Two-column inside `max-w-6xl` centered on cream background:
 
-Replace the current `<header>` with a sticky bar:
+```text
+┌──────────── /support ────────────┐
+│ breadcrumb: home > support       │
+│ h1 "support."                    │
+│                                  │
+│ ┌─ sticky menu ─┐ ┌─ content ──┐ │
+│ │ contact us    │ │            │ │
+│ │ shipping &    │ │  panel     │ │
+│ │   returns     │ │  (cream,   │ │
+│ │ privacy       │ │  4px ink,  │ │
+│ │   policy      │ │  hard      │ │
+│ │ terms of      │ │  shadow)   │ │
+│ │   service     │ │            │ │
+│ └───────────────┘ └────────────┘ │
+└──────────────────────────────────┘
+```
 
-- `sticky top-0 z-50`, background `#F6F2E7`, `border-b-4 border-ink`.
-- Three-column flex layout inside `max-w-7xl` container:
-  - **Left:** text logo `tulip & co.` — all-lowercase, neo-grotesque, bold, links to `/`.
-  - **Center (desktop):** horizontal text links `shop`, `about`, `pop-ups` — all-lowercase, ink color, hover → Denim Blue (`#3D6E97`), active state subtle underline. (Note: copy says `about`, current route is `/our-story` — I'll wire `about` → `/our-story` unless you want a new `/about` route.)
-  - **Right:** minimal search icon button (lucide `Search`, ghost circular hit area) + pill-shaped cart button (lucide `ShoppingBag` + count badge slot), pill border-radius 50px, 4px ink border, hard 4px ink offset shadow. Cart stays neutral cream here (no Poppy) since it's navigation, not the primary conversion CTA — confirm if you'd rather it be Poppy.
-- The existing announcement bar stays above the sticky header (also sticky as part of the same wrapper so they stick together).
-- Mobile: condensed row — logo left, icon + cart right, links collapse into a pill-row below (kept simple, no hamburger drawer this pass).
+- Left column (`md:col-span-4`, `lg:col-span-3`): `sticky top-24` vertical stack of 4 pill buttons (`rounded-full`, 4px ink border, hard 4px ink offset shadow). Active tab = Sun Yellow `#F2B73F` fill; inactive = cream fill, ink text. Hover = Denim Blue `#3D6E97` text.
+- Right column (`md:col-span-8`, `lg:col-span-9`): content container — `bg-[#F6F2E7]`, `border-4 border-ink`, `rounded-2xl` (16px), hard `8px 8px 0 #333` shadow, generous `p-8 md:p-12` padding for the Layered-Cake rhythm.
+- Mobile: menu collapses above content as a horizontal pill row (scroll-x), content stacks below. No drawer/accordion.
 
-## Task 2 — Trust & Compliance Footer
+### Tab state
+Local `useState<'contact' | 'shipping' | 'privacy' | 'terms'>('contact')`. Plain React conditional rendering — no shadcn Tabs (keeps full control over the pill styling, no extra deps). Tab change is instant; no animation needed.
 
-Replace the current footer with a minimal trust-first version (the "Join the Club" subscribe block stays — it lives above the footer in the existing layout; I'll keep it but separated by spacing, not merged into the footer). The new footer itself:
+### Tab 1 — contact us (default)
+- h2 `let's chat.` (lowercase, neo-grotesque, bold, large)
+- Body paragraph using the exact copy provided, with `hello@tulipnco.com` rendered as a `mailto:` link in Denim Blue.
+- Form: three pill-shaped inputs (Name, Email, Message → multi-line textarea also pill-rounded `rounded-3xl`), 4px ink border, hard 4px ink offset shadow, cream fill, ink text.
+- Submit: pill Poppy Red `#E05A36` button "send message", white text, hard 6px ink offset shadow.
+- Submission behavior: **client-side only for this pass** — `e.preventDefault()` + a `sonner` toast "thanks — we'll be in touch within 24–48 hours." and a form reset. No DB write, no server function (matches "do not build database logic yet" stance from the navigation/footer turn). If you want it wired to a `contact_messages` table, say the word and I'll add a follow-up migration + server function.
 
-- Container with `border-t-4 border-ink`, cream background, generous padding.
-- Two rows inside `max-w-7xl`:
-  1. **Links + social row:**
-     - Lowercase text links: `privacy policy`, `terms of service`, `shipping & returns`, `contact us` (placeholders → `/privacy`, `/terms`, `/shipping-returns`, `/contact`; routes not created this pass, links render as `<a href>` placeholders until routes exist to avoid TanStack type errors).
-     - Outline Instagram + TikTok icons (lucide `Instagram`, custom inline TikTok SVG since lucide lacks one) — circular 4px ink border, hard offset shadow on hover.
-  2. **Trust signals row:**
-     - Inline SVG monochrome marks for Visa, Mastercard, Apple Pay inside small white pill chips with 2px ink border.
-     - Lucide `Lock` icon + text `secure checkout` (lowercase).
-     - Copyright line on the right: `© {year} tulip & co.`
-- No gradients, no blur, no shadows softer than hard-offset.
+### Tabs 2–4 — static content
+Each panel: lowercase h2 header + body copy exactly as provided. `shipping & returns` and `privacy policy` rendered as separated paragraphs / numbered list with clear vertical rhythm (no decorative dividers — negative space does the work). `hello@tulipnco.com` linked everywhere it appears.
 
-## Technical notes
+### SEO
+Route-level `head()` with unique title/description and matching og:title/og:description. No og:image (no hero asset for this page).
 
-- File touched: `src/components/SiteLayout.tsx` only.
-- Uses existing Tailwind tokens (`bg-cream`, `border-ink`, `text-poppy`, etc.) already defined in `styles.css`.
-- Icons via `lucide-react` (already installed): `Search`, `ShoppingBag`, `Lock`, `Instagram`. TikTok via inline SVG.
-- Payment marks: inline SVGs (no new deps, no external images).
-- No new routes, no new components, no DB changes.
+### Open question
+1. Contact form — keep client-only toast for now, or wire it to a new `contact_messages` table with RLS + a server function this same turn?
 
-## Open questions before I build
-
-1. `about` link → point at existing `/our-story`, or create a new `/about` route?
-2. Cart button — keep neutral cream (matches "trust/navigation" role) or override with Poppy Red since it's the path to checkout?
-3. Keep the existing "Join the Club" subscribe block sitting above the footer, or remove it entirely for this pure-frame pass?
+Default if you don't answer: **client-only toast**, no DB.

@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SupportRouteImport } from './routes/support'
 import { Route as ShopRouteImport } from './routes/shop'
 import { Route as PopUpsRouteImport } from './routes/pop-ups'
 import { Route as OurStoryRouteImport } from './routes/our-story'
@@ -16,6 +17,11 @@ import { Route as BlogRouteImport } from './routes/blog'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 
+const SupportRoute = SupportRouteImport.update({
+  id: '/support',
+  path: '/support',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ShopRoute = ShopRouteImport.update({
   id: '/shop',
   path: '/shop',
@@ -53,6 +59,7 @@ export interface FileRoutesByFullPath {
   '/our-story': typeof OurStoryRoute
   '/pop-ups': typeof PopUpsRoute
   '/shop': typeof ShopRoute
+  '/support': typeof SupportRoute
   '/blog/$slug': typeof BlogSlugRoute
 }
 export interface FileRoutesByTo {
@@ -61,6 +68,7 @@ export interface FileRoutesByTo {
   '/our-story': typeof OurStoryRoute
   '/pop-ups': typeof PopUpsRoute
   '/shop': typeof ShopRoute
+  '/support': typeof SupportRoute
   '/blog/$slug': typeof BlogSlugRoute
 }
 export interface FileRoutesById {
@@ -70,13 +78,28 @@ export interface FileRoutesById {
   '/our-story': typeof OurStoryRoute
   '/pop-ups': typeof PopUpsRoute
   '/shop': typeof ShopRoute
+  '/support': typeof SupportRoute
   '/blog/$slug': typeof BlogSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/blog' | '/our-story' | '/pop-ups' | '/shop' | '/blog/$slug'
+  fullPaths:
+    | '/'
+    | '/blog'
+    | '/our-story'
+    | '/pop-ups'
+    | '/shop'
+    | '/support'
+    | '/blog/$slug'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/blog' | '/our-story' | '/pop-ups' | '/shop' | '/blog/$slug'
+  to:
+    | '/'
+    | '/blog'
+    | '/our-story'
+    | '/pop-ups'
+    | '/shop'
+    | '/support'
+    | '/blog/$slug'
   id:
     | '__root__'
     | '/'
@@ -84,6 +107,7 @@ export interface FileRouteTypes {
     | '/our-story'
     | '/pop-ups'
     | '/shop'
+    | '/support'
     | '/blog/$slug'
   fileRoutesById: FileRoutesById
 }
@@ -93,10 +117,18 @@ export interface RootRouteChildren {
   OurStoryRoute: typeof OurStoryRoute
   PopUpsRoute: typeof PopUpsRoute
   ShopRoute: typeof ShopRoute
+  SupportRoute: typeof SupportRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/support': {
+      id: '/support'
+      path: '/support'
+      fullPath: '/support'
+      preLoaderRoute: typeof SupportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/shop': {
       id: '/shop'
       path: '/shop'
@@ -158,17 +190,8 @@ const rootRouteChildren: RootRouteChildren = {
   OurStoryRoute: OurStoryRoute,
   PopUpsRoute: PopUpsRoute,
   ShopRoute: ShopRoute,
+  SupportRoute: SupportRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
