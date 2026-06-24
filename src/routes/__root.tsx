@@ -83,6 +83,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "author", content: "Tulip & Co." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
+      { property: "og:title", content: "Tulip & Co. — Authentic Dutch Design" },
+      { name: "twitter:title", content: "Tulip & Co. — Authentic Dutch Design" },
+      { property: "og:description", content: "Premium Dutch stationery, plushies, and Miffy collectibles. Curated in San Diego." },
+      { name: "twitter:description", content: "Premium Dutch stationery, plushies, and Miffy collectibles. Curated in San Diego." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/023db74a-1f7d-43e6-a835-8e7ec653fe20/id-preview-3de8c346--730d208e-2a7b-48b2-91ac-f83177a702bb.lovable.app-1782268820663.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/023db74a-1f7d-43e6-a835-8e7ec653fe20/id-preview-3de8c346--730d208e-2a7b-48b2-91ac-f83177a702bb.lovable.app-1782268820663.png" },
     ],
     links: [
       { rel: "icon", type: "image/png", href: "https://i.imgur.com/HxWe3nz.png" },
