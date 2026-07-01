@@ -6,7 +6,7 @@ import { listProducts, type Product } from "@/lib/products.functions";
 import { cart, cartDrawer } from "@/lib/cart-store";
 
 const productsQO = queryOptions({
-  queryKey: ["products", "all"],
+  queryKey: ["products", "all"] as const,
   queryFn: () => listProducts(),
 });
 
@@ -107,7 +107,7 @@ const BG_CLASS: Record<string, string> = {
 };
 
 function ShopPage() {
-  const { data: products } = useSuspenseQuery<Product[]>(productsQO);
+  const { data: products } = useSuspenseQuery(productsQO);
 
   function addToCart(p: Product) {
     cart.add(p.id);

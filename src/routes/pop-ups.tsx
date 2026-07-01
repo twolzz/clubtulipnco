@@ -5,7 +5,7 @@ import { JoinClubDialog } from "@/components/JoinClubDialog";
 import { listPopUps, type PopUp } from "@/lib/pop-ups.functions";
 
 const popUpsQO = queryOptions({
-  queryKey: ["pop-ups", "published"],
+  queryKey: ["pop-ups", "published"] as const,
   queryFn: () => listPopUps(),
 });
 
@@ -55,7 +55,7 @@ function formatTime(start: string | null, end: string | null) {
 }
 
 function PopUpsPage() {
-  const { data: events } = useSuspenseQuery<PopUp[]>(popUpsQO);
+  const { data: events } = useSuspenseQuery(popUpsQO);
   return (
     <SiteLayout>
       <section className="px-5 md:px-8 py-16 md:py-24">
