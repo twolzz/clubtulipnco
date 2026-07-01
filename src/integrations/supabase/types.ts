@@ -14,6 +14,99 @@ export type Database = {
   }
   public: {
     Tables: {
+      pop_ups: {
+        Row: {
+          accent: string
+          created_at: string
+          created_by: string | null
+          end_time: string | null
+          event_date: string
+          id: string
+          is_published: boolean
+          location: string
+          name: string
+          start_time: string | null
+          tag: string
+          updated_at: string
+        }
+        Insert: {
+          accent?: string
+          created_at?: string
+          created_by?: string | null
+          end_time?: string | null
+          event_date: string
+          id?: string
+          is_published?: boolean
+          location: string
+          name: string
+          start_time?: string | null
+          tag?: string
+          updated_at?: string
+        }
+        Update: {
+          accent?: string
+          created_at?: string
+          created_by?: string | null
+          end_time?: string | null
+          event_date?: string
+          id?: string
+          is_published?: boolean
+          location?: string
+          name?: string
+          start_time?: string | null
+          tag?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      products: {
+        Row: {
+          bg_color: string
+          category: string
+          created_at: string
+          fg_color: string
+          id: string
+          is_active: boolean
+          name: string
+          price_cents: number
+          shadow: string
+          shape: string
+          slug: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          bg_color?: string
+          category: string
+          created_at?: string
+          fg_color?: string
+          id?: string
+          is_active?: boolean
+          name: string
+          price_cents: number
+          shadow?: string
+          shape?: string
+          slug: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          bg_color?: string
+          category?: string
+          created_at?: string
+          fg_color?: string
+          id?: string
+          is_active?: boolean
+          name?: string
+          price_cents?: number
+          shadow?: string
+          shape?: string
+          slug?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       subscribers: {
         Row: {
           created_at: string

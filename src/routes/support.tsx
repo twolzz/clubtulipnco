@@ -1,9 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { toast } from "sonner";
+import { z } from "zod";
 import { SiteLayout } from "@/components/SiteLayout";
 
+const tabSchema = z.object({
+  tab: z.enum(["contact", "shipping", "privacy", "terms"]).optional(),
+});
+
 export const Route = createFileRoute("/support")({
+  validateSearch: (search) => tabSchema.parse(search),
   head: () => ({
     meta: [
       { title: "support — tulip & co." },
@@ -46,7 +52,12 @@ function MailLink() {
 }
 
 function SupportPage() {
-  const [active, setActive] = useState<TabKey>("contact");
+  const search = Route.useSearch();
+  const [active, setActive] = useState<TabKey>(search.tab ?? "contact");
+  useEffect(() => {
+    if (search.tab && search.tab !== active) setActive(search.tab);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [search.tab]);
 
   return (
     <SiteLayout>

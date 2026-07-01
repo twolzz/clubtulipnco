@@ -52,12 +52,8 @@ function Home() {
       <section className="px-5 md:px-8 py-16 md:py-24">
         <div className="max-w-6xl mx-auto grid lg:grid-cols-[1.3fr_1fr] gap-10 items-center">
           <div>
-            <span className="inline-block px-3 py-1 mb-6 rounded-full bg-sun border-[3px] border-ink text-sm font-bold">
-              {"\n"}
-            </span>
-            <h1 className="text-5xl md:text-7xl font-extrabold leading-[1.02] tracking-tight">
-              Authentic Dutch Heritage is{" "}
-              <span className="text-poppy">Coming to Southern California</span>
+            <h1 className="text-5xl md:text-7xl font-extrabold lowercase leading-[1.02] tracking-tight">
+              dutch design is coming to <span className="text-poppy">san diego.</span>
             </h1>
             <p className="mt-6 text-lg md:text-xl text-ink/80 max-w-xl">
               Tulip &amp; Co. is your curated home for premium Dutch stationery, minimalist

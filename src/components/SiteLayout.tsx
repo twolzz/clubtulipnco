@@ -1,20 +1,24 @@
 import { Link } from "@tanstack/react-router";
 import type { ReactNode } from "react";
-import { Search, ShoppingBag, Lock, Instagram } from "lucide-react";
+import { Lock, Instagram } from "lucide-react";
 import { SubscribeForm } from "./SubscribeForm";
+import { CartButton } from "./CartButton";
+import { HeaderSearch } from "./HeaderSearch";
 
 const NAV = [
   { to: "/shop", label: "shop" },
-  { to: "/our-story", label: "about" },
+  { to: "/support", label: "support" },
+  { to: "/blog", label: "blog" },
+  { to: "/our-story", label: "our-story" },
   { to: "/pop-ups", label: "pop-ups" },
 ] as const;
 
 const FOOTER_LINKS = [
-  { href: "/privacy", label: "privacy policy" },
-  { href: "/terms", label: "terms of service" },
-  { href: "/shipping-returns", label: "shipping & returns" },
-  { href: "/contact", label: "contact us" },
-];
+  { to: "/support", search: { tab: "privacy" as const }, label: "privacy policy" },
+  { to: "/support", search: { tab: "terms" as const }, label: "terms of service" },
+  { to: "/support", search: { tab: "shipping" as const }, label: "shipping & returns" },
+  { to: "/support", search: { tab: "contact" as const }, label: "contact us" },
+] as const;
 
 function TikTokIcon({ className }: { className?: string }) {
   return (
@@ -98,21 +102,8 @@ export function SiteLayout({ children }: { children: ReactNode }) {
 
             {/* Right: search + cart */}
             <div className="flex items-center gap-2 md:gap-3">
-              <button
-                type="button"
-                aria-label="search"
-                className="w-10 h-10 flex items-center justify-center rounded-full text-ink hover:text-denim transition-colors"
-              >
-                <Search size={20} strokeWidth={2.5} />
-              </button>
-              <button
-                type="button"
-                aria-label="shopping cart"
-                className="inline-flex items-center gap-2 rounded-full border-[3px] border-ink bg-cream px-4 py-2 font-semibold lowercase text-ink shadow-[4px_4px_0_var(--ink)] hover:shadow-[6px_6px_0_var(--ink)] hover:-translate-x-[2px] hover:-translate-y-[2px] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[2px_2px_0_var(--ink)] transition-all"
-              >
-                <ShoppingBag size={18} strokeWidth={2.5} />
-                <span className="text-sm">cart (0)</span>
-              </button>
+              <HeaderSearch />
+              <CartButton />
             </div>
           </div>
 
@@ -160,13 +151,14 @@ export function SiteLayout({ children }: { children: ReactNode }) {
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <nav className="flex flex-wrap gap-x-6 gap-y-2">
               {FOOTER_LINKS.map((l) => (
-                <a
-                  key={l.href}
-                  href={l.href}
+                <Link
+                  key={l.label}
+                  to={l.to}
+                  search={l.search}
                   className="text-sm font-semibold lowercase text-ink hover:text-denim transition-colors"
                 >
                   {l.label}
-                </a>
+                </Link>
               ))}
             </nav>
             <div className="flex items-center gap-3">
