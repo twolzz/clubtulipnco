@@ -1,20 +1,24 @@
 import { Link } from "@tanstack/react-router";
 import type { ReactNode } from "react";
-import { Search, ShoppingBag, Lock, Instagram } from "lucide-react";
+import { Search, Lock, Instagram } from "lucide-react";
 import { SubscribeForm } from "./SubscribeForm";
+import { CartButton } from "./CartButton";
+import { HeaderSearch } from "./HeaderSearch";
 
 const NAV = [
   { to: "/shop", label: "shop" },
-  { to: "/our-story", label: "about" },
+  { to: "/support", label: "support" },
+  { to: "/blog", label: "blog" },
+  { to: "/our-story", label: "our-story" },
   { to: "/pop-ups", label: "pop-ups" },
 ] as const;
 
 const FOOTER_LINKS = [
-  { href: "/privacy", label: "privacy policy" },
-  { href: "/terms", label: "terms of service" },
-  { href: "/shipping-returns", label: "shipping & returns" },
-  { href: "/contact", label: "contact us" },
-];
+  { to: "/support", search: { tab: "privacy" as const }, label: "privacy policy" },
+  { to: "/support", search: { tab: "terms" as const }, label: "terms of service" },
+  { to: "/support", search: { tab: "shipping" as const }, label: "shipping & returns" },
+  { to: "/support", search: { tab: "contact" as const }, label: "contact us" },
+] as const;
 
 function TikTokIcon({ className }: { className?: string }) {
   return (
