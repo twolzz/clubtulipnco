@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import type { ReactNode } from "react";
-import { Search, Lock, Instagram } from "lucide-react";
+import { Lock, Instagram } from "lucide-react";
 import { SubscribeForm } from "./SubscribeForm";
 import { CartButton } from "./CartButton";
 import { HeaderSearch } from "./HeaderSearch";

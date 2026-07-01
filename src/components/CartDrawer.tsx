@@ -1,0 +1,153 @@
+import { Link } from "@tanstack/react-router";
+import { X, Trash2, Plus, Minus } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import { cart, cartDrawer, useCart, useCartDrawer } from "@/lib/cart-store";
+import { listProducts } from "@/lib/products.functions";
+import type { Product } from "@/lib/products.functions";
+
+function formatPrice(cents: number) {
+  return `$${(cents / 100).toFixed(cents % 100 === 0 ? 0 : 2)}`;
+}
+
+export function CartDrawer() {
+  const open = useCartDrawer();
+  const { items } = useCart();
+  const listFn = useServerFn(listProducts);
+  const { data: products } = useQuery<Product[]>({
+    queryKey: ["products", "all"],
+    queryFn: () => listFn({}),
+    staleTime: 60_000,
+  });
+
+  const productMap = new Map((products ?? []).map((p) => [p.id, p]));
+  const lines = items
+    .map((i) => ({ item: i, product: productMap.get(i.productId) }))
+    .filter((l): l is { item: typeof l.item; product: Product } => Boolean(l.product));
+  const subtotal = lines.reduce((s, l) => s + l.product.price_cents * l.item.qty, 0);
+
+  return (
+    <>
+      {/* Overlay */}
+      <div
+        aria-hidden={!open}
+        onClick={() => cartDrawer.close()}
+        className={`fixed inset-0 z-[60] bg-ink/40 transition-opacity ${
+          open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+        }`}
+      />
+      {/* Panel */}
+      <aside
+        role="dialog"
+        aria-label="shopping cart"
+        aria-hidden={!open}
+        className={`fixed top-0 right-0 bottom-0 w-full sm:w-[440px] z-[61] bg-cream border-l-4 border-ink flex flex-col transition-transform duration-200 ${
+          open ? "translate-x-0" : "translate-x-full"
+        }`}
+      >
+        <header className="flex items-center justify-between px-6 py-5 border-b-4 border-ink">
+          <h2 className="font-display text-2xl font-extrabold lowercase">your cart.</h2>
+          <button
+            type="button"
+            aria-label="close cart"
+            onClick={() => cartDrawer.close()}
+            className="w-10 h-10 rounded-full border-[3px] border-ink bg-white flex items-center justify-center shadow-[3px_3px_0_var(--ink)] hover:shadow-[5px_5px_0_var(--ink)] hover:-translate-x-[1px] hover:-translate-y-[1px] transition-all"
+          >
+            <X size={18} strokeWidth={2.5} />
+          </button>
+        </header>
+
+        <div className="flex-1 overflow-y-auto px-6 py-5 space-y-4">
+          {lines.length === 0 ? (
+            <div className="text-center py-16">
+              <p className="font-display text-3xl font-extrabold lowercase mb-3">
+                your cart is empty.
+              </p>
+              <p className="text-ink/70 mb-6">quiet things await.</p>
+              <Link
+                to="/shop"
+                onClick={() => cartDrawer.close()}
+                className="tc-btn tc-btn-sun inline-flex"
+              >
+                browse the shop
+              </Link>
+            </div>
+          ) : (
+            lines.map(({ item, product }) => (
+              <div
+                key={item.productId}
+                className="flex gap-4 items-center rounded-2xl border-[3px] border-ink bg-white p-4 shadow-[4px_4px_0_var(--ink)]"
+              >
+                <div
+                  className="w-14 h-14 rounded-xl border-2 border-ink shrink-0"
+                  style={{ background: product.bg_color }}
+                  aria-hidden
+                />
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-bold uppercase tracking-widest text-ink/60">
+                    {product.category}
+                  </p>
+                  <p className="font-semibold text-ink truncate">{product.name}</p>
+                  <div className="mt-2 flex items-center gap-2">
+                    <button
+                      type="button"
+                      aria-label="decrease quantity"
+                      onClick={() => cart.setQty(item.productId, item.qty - 1)}
+                      className="w-7 h-7 rounded-full border-2 border-ink bg-cream flex items-center justify-center"
+                    >
+                      <Minus size={12} strokeWidth={3} />
+                    </button>
+                    <span className="font-bold text-sm w-6 text-center">{item.qty}</span>
+                    <button
+                      type="button"
+                      aria-label="increase quantity"
+                      onClick={() => cart.setQty(item.productId, item.qty + 1)}
+                      className="w-7 h-7 rounded-full border-2 border-ink bg-cream flex items-center justify-center"
+                    >
+                      <Plus size={12} strokeWidth={3} />
+                    </button>
+                    <button
+                      type="button"
+                      aria-label="remove item"
+                      onClick={() => cart.remove(item.productId)}
+                      className="ml-auto text-ink/60 hover:text-poppy"
+                    >
+                      <Trash2 size={16} strokeWidth={2.5} />
+                    </button>
+                  </div>
+                </div>
+                <span className="font-extrabold">
+                  {formatPrice(product.price_cents * item.qty)}
+                </span>
+              </div>
+            ))
+          )}
+        </div>
+
+        {lines.length > 0 && (
+          <footer className="border-t-4 border-ink px-6 py-5 space-y-3">
+            <div className="flex items-center justify-between text-lg">
+              <span className="font-semibold lowercase">subtotal</span>
+              <span className="font-extrabold text-2xl">{formatPrice(subtotal)}</span>
+            </div>
+            <button
+              type="button"
+              disabled
+              title="checkout coming soon"
+              className="w-full tc-btn tc-btn-poppy opacity-60 cursor-not-allowed"
+            >
+              checkout — coming soon
+            </button>
+            <Link
+              to="/cart"
+              onClick={() => cartDrawer.close()}
+              className="w-full tc-btn tc-btn-cream text-center"
+            >
+              view full cart
+            </Link>
+          </footer>
+        )}
+      </aside>
+    </>
+  );
+}
