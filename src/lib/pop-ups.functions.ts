@@ -23,7 +23,7 @@ function publicClient() {
     {
       auth: { storage: undefined, persistSession: false, autoRefreshToken: false },
     },
-  ) as unknown as ReturnType<typeof createClient>;
+  ) as any;
 }
 
 const SELECT =

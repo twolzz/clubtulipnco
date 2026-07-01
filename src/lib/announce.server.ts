@@ -131,9 +131,7 @@ export async function sendPopUpAnnouncement(popUp: PopUp): Promise<number> {
   }
 
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-  const admin = supabaseAdmin as unknown as ReturnType<
-    typeof import("@supabase/supabase-js").createClient
-  >;
+  const admin = supabaseAdmin as any;
 
   const { data: subs, error: subErr } = await admin
     .from("subscribers")
