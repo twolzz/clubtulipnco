@@ -46,8 +46,17 @@ function AdminPopUps() {
   });
 
   const create = useMutation({
-    mutationFn: (data: Parameters<typeof createFn>[0]["data"]) =>
-      createFn({ data }),
+    mutationFn: (data: {
+      name: string;
+      location: string;
+      event_date: string;
+      start_time: string | null;
+      end_time: string | null;
+      tag: string;
+      accent: (typeof ACCENTS)[number];
+      is_published: boolean;
+      send_announcement: boolean;
+    }) => createFn({ data }),
     onSuccess: (res) => {
       toast.success(
         res.announced > 0

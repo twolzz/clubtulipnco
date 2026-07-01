@@ -13,9 +13,11 @@ import { Route as SupportRouteImport } from './routes/support'
 import { Route as ShopRouteImport } from './routes/shop'
 import { Route as PopUpsRouteImport } from './routes/pop-ups'
 import { Route as OurStoryRouteImport } from './routes/our-story'
+import { Route as CartRouteImport } from './routes/cart'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
+import { Route as AuthenticatedAdminPopUpsRouteImport } from './routes/_authenticated/admin.pop-ups'
 
 const SupportRoute = SupportRouteImport.update({
   id: '/support',
@@ -37,6 +39,11 @@ const OurStoryRoute = OurStoryRouteImport.update({
   path: '/our-story',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CartRoute = CartRouteImport.update({
+  id: '/cart',
+  path: '/cart',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BlogRoute = BlogRouteImport.update({
   id: '/blog',
   path: '/blog',
@@ -52,72 +59,92 @@ const BlogSlugRoute = BlogSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => BlogRoute,
 } as any)
+const AuthenticatedAdminPopUpsRoute =
+  AuthenticatedAdminPopUpsRouteImport.update({
+    id: '/_authenticated/admin/pop-ups',
+    path: '/admin/pop-ups',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/blog': typeof BlogRouteWithChildren
+  '/cart': typeof CartRoute
   '/our-story': typeof OurStoryRoute
   '/pop-ups': typeof PopUpsRoute
   '/shop': typeof ShopRoute
   '/support': typeof SupportRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/admin/pop-ups': typeof AuthenticatedAdminPopUpsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/blog': typeof BlogRouteWithChildren
+  '/cart': typeof CartRoute
   '/our-story': typeof OurStoryRoute
   '/pop-ups': typeof PopUpsRoute
   '/shop': typeof ShopRoute
   '/support': typeof SupportRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/admin/pop-ups': typeof AuthenticatedAdminPopUpsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/blog': typeof BlogRouteWithChildren
+  '/cart': typeof CartRoute
   '/our-story': typeof OurStoryRoute
   '/pop-ups': typeof PopUpsRoute
   '/shop': typeof ShopRoute
   '/support': typeof SupportRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/_authenticated/admin/pop-ups': typeof AuthenticatedAdminPopUpsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/blog'
+    | '/cart'
     | '/our-story'
     | '/pop-ups'
     | '/shop'
     | '/support'
     | '/blog/$slug'
+    | '/admin/pop-ups'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/blog'
+    | '/cart'
     | '/our-story'
     | '/pop-ups'
     | '/shop'
     | '/support'
     | '/blog/$slug'
+    | '/admin/pop-ups'
   id:
     | '__root__'
     | '/'
     | '/blog'
+    | '/cart'
     | '/our-story'
     | '/pop-ups'
     | '/shop'
     | '/support'
     | '/blog/$slug'
+    | '/_authenticated/admin/pop-ups'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BlogRoute: typeof BlogRouteWithChildren
+  CartRoute: typeof CartRoute
   OurStoryRoute: typeof OurStoryRoute
   PopUpsRoute: typeof PopUpsRoute
   ShopRoute: typeof ShopRoute
   SupportRoute: typeof SupportRoute
+  AuthenticatedAdminPopUpsRoute: typeof AuthenticatedAdminPopUpsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -150,6 +177,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OurStoryRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/cart': {
+      id: '/cart'
+      path: '/cart'
+      fullPath: '/cart'
+      preLoaderRoute: typeof CartRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/blog': {
       id: '/blog'
       path: '/blog'
@@ -171,6 +205,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof BlogRoute
     }
+    '/_authenticated/admin/pop-ups': {
+      id: '/_authenticated/admin/pop-ups'
+      path: '/admin/pop-ups'
+      fullPath: '/admin/pop-ups'
+      preLoaderRoute: typeof AuthenticatedAdminPopUpsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -187,10 +228,12 @@ const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BlogRoute: BlogRouteWithChildren,
+  CartRoute: CartRoute,
   OurStoryRoute: OurStoryRoute,
   PopUpsRoute: PopUpsRoute,
   ShopRoute: ShopRoute,
   SupportRoute: SupportRoute,
+  AuthenticatedAdminPopUpsRoute: AuthenticatedAdminPopUpsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
