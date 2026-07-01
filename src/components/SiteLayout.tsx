@@ -102,21 +102,8 @@ export function SiteLayout({ children }: { children: ReactNode }) {
 
             {/* Right: search + cart */}
             <div className="flex items-center gap-2 md:gap-3">
-              <button
-                type="button"
-                aria-label="search"
-                className="w-10 h-10 flex items-center justify-center rounded-full text-ink hover:text-denim transition-colors"
-              >
-                <Search size={20} strokeWidth={2.5} />
-              </button>
-              <button
-                type="button"
-                aria-label="shopping cart"
-                className="inline-flex items-center gap-2 rounded-full border-[3px] border-ink bg-cream px-4 py-2 font-semibold lowercase text-ink shadow-[4px_4px_0_var(--ink)] hover:shadow-[6px_6px_0_var(--ink)] hover:-translate-x-[2px] hover:-translate-y-[2px] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[2px_2px_0_var(--ink)] transition-all"
-              >
-                <ShoppingBag size={18} strokeWidth={2.5} />
-                <span className="text-sm">cart (0)</span>
-              </button>
+              <HeaderSearch />
+              <CartButton />
             </div>
           </div>
 
@@ -164,13 +151,14 @@ export function SiteLayout({ children }: { children: ReactNode }) {
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <nav className="flex flex-wrap gap-x-6 gap-y-2">
               {FOOTER_LINKS.map((l) => (
-                <a
-                  key={l.href}
-                  href={l.href}
+                <Link
+                  key={l.label}
+                  to={l.to}
+                  search={l.search}
                   className="text-sm font-semibold lowercase text-ink hover:text-denim transition-colors"
                 >
                   {l.label}
-                </a>
+                </Link>
               ))}
             </nav>
             <div className="flex items-center gap-3">
