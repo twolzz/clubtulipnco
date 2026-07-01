@@ -3,7 +3,7 @@ import { Search, X } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { Link } from "@tanstack/react-router";
-import { searchProducts } from "@/lib/products.functions";
+import { searchProducts, type Product } from "@/lib/products.functions";
 
 function formatPrice(cents: number) {
   return `$${(cents / 100).toFixed(cents % 100 === 0 ? 0 : 2)}`;
@@ -50,7 +50,7 @@ export function HeaderSearch() {
     staleTime: 30_000,
   });
 
-  const results = data ?? [];
+  const results: Product[] = data ?? [];
 
   return (
     <>
