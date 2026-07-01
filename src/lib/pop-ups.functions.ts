@@ -48,7 +48,7 @@ export const listAllPopUps = createServerFn({ method: "GET" })
       _role: "admin",
     });
     if (!isAdmin) throw new Error("Forbidden");
-    const client = context.supabase as unknown as ReturnType<typeof createClient>;
+    const client = context.supabase as unknown as any;
     const { data, error } = await client
       .from("pop_ups")
       .select(SELECT)
@@ -79,7 +79,7 @@ export const createPopUp = createServerFn({ method: "POST" })
     });
     if (!isAdmin) throw new Error("Forbidden");
 
-    const client = context.supabase as unknown as ReturnType<typeof createClient>;
+    const client = context.supabase as unknown as any;
     const { send_announcement, ...row } = data;
     const { data: inserted, error } = await client
       .from("pop_ups")
@@ -112,7 +112,7 @@ export const updatePopUp = createServerFn({ method: "POST" })
       _role: "admin",
     });
     if (!isAdmin) throw new Error("Forbidden");
-    const client = context.supabase as unknown as ReturnType<typeof createClient>;
+    const client = context.supabase as unknown as any;
     const { id, ...patch } = data;
     const { error } = await client.from("pop_ups").update(patch).eq("id", id);
     if (error) throw new Error(error.message);
@@ -128,7 +128,7 @@ export const deletePopUp = createServerFn({ method: "POST" })
       _role: "admin",
     });
     if (!isAdmin) throw new Error("Forbidden");
-    const client = context.supabase as unknown as ReturnType<typeof createClient>;
+    const client = context.supabase as unknown as any;
     const { error } = await client.from("pop_ups").delete().eq("id", data.id);
     if (error) throw new Error(error.message);
     return { ok: true };
