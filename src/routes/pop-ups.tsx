@@ -1,6 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { SiteLayout } from "@/components/SiteLayout";
 import { JoinClubDialog } from "@/components/JoinClubDialog";
+import { listPopUps, type PopUp } from "@/lib/pop-ups.functions";
+
+const popUpsQO = queryOptions({
+  queryKey: ["pop-ups", "published"],
+  queryFn: () => listPopUps(),
+});
 
 export const Route = createFileRoute("/pop-ups")({
   head: () => ({
@@ -11,39 +18,46 @@ export const Route = createFileRoute("/pop-ups")({
       { property: "og:description", content: "Find Tulip & Co. live at San Diego weekend markets." },
     ],
   }),
+  loader: ({ context }) => context.queryClient.ensureQueryData(popUpsQO),
   component: PopUpsPage,
+  errorComponent: () => (
+    <SiteLayout>
+      <section className="px-5 md:px-8 py-24 text-center font-display text-2xl lowercase">
+        calendar loading — please refresh.
+      </section>
+    </SiteLayout>
+  ),
 });
 
-type Event = {
-  date: string;
-  day: string;
-  month: string;
-  name: string;
-  location: string;
-  time: string;
-  tag: string;
-  accent: "poppy" | "sun" | "sage" | "denim";
-};
-
-const EVENTS: Event[] = [
-  { date: "Sat", day: "12", month: "Jul", name: "Neighborhood Farmers Market", location: "North Park, San Diego", time: "9:00 AM – 1:00 PM", tag: "This Weekend", accent: "poppy" },
-  { date: "Sun", day: "20", month: "Jul", name: "Downtown Pop-up Festival", location: "Little Italy Piazza", time: "10:00 AM – 4:00 PM", tag: "Featured", accent: "sun" },
-  { date: "Sat", day: "02", month: "Aug", name: "Coastal Makers Market", location: "Encinitas Boardwalk", time: "11:00 AM – 5:00 PM", tag: "New", accent: "sage" },
-  { date: "Sun", day: "17", month: "Aug", name: "Sunday Stationery Social", location: "South Park Walkabout", time: "12:00 PM – 6:00 PM", tag: "RSVP", accent: "denim" },
-  { date: "Sat", day: "06", month: "Sep", name: "Mercato Centrale", location: "Little Italy, San Diego", time: "9:00 AM – 1:30 PM", tag: "Returning", accent: "poppy" },
-];
-
-const ACCENT: Record<Event["accent"], { bg: string; shadow: string; text: string }> = {
+const ACCENT: Record<PopUp["accent"], { bg: string; shadow: string; text: string }> = {
   poppy: { bg: "bg-poppy", shadow: "tc-card-sun", text: "text-white" },
   sun: { bg: "bg-sun", shadow: "tc-card-denim", text: "text-ink" },
   sage: { bg: "bg-sage", shadow: "tc-card-poppy", text: "text-white" },
   denim: { bg: "bg-denim", shadow: "tc-card-sage", text: "text-white" },
 };
 
+const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const DAYS = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+
+function splitDate(iso: string) {
+  const d = new Date(iso + "T12:00:00");
+  return { day: String(d.getDate()).padStart(2, "0"), month: MONTHS[d.getMonth()], weekday: DAYS[d.getDay()] };
+}
+function formatTime(start: string | null, end: string | null) {
+  if (!start || !end) return "";
+  const fmt = (t: string) => {
+    const [h, m] = t.split(":").map(Number);
+    const hh = ((h + 11) % 12) + 1;
+    const am = h < 12 ? "AM" : "PM";
+    return `${hh}:${String(m).padStart(2, "0")} ${am}`;
+  };
+  return `${fmt(start)} – ${fmt(end)}`;
+}
+
 function PopUpsPage() {
+  const { data: events } = useSuspenseQuery<PopUp[]>(popUpsQO);
   return (
     <SiteLayout>
-      {/* Hero */}
       <section className="px-5 md:px-8 py-16 md:py-24">
         <div className="max-w-6xl mx-auto grid lg:grid-cols-[1.4fr_1fr] gap-10 items-center">
           <div>
@@ -72,50 +86,48 @@ function PopUpsPage() {
         </div>
       </section>
 
-      {/* Schedule */}
       <section className="bg-sun border-y-4 border-ink py-16 md:py-24 px-5 md:px-8">
         <div className="max-w-5xl mx-auto">
           <h2 className="text-4xl md:text-5xl font-extrabold mb-10">Upcoming Pop-ups</h2>
-
-          <ol className="flex flex-col gap-6">
-            {EVENTS.map((e) => {
-              const a = ACCENT[e.accent];
-              return (
-                <li
-                  key={`${e.day}-${e.name}`}
-                  className="tc-card tc-card-denim bg-white p-5 md:p-7 grid md:grid-cols-[auto_1fr_auto] gap-6 items-center"
-                >
-                  <div className={`${a.bg} ${a.text} border-4 border-ink rounded-2xl w-24 h-24 flex flex-col items-center justify-center shrink-0`}>
-                    <span className="text-xs font-bold uppercase tracking-widest">{e.month}</span>
-                    <span className="font-display text-4xl font-extrabold leading-none">{e.day}</span>
-                    <span className="text-xs font-bold uppercase tracking-widest mt-1">{e.date}</span>
-                  </div>
-
-                  <div className="min-w-0">
-                    <span className="inline-block px-2.5 py-0.5 rounded-full bg-cream border-2 border-ink text-xs font-bold mb-2">
-                      {e.tag}
-                    </span>
-                    <h3 className="text-2xl font-extrabold leading-tight">{e.name}</h3>
-                    <p className="mt-1 text-ink/80">{e.location}</p>
-                    <p className="text-ink/60 text-sm font-semibold mt-0.5">{e.time}</p>
-                  </div>
-
-                  <JoinClubDialog className="tc-btn tc-btn-cream whitespace-nowrap inline-flex">
-                    Notify Me
-                  </JoinClubDialog>
-                </li>
-              );
-            })}
-          </ol>
+          {events.length === 0 ? (
+            <p className="text-ink/80 text-lg">new dates coming soon — join the club for first notice.</p>
+          ) : (
+            <ol className="flex flex-col gap-6">
+              {events.map((e) => {
+                const a = ACCENT[e.accent] ?? ACCENT.poppy;
+                const d = splitDate(e.event_date);
+                return (
+                  <li
+                    key={e.id}
+                    className="tc-card tc-card-denim bg-white p-5 md:p-7 grid md:grid-cols-[auto_1fr_auto] gap-6 items-center"
+                  >
+                    <div className={`${a.bg} ${a.text} border-4 border-ink rounded-2xl w-24 h-24 flex flex-col items-center justify-center shrink-0`}>
+                      <span className="text-xs font-bold uppercase tracking-widest">{d.month}</span>
+                      <span className="font-display text-4xl font-extrabold leading-none">{d.day}</span>
+                      <span className="text-xs font-bold uppercase tracking-widest mt-1">{d.weekday}</span>
+                    </div>
+                    <div className="min-w-0">
+                      <span className="inline-block px-2.5 py-0.5 rounded-full bg-cream border-2 border-ink text-xs font-bold mb-2">
+                        {e.tag}
+                      </span>
+                      <h3 className="text-2xl font-extrabold leading-tight">{e.name}</h3>
+                      <p className="mt-1 text-ink/80">{e.location}</p>
+                      <p className="text-ink/60 text-sm font-semibold mt-0.5">{formatTime(e.start_time, e.end_time)}</p>
+                    </div>
+                    <JoinClubDialog className="tc-btn tc-btn-cream whitespace-nowrap inline-flex">
+                      Notify Me
+                    </JoinClubDialog>
+                  </li>
+                );
+              })}
+            </ol>
+          )}
         </div>
       </section>
 
-      {/* CTA */}
       <section className="px-5 md:px-8 py-16 md:py-24">
         <div className="max-w-4xl mx-auto tc-card tc-card-sage bg-denim text-white p-8 md:p-12 text-center">
-          <h2 className="text-4xl md:text-5xl font-extrabold">
-            Be first in line.
-          </h2>
+          <h2 className="text-4xl md:text-5xl font-extrabold">Be first in line.</h2>
           <p className="mt-4 text-white/90 text-lg max-w-xl mx-auto">
             Club members get pop-up dates a week early — plus first dibs on limited drops.
           </p>
