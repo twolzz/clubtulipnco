@@ -13,6 +13,7 @@ import { Route as SupportRouteImport } from './routes/support'
 import { Route as ShopRouteImport } from './routes/shop'
 import { Route as PopUpsRouteImport } from './routes/pop-ups'
 import { Route as OurStoryRouteImport } from './routes/our-story'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as CartRouteImport } from './routes/cart'
 import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
@@ -38,6 +39,11 @@ const PopUpsRoute = PopUpsRouteImport.update({
 const OurStoryRoute = OurStoryRouteImport.update({
   id: '/our-story',
   path: '/our-story',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CartRoute = CartRouteImport.update({
@@ -75,6 +81,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/blog': typeof BlogRouteWithChildren
   '/cart': typeof CartRoute
+  '/login': typeof LoginRoute
   '/our-story': typeof OurStoryRoute
   '/pop-ups': typeof PopUpsRoute
   '/shop': typeof ShopRoute
@@ -86,6 +93,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/blog': typeof BlogRouteWithChildren
   '/cart': typeof CartRoute
+  '/login': typeof LoginRoute
   '/our-story': typeof OurStoryRoute
   '/pop-ups': typeof PopUpsRoute
   '/shop': typeof ShopRoute
@@ -99,6 +107,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/blog': typeof BlogRouteWithChildren
   '/cart': typeof CartRoute
+  '/login': typeof LoginRoute
   '/our-story': typeof OurStoryRoute
   '/pop-ups': typeof PopUpsRoute
   '/shop': typeof ShopRoute
@@ -112,6 +121,7 @@ export interface FileRouteTypes {
     | '/'
     | '/blog'
     | '/cart'
+    | '/login'
     | '/our-story'
     | '/pop-ups'
     | '/shop'
@@ -123,6 +133,7 @@ export interface FileRouteTypes {
     | '/'
     | '/blog'
     | '/cart'
+    | '/login'
     | '/our-story'
     | '/pop-ups'
     | '/shop'
@@ -135,6 +146,7 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/blog'
     | '/cart'
+    | '/login'
     | '/our-story'
     | '/pop-ups'
     | '/shop'
@@ -148,6 +160,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   BlogRoute: typeof BlogRouteWithChildren
   CartRoute: typeof CartRoute
+  LoginRoute: typeof LoginRoute
   OurStoryRoute: typeof OurStoryRoute
   PopUpsRoute: typeof PopUpsRoute
   ShopRoute: typeof ShopRoute
@@ -182,6 +195,13 @@ declare module '@tanstack/react-router' {
       path: '/our-story'
       fullPath: '/our-story'
       preLoaderRoute: typeof OurStoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/cart': {
@@ -255,6 +275,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   BlogRoute: BlogRouteWithChildren,
   CartRoute: CartRoute,
+  LoginRoute: LoginRoute,
   OurStoryRoute: OurStoryRoute,
   PopUpsRoute: PopUpsRoute,
   ShopRoute: ShopRoute,
