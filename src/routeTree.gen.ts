@@ -15,6 +15,7 @@ import { Route as PopUpsRouteImport } from './routes/pop-ups'
 import { Route as OurStoryRouteImport } from './routes/our-story'
 import { Route as CartRouteImport } from './routes/cart'
 import { Route as BlogRouteImport } from './routes/blog'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AuthenticatedAdminPopUpsRouteImport } from './routes/_authenticated/admin.pop-ups'
@@ -49,6 +50,10 @@ const BlogRoute = BlogRouteImport.update({
   path: '/blog',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -61,9 +66,9 @@ const BlogSlugRoute = BlogSlugRouteImport.update({
 } as any)
 const AuthenticatedAdminPopUpsRoute =
   AuthenticatedAdminPopUpsRouteImport.update({
-    id: '/_authenticated/admin/pop-ups',
+    id: '/admin/pop-ups',
     path: '/admin/pop-ups',
-    getParentRoute: () => rootRouteImport,
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -91,6 +96,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/blog': typeof BlogRouteWithChildren
   '/cart': typeof CartRoute
   '/our-story': typeof OurStoryRoute
@@ -126,6 +132,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/_authenticated'
     | '/blog'
     | '/cart'
     | '/our-story'
@@ -138,13 +145,13 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   BlogRoute: typeof BlogRouteWithChildren
   CartRoute: typeof CartRoute
   OurStoryRoute: typeof OurStoryRoute
   PopUpsRoute: typeof PopUpsRoute
   ShopRoute: typeof ShopRoute
   SupportRoute: typeof SupportRoute
-  AuthenticatedAdminPopUpsRoute: typeof AuthenticatedAdminPopUpsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -191,6 +198,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -210,10 +224,21 @@ declare module '@tanstack/react-router' {
       path: '/admin/pop-ups'
       fullPath: '/admin/pop-ups'
       preLoaderRoute: typeof AuthenticatedAdminPopUpsRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
   }
 }
+
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminPopUpsRoute: typeof AuthenticatedAdminPopUpsRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminPopUpsRoute: AuthenticatedAdminPopUpsRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
 interface BlogRouteChildren {
   BlogSlugRoute: typeof BlogSlugRoute
@@ -227,13 +252,13 @@ const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   BlogRoute: BlogRouteWithChildren,
   CartRoute: CartRoute,
   OurStoryRoute: OurStoryRoute,
   PopUpsRoute: PopUpsRoute,
   ShopRoute: ShopRoute,
   SupportRoute: SupportRoute,
-  AuthenticatedAdminPopUpsRoute: AuthenticatedAdminPopUpsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
