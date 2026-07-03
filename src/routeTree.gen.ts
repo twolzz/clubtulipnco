@@ -13,8 +13,10 @@ import { Route as SupportRouteImport } from './routes/support'
 import { Route as ShopRouteImport } from './routes/shop'
 import { Route as PopUpsRouteImport } from './routes/pop-ups'
 import { Route as OurStoryRouteImport } from './routes/our-story'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as CartRouteImport } from './routes/cart'
 import { Route as BlogRouteImport } from './routes/blog'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AuthenticatedAdminPopUpsRouteImport } from './routes/_authenticated/admin.pop-ups'
@@ -39,6 +41,11 @@ const OurStoryRoute = OurStoryRouteImport.update({
   path: '/our-story',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CartRoute = CartRouteImport.update({
   id: '/cart',
   path: '/cart',
@@ -47,6 +54,10 @@ const CartRoute = CartRouteImport.update({
 const BlogRoute = BlogRouteImport.update({
   id: '/blog',
   path: '/blog',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -61,15 +72,16 @@ const BlogSlugRoute = BlogSlugRouteImport.update({
 } as any)
 const AuthenticatedAdminPopUpsRoute =
   AuthenticatedAdminPopUpsRouteImport.update({
-    id: '/_authenticated/admin/pop-ups',
+    id: '/admin/pop-ups',
     path: '/admin/pop-ups',
-    getParentRoute: () => rootRouteImport,
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/blog': typeof BlogRouteWithChildren
   '/cart': typeof CartRoute
+  '/login': typeof LoginRoute
   '/our-story': typeof OurStoryRoute
   '/pop-ups': typeof PopUpsRoute
   '/shop': typeof ShopRoute
@@ -81,6 +93,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/blog': typeof BlogRouteWithChildren
   '/cart': typeof CartRoute
+  '/login': typeof LoginRoute
   '/our-story': typeof OurStoryRoute
   '/pop-ups': typeof PopUpsRoute
   '/shop': typeof ShopRoute
@@ -91,8 +104,10 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/blog': typeof BlogRouteWithChildren
   '/cart': typeof CartRoute
+  '/login': typeof LoginRoute
   '/our-story': typeof OurStoryRoute
   '/pop-ups': typeof PopUpsRoute
   '/shop': typeof ShopRoute
@@ -106,6 +121,7 @@ export interface FileRouteTypes {
     | '/'
     | '/blog'
     | '/cart'
+    | '/login'
     | '/our-story'
     | '/pop-ups'
     | '/shop'
@@ -117,6 +133,7 @@ export interface FileRouteTypes {
     | '/'
     | '/blog'
     | '/cart'
+    | '/login'
     | '/our-story'
     | '/pop-ups'
     | '/shop'
@@ -126,8 +143,10 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/_authenticated'
     | '/blog'
     | '/cart'
+    | '/login'
     | '/our-story'
     | '/pop-ups'
     | '/shop'
@@ -138,13 +157,14 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   BlogRoute: typeof BlogRouteWithChildren
   CartRoute: typeof CartRoute
+  LoginRoute: typeof LoginRoute
   OurStoryRoute: typeof OurStoryRoute
   PopUpsRoute: typeof PopUpsRoute
   ShopRoute: typeof ShopRoute
   SupportRoute: typeof SupportRoute
-  AuthenticatedAdminPopUpsRoute: typeof AuthenticatedAdminPopUpsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -177,6 +197,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OurStoryRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/cart': {
       id: '/cart'
       path: '/cart'
@@ -189,6 +216,13 @@ declare module '@tanstack/react-router' {
       path: '/blog'
       fullPath: '/blog'
       preLoaderRoute: typeof BlogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -210,10 +244,21 @@ declare module '@tanstack/react-router' {
       path: '/admin/pop-ups'
       fullPath: '/admin/pop-ups'
       preLoaderRoute: typeof AuthenticatedAdminPopUpsRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
   }
 }
+
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminPopUpsRoute: typeof AuthenticatedAdminPopUpsRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminPopUpsRoute: AuthenticatedAdminPopUpsRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
 interface BlogRouteChildren {
   BlogSlugRoute: typeof BlogSlugRoute
@@ -227,13 +272,14 @@ const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   BlogRoute: BlogRouteWithChildren,
   CartRoute: CartRoute,
+  LoginRoute: LoginRoute,
   OurStoryRoute: OurStoryRoute,
   PopUpsRoute: PopUpsRoute,
   ShopRoute: ShopRoute,
   SupportRoute: SupportRoute,
-  AuthenticatedAdminPopUpsRoute: AuthenticatedAdminPopUpsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
