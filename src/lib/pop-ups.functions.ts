@@ -88,12 +88,22 @@ export const createPopUp = createServerFn({ method: "POST" })
       .single();
     if (error) throw new Error(error.message);
 
-    let announced = 0;
+    let announce: {
+      attempted: number;
+      succeeded: number;
+      failed: number;
+      empty?: boolean;
+      errors: string[];
+    } = { attempted: 0, succeeded: 0, failed: 0, errors: [] };
     if (send_announcement && data.is_published) {
       const { sendPopUpAnnouncement } = await import("./announce.server");
-      announced = await sendPopUpAnnouncement(inserted as unknown as PopUp);
+      announce = await sendPopUpAnnouncement(inserted as unknown as PopUp);
     }
-    return { popUp: inserted as unknown as PopUp, announced };
+    return {
+      popUp: inserted as unknown as PopUp,
+      announced: announce.succeeded,
+      announce,
+    };
   });
 
 export const updatePopUp = createServerFn({ method: "POST" })

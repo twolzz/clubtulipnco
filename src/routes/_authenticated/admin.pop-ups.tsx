@@ -58,11 +58,20 @@ function AdminPopUps() {
       send_announcement: boolean;
     }) => createFn({ data }),
     onSuccess: (res) => {
-      toast.success(
-        res.announced > 0
-          ? `pop-up added — ${res.announced} subscriber${res.announced === 1 ? "" : "s"} notified.`
-          : "pop-up added.",
-      );
+      const a = res.announce;
+      if (a?.empty) {
+        toast.warning("pop-up added — 0 subscribers, no emails sent.");
+      } else if (a && a.attempted > 0 && a.failed === 0) {
+        toast.success(
+          `pop-up added — ${a.succeeded} subscriber${a.succeeded === 1 ? "" : "s"} notified.`,
+        );
+      } else if (a && a.failed > 0) {
+        toast.error(
+          `pop-up added — sent ${a.succeeded}/${a.attempted} (${a.failed} failed, see server logs).`,
+        );
+      } else {
+        toast.success("pop-up added.");
+      }
       qc.invalidateQueries({ queryKey: ["pop-ups"] });
     },
     onError: (e: Error) => toast.error(e.message),
