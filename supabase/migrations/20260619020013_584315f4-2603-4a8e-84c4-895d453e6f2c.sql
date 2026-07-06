@@ -42,6 +42,8 @@ CREATE POLICY "Users can view their own roles"
   TO authenticated
   USING (auth.uid() = user_id);
 
+drop policy if exists "Users can view their own roles" 
+    ON public.user_roles;
 CREATE POLICY "Admins can manage all roles"
   ON public.user_roles FOR ALL
   TO authenticated
@@ -53,6 +55,8 @@ DROP POLICY IF EXISTS "Anyone can subscribe" ON public.subscribers;
 
 GRANT SELECT, UPDATE, DELETE ON public.subscribers TO authenticated;
 
+drop policy if exists "Users can view their own roles" 
+    ON public.user_roles;
 CREATE POLICY "Public can subscribe with valid input"
   ON public.subscribers FOR INSERT
   TO anon, authenticated
@@ -62,17 +66,23 @@ CREATE POLICY "Public can subscribe with valid input"
     AND email ~* '^[^@\s]+@[^@\s]+\.[^@\s]+$'
   );
 
+drop policy if exists "Users can view their own roles" 
+    ON public.user_roles;
 CREATE POLICY "Admins can view subscribers"
   ON public.subscribers FOR SELECT
   TO authenticated
   USING (public.has_role(auth.uid(), 'admin'));
 
+drop policy if exists "Users can view their own roles" 
+    ON public.user_roles;
 CREATE POLICY "Admins can update subscribers"
   ON public.subscribers FOR UPDATE
   TO authenticated
   USING (public.has_role(auth.uid(), 'admin'))
   WITH CHECK (public.has_role(auth.uid(), 'admin'));
 
+drop policy if exists "Users can view their own roles" 
+    ON public.user_roles;
 CREATE POLICY "Admins can delete subscribers"
   ON public.subscribers FOR DELETE
   TO authenticated
