@@ -9,7 +9,7 @@ END
 $$;
 
 
-CREATE TABLE public.user_roles (
+CREATE TABLE if not exists public.user_roles (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id uuid NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   role public.app_role NOT NULL,
