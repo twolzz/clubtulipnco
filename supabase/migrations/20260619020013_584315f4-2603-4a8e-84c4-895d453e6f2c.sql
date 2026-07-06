@@ -51,6 +51,8 @@ CREATE POLICY "Admins can manage all roles"
   WITH CHECK (public.has_role(auth.uid(), 'admin'));
 
 -- 2. Tighten subscribers policies
+drop policy if exists "Users can view their own roles" 
+    ON public.user_roles;
 DROP POLICY IF EXISTS "Anyone can subscribe" ON public.subscribers;
 
 GRANT SELECT, UPDATE, DELETE ON public.subscribers TO authenticated;
