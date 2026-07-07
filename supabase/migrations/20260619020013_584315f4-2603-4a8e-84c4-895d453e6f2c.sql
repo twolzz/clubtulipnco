@@ -22,18 +22,19 @@ GRANT ALL ON public.user_roles TO service_role;
 ALTER TABLE public.user_roles ADD COLUMN IF NOT EXISTS role public.app_role default 'user' NOT NULL;
 ALTER TABLE public.user_roles ENABLE ROW LEVEL SECURITY;
 
-drop function if exists public.has_role(uuid, public.app_role);
-CREATE OR REPLACE FUNCTION public.has_role(user_id uuid, _role public.app_role)
+DROP FUNCTION IF EXISTS public.has_role(uuid, public.app_role);
+
+CREATE FUNCTION public.has_role(_user_id uuid, _role public.app_role)
 RETURNS boolean
 LANGUAGE sql
 SECURITY DEFINER
 SET search_path = public
 AS $$
     SELECT EXISTS (
-        SELECT 1 
-        FROM public.user_roles 
-        WHERE public.user_roles.user_id = $1 
-        AND public.user_roles.role = $2
+        SELECT 1
+        FROM public.user_roles
+        WHERE user_id = _user_id
+          AND role = _role
     );
 $$;
 
