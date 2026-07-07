@@ -1,4 +1,5 @@
 -- 1. Role system
+DROP TYPE IF EXISTS public.app_role CASCADE;
 DO $$
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'app_role') THEN
