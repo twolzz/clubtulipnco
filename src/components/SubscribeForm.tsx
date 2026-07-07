@@ -1,7 +1,8 @@
 import { useState, type FormEvent } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
+import { useServerFn } from "@tanstack/react-start";
+import { subscribeToClub } from "@/lib/subscribers.functions";
 
 const schema = z.object({
   first_name: z.string().trim().min(1, "First name is required").max(60, "Too long"),
@@ -15,6 +16,7 @@ export function SubscribeForm({ variant = "inline" }: { variant?: "inline" | "mo
   const [email, setEmail] = useState("");
   const [errors, setErrors] = useState<FieldErrors>({});
   const [status, setStatus] = useState<"idle" | "loading" | "success">("idle");
+  const subscribe = useServerFn(subscribeToClub);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -32,19 +34,22 @@ export function SubscribeForm({ variant = "inline" }: { variant?: "inline" | "mo
     }
 
     setStatus("loading");
-    const { error } = await supabase.from("subscribers").insert(parsed.data);
-
-    if (error) {
+    try {
+      const res = await subscribe({ data: parsed.data });
+      if (res.ok) {
+        setStatus("success");
+        return;
+      }
       setStatus("idle");
-      if (error.code === "23505") {
+      if (res.error === "duplicate") {
         toast.error("You're already on the list!");
       } else {
         toast.error("Something went wrong — please try again.");
       }
-      return;
+    } catch {
+      setStatus("idle");
+      toast.error("Something went wrong — please try again.");
     }
-
-    setStatus("success");
   }
 
   if (status === "success") {
