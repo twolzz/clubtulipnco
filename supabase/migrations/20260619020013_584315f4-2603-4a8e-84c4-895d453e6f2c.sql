@@ -22,6 +22,7 @@ GRANT ALL ON public.user_roles TO service_role;
 ALTER TABLE public.user_roles ADD COLUMN IF NOT EXISTS role public.app_role default 'user' NOT NULL;
 ALTER TABLE public.user_roles ENABLE ROW LEVEL SECURITY;
 
+drop function if exists public.has_role(uuid, public.app_role);
 CREATE OR REPLACE FUNCTION public.has_role(user_id uuid, _role public.app_role)
 RETURNS boolean
 LANGUAGE sql
