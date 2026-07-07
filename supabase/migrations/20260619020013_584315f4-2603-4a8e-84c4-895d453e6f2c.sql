@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS public.user_roles (
 GRANT SELECT ON public.user_roles TO authenticated;
 GRANT ALL ON public.user_roles TO service_role;
 
-ALTER TABLE public.user_roles ADD COLUMN IF NOT EXISTS role public.app_role NOT NULL;
+ALTER TABLE public.user_roles ADD COLUMN IF NOT EXISTS role public.app_role default 'user' NOT NULL;
 ALTER TABLE public.user_roles ENABLE ROW LEVEL SECURITY;
 
 CREATE OR REPLACE FUNCTION public.has_role(user_id uuid, _role public.app_role)
