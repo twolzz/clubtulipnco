@@ -18,7 +18,7 @@ AS $$
   SELECT EXISTS (
     SELECT 1
     FROM public.user_roles
-    WHERE public.user_roles.user_id = has_role.user_id  -- Explicitly references the function parameter
+    WHERE public.user_roles.user_id = has_role.user_id  -- Explicitly references the function parameterr
       AND public.user_roles.role = has_role._role
   );
 $$;
