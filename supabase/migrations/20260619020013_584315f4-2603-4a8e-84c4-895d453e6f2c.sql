@@ -24,7 +24,9 @@ ALTER TABLE public.user_roles ENABLE ROW LEVEL SECURITY;
 
 DROP FUNCTION IF EXISTS public.has_role(uuid, public.app_role);
 
-CREATE FUNCTION public.has_role(_user_id uuid, _role public.app_role)
+DROP FUNCTION IF EXISTS public.has_role(uuid, public.app_role);
+
+CREATE FUNCTION public.has_role(user_id uuid, _role public.app_role)
 RETURNS boolean
 LANGUAGE sql
 SECURITY DEFINER
@@ -33,8 +35,8 @@ AS $$
     SELECT EXISTS (
         SELECT 1
         FROM public.user_roles
-        WHERE user_id = _user_id
-          AND role = _role
+        WHERE public.user_roles.user_id = $1
+          AND public.user_roles.role = $2
     );
 $$;
 
