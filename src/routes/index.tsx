@@ -53,7 +53,7 @@ function Home() {
         <div className="max-w-6xl mx-auto grid lg:grid-cols-[1.3fr_1fr] gap-10 items-center">
           <div>
             <h1 className="text-5xl md:text-7xl font-extrabold lowercase leading-[1.02] tracking-tight">
-              test dutch design is coming to <span className="text-poppy">san diego.</span>
+              dutch design is coming to <span className="text-poppy">san diego.</span>
             </h1>
             <p className="mt-6 text-lg md:text-xl text-ink/80 max-w-xl">
               Tulip &amp; Co. is your curated home for premium Dutch stationery, minimalist
