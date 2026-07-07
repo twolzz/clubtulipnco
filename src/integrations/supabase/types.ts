@@ -17,6 +17,7 @@ export type Database = {
       pop_ups: {
         Row: {
           accent: string
+          announced_at: string | null
           created_at: string
           created_by: string | null
           end_time: string | null
@@ -31,6 +32,7 @@ export type Database = {
         }
         Insert: {
           accent?: string
+          announced_at?: string | null
           created_at?: string
           created_by?: string | null
           end_time?: string | null
@@ -45,6 +47,7 @@ export type Database = {
         }
         Update: {
           accent?: string
+          announced_at?: string | null
           created_at?: string
           created_by?: string | null
           end_time?: string | null
