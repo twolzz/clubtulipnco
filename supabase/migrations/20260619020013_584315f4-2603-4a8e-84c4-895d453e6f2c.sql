@@ -22,7 +22,7 @@ GRANT ALL ON public.user_roles TO service_role;
 ALTER TABLE public.user_roles ADD COLUMN IF NOT EXISTS role public.app_role default 'user' NOT NULL;
 ALTER TABLE public.user_roles ENABLE ROW LEVEL SECURITY;
 
-CREATE OR REPLACE FUNCTION public.has_role(p_user_id uuid, p_role public.app_role)
+CREATE OR REPLACE FUNCTION public.has_role(user_id uuid, _role public.app_role)
 RETURNS boolean
 LANGUAGE sql
 STABLE
@@ -31,9 +31,9 @@ SET search_path = public
 AS $$
   SELECT EXISTS (
     SELECT 1
-    FROM public.user_roles ur
-    WHERE ur.user_id = p_user_id
-      AND ur.role = p_role
+    FROM public.user_roles
+    WHERE public.user_roles.user_id = has_role.user_id
+      AND public.user_roles.role = has_role._role
   )
 $$;
 
