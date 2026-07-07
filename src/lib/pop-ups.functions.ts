@@ -95,9 +95,16 @@ export const createPopUp = createServerFn({ method: "POST" })
       empty?: boolean;
       errors: string[];
     } = { attempted: 0, succeeded: 0, failed: 0, errors: [] };
+    // Send only on first publish (announced_at is null and row is published).
     if (send_announcement && data.is_published) {
       const { sendPopUpAnnouncement } = await import("./announce.server");
       announce = await sendPopUpAnnouncement(inserted as unknown as PopUp);
+      if (announce.succeeded > 0) {
+        await client
+          .from("pop_ups")
+          .update({ announced_at: new Date().toISOString() })
+          .eq("id", (inserted as any).id);
+      }
     }
     return {
       popUp: inserted as unknown as PopUp,
