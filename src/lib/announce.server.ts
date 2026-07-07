@@ -1,11 +1,10 @@
 // Server-only. RESEND_API_KEY is read from process.env inside the handler —
-// never bundled to the client. Sender uses the verified hello@tulipnco.com
-// domain (verified in Resend dashboard) so mail actually reaches subscribers,
-// unlike onboarding@resend.dev which only delivers to the account owner.
+// never bundled to the client. Sender uses the verified updates.tulipnco.com
+// subdomain for list traffic, with replies routed back to hello@tulipnco.com.
 import type { PopUp } from "./pop-ups.functions";
 
 const GATEWAY_URL = "https://connector-gateway.lovable.dev/resend";
-const FROM = "Tulip & Co. <hello@tulipnco.com>";
+const FROM = "Tulip & Co. <hello@updates.tulipnco.com>";
 const REPLY_TO = "hello@tulipnco.com";
 const SITE_URL = process.env.SITE_URL ?? "https://tulipnco.com";
 

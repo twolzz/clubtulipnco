@@ -95,9 +95,16 @@ export const createPopUp = createServerFn({ method: "POST" })
       empty?: boolean;
       errors: string[];
     } = { attempted: 0, succeeded: 0, failed: 0, errors: [] };
+    // Send only on first publish (announced_at is null and row is published).
     if (send_announcement && data.is_published) {
       const { sendPopUpAnnouncement } = await import("./announce.server");
       announce = await sendPopUpAnnouncement(inserted as unknown as PopUp);
+      if (announce.succeeded > 0) {
+        await client
+          .from("pop_ups")
+          .update({ announced_at: new Date().toISOString() })
+          .eq("id", (inserted as any).id);
+      }
     }
     return {
       popUp: inserted as unknown as PopUp,
@@ -112,6 +119,7 @@ export const updatePopUp = createServerFn({ method: "POST" })
     z
       .object({
         id: z.string().uuid(),
+        resend_announcement: z.boolean().optional().default(false),
       })
       .merge(popUpInput.omit({ send_announcement: true }).partial())
       .parse(input),
@@ -123,10 +131,56 @@ export const updatePopUp = createServerFn({ method: "POST" })
     });
     if (!isAdmin) throw new Error("Forbidden");
     const client = context.supabase as unknown as any;
-    const { id, ...patch } = data;
+    const { id, resend_announcement, ...patch } = data;
+
+    // Read current state to detect a false->true publish transition.
+    const { data: before, error: beforeErr } = await client
+      .from("pop_ups")
+      .select("is_published, announced_at")
+      .eq("id", id)
+      .single();
+    if (beforeErr) throw new Error(beforeErr.message);
+
     const { error } = await client.from("pop_ups").update(patch).eq("id", id);
     if (error) throw new Error(error.message);
-    return { ok: true };
+
+    // Decide whether to send. Two paths:
+    // 1) explicit admin re-blast (resend_announcement === true)
+    // 2) first publish: is_published flipping false -> true AND announced_at null
+    const nowPublished =
+      typeof patch.is_published === "boolean" ? patch.is_published : before.is_published;
+    const wasPublished = before.is_published;
+    const firstPublish =
+      nowPublished && !wasPublished && before.announced_at == null;
+
+    let announce:
+      | {
+          attempted: number;
+          succeeded: number;
+          failed: number;
+          empty?: boolean;
+          errors: string[];
+        }
+      | undefined;
+
+    if (nowPublished && (resend_announcement || firstPublish)) {
+      const { data: full, error: fetchErr } = await client
+        .from("pop_ups")
+        .select(SELECT)
+        .eq("id", id)
+        .single();
+      if (fetchErr) throw new Error(fetchErr.message);
+      const { sendPopUpAnnouncement } = await import("./announce.server");
+      announce = await sendPopUpAnnouncement(full as unknown as PopUp);
+      if (announce.succeeded > 0) {
+        await client
+          .from("pop_ups")
+          .update({ announced_at: new Date().toISOString() })
+          .eq("id", id);
+      }
+    }
+
+    return { ok: true, announce };
   });
 
 export const deletePopUp = createServerFn({ method: "POST" })

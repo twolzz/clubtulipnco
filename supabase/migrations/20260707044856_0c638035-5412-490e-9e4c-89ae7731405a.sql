@@ -1,0 +1,1 @@
+ALTER TABLE public.pop_ups ADD COLUMN IF NOT EXISTS announced_at timestamptz;
