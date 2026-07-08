@@ -26,109 +26,131 @@ function esc(str: string) {
 
 function renderHtml(firstName: string) {
   const name = esc(firstName || "friend");
-  return `<!doctype html>
-<html><head><meta charset="utf-8" /><title>welcome to tulip &amp; co.</title></head>
-<body style="margin:0;padding:0;background:#F6F2E7;font-family:Inter,Arial,sans-serif;color:#333333;">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F6F2E7;padding:32px 16px;">
-    <tr><td align="center">
-      <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;">
-        <tr><td style="padding:0 8px 24px 8px;">
-          <div style="font-family:'Archivo',Inter,Arial,sans-serif;font-size:20px;font-weight:800;text-transform:lowercase;letter-spacing:-0.02em;">tulip &amp; co.</div>
-        </td></tr>
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>you're in! welcome to the tulip & co. club.</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #FFFFFF; font-family: Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased;">
 
-        <!-- greeting + incentive -->
-        <tr><td style="background:#F6F2E7;border:4px solid #333333;border-radius:16px;box-shadow:12px 12px 0 #F2B73F;padding:32px;">
-          <div style="display:inline-block;background:#F2B73F;border:3px solid #333333;border-radius:999px;padding:4px 14px;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;">welcome</div>
-          <h1 style="font-family:'Archivo',Inter,Arial,sans-serif;font-size:34px;line-height:1.05;font-weight:900;text-transform:lowercase;letter-spacing:-0.02em;margin:16px 0 8px 0;color:#333333;">hi ${name}, you're in.</h1>
-          <p style="font-size:16px;line-height:1.55;margin:8px 0 24px 0;color:#333333;">
-            welcome to the tulip &amp; co. club — a small circle of people who
-            appreciate quiet, functional, hand-picked dutch design in san diego.
-          </p>
+  <!-- MAIN CANVAS (Maintains the premium boutique atmosphere) -->
+  <table width="100%" border="0" cellpadding="0" cellspacing="0" style="background-color: #FFFFFF; padding: 45px 20px;">
+    <tr>
+      <td align="center">
 
-          <div style="background:#ffffff;border:3px solid #333333;border-radius:12px;padding:20px 22px;margin:8px 0 20px 0;">
-            <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:#555;">your welcome perk</div>
-            <div style="font-size:22px;font-weight:900;color:#333333;margin:6px 0 4px 0;letter-spacing:-0.01em;">10% off your first order</div>
-            <div style="font-size:14px;color:#333333;">use code
-              <span style="display:inline-block;background:#F6F2E7;border:2px solid #333333;border-radius:6px;padding:2px 8px;font-weight:800;letter-spacing:1px;">${DISCOUNT_CODE}</span>
-              at checkout.
-            </div>
-          </div>
+        <!-- DE STIJL BOX (4px Bold Black Outline, Warm Cream F9F6F0 Fill) -->
+        <table width="100%" border="0" cellpadding="0" cellspacing="0" style="max-width: 580px; background-color: #F9F6F0; border: 4px solid #000000; border-radius: 12px; overflow: hidden; text-align: left;">
+          <tr>
+            <td style="padding: 40px 35px;">
 
-          <a href="${SITE_URL}/shop?discount=${DISCOUNT_CODE}" style="display:inline-block;background:#E05A36;color:#ffffff;font-weight:800;text-transform:lowercase;text-decoration:none;padding:14px 28px;border:3px solid #333333;border-radius:999px;box-shadow:6px 6px 0 #333333;">
-            shop now
-          </a>
-        </td></tr>
+              <!-- BRAND EMBLEM (Your Imgur Logo Link) -->
+              <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-bottom: 30px;">
+                <tr>
+                  <td align="center">
+                    <!-- 🚨 IMGUR LINK: Replace the placeholder URL below with your raw direct Imgur link (ends in .png/.jpg) -->
+                    <img src="https://i.imgur.com/ZFYdjIv.png" alt="tulip & co." style="max-width: 140px; height: auto; display: block; border: 0;">
+                  </td>
+                </tr>
+              </table>
 
-        <!-- brand philosophy -->
-        <tr><td style="padding:32px 8px 8px 8px;">
-          <h2 style="font-family:'Archivo',Inter,Arial,sans-serif;font-size:20px;font-weight:900;text-transform:lowercase;letter-spacing:-0.02em;margin:0 0 10px 0;color:#333333;">what we're about.</h2>
-          <p style="font-size:15px;line-height:1.6;margin:0;color:#333333;">
-            tulip &amp; co. is built on one idea: mindful minimalism. we import
-            small runs of premium dutch stationery, eco-corduroy miffy plushies,
-            and quiet everyday objects — and bring them, hand-delivered, to
-            pop-ups across san diego. no fluff, no filler. just calm design that
-            earns its place on your desk.
-          </p>
-        </td></tr>
+              <!-- HERO GREETING (Dick Bruna Style Typography) -->
+              <h1 style="margin: 0 0 24px 0; font-size: 28px; font-weight: bold; color: #000000; line-height: 1.2; letter-spacing: -0.8px; text-align: center;">
+                hi ${name}, you're in.
+              </h1>
 
-        <!-- collection shortcuts -->
-        <tr><td style="padding:24px 8px 8px 8px;">
-          <h2 style="font-family:'Archivo',Inter,Arial,sans-serif;font-size:20px;font-weight:900;text-transform:lowercase;letter-spacing:-0.02em;margin:0 0 12px 0;color:#333333;">start here.</h2>
-          <table role="presentation" cellpadding="0" cellspacing="0"><tr>
-            <td style="padding:0 8px 8px 0;">
-              <a href="${SITE_URL}/shop?sort=new" style="display:inline-block;background:#ffffff;border:3px solid #333333;border-radius:999px;padding:8px 16px;font-size:13px;font-weight:800;text-transform:lowercase;color:#333333;text-decoration:none;">new arrivals</a>
+              <!-- SHORTENED BODY (Mindful, sophisticated copy to maximize reader completion rates) -->
+              <p style="margin: 0 0 32px 0; font-size: 16px; color: #000000; line-height: 1.6; text-align: center;">
+                welcome to the tulip & co. club — a small circle of people who appreciate quiet, functional, hand-picked dutch design in san diego.
+              </p>
+
+              <!-- WELCOME PERK CARD (Minimalist dashed border to grab immediate focus) -->
+              <table width="100%" border="0" cellpadding="0" cellspacing="0" style="background-color: #FFFFFF; border: 2px dashed #000000; border-radius: 8px; margin-bottom: 35px;">
+                <tr>
+                  <td style="padding: 24px; text-align: center;">
+                    <p style="margin: 0 0 8px 0; font-size: 12px; font-weight: bold; color: #000000; letter-spacing: 2px; text-transform: uppercase;">
+                      your welcome perk
+                    </p>
+                    <h2 style="margin: 0 0 16px 0; font-size: 26px; font-weight: bold; color: #E05A36;">
+                      10% off your first order
+                    </h2>
+                    <!-- INJECTED COUPON CODE -->
+                    <div style="background-color: #F9F6F0; border: 2px solid #000000; display: inline-block; padding: 10px 24px; font-size: 18px; font-family: Courier, monospace; font-weight: bold; color: #000000; letter-spacing: 1px;">
+                      ${DISCOUNT_CODE}
+                    </div>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- HIGH-CONVERSION CTA (Pill-shaped Terracotta Red Button) -->
+              <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-bottom: 40px;">
+                <tr>
+                  <td align="center">
+                    <!-- INJECTED TARGET SITE URL -->
+                    <a href="${SITE_URL}" style="background-color: #E05A36; color: #FFFFFF; border: 3px solid #000000; border-radius: 50px; padding: 14px 36px; font-size: 16px; font-weight: bold; text-decoration: none; display: inline-block; text-align: center; box-shadow: 0 4px 0px #000000;">
+                      shop now
+                    </a>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- SOPHISTICATED BRAND STATEMENT (Supports authenticity and authority) -->
+              <p style="margin: 0 0 8px 0; font-size: 14px; font-weight: bold; color: #000000;">
+                what we're about.
+              </p>
+              <p style="margin: 0; font-size: 14px; color: #666666; line-height: 1.5;">
+                tulip & co. is built on one idea: mindful minimalism. we source authentic, licensed stationery and home goods to bridge the gap between premium dutch craftsmanship and the southern california retail space.
+              </p>
+
             </td>
-            <td style="padding:0 8px 8px 0;">
-              <a href="${SITE_URL}/shop?sort=bestsellers" style="display:inline-block;background:#ffffff;border:3px solid #333333;border-radius:999px;padding:8px 16px;font-size:13px;font-weight:800;text-transform:lowercase;color:#333333;text-decoration:none;">best sellers</a>
-            </td>
-            <td style="padding:0 8px 8px 0;">
-              <a href="${SITE_URL}/pop-ups" style="display:inline-block;background:#ffffff;border:3px solid #333333;border-radius:999px;padding:8px 16px;font-size:13px;font-weight:800;text-transform:lowercase;color:#333333;text-decoration:none;">pop-up calendar</a>
-            </td>
-          </tr></table>
-        </td></tr>
+          </tr>
+        </table>
 
-        <!-- whitelist prompt -->
-        <tr><td style="padding:24px 8px 8px 8px;">
-          <p style="font-size:13px;line-height:1.5;color:#555;margin:0;background:#ffffff;border:2px dashed #333333;border-radius:12px;padding:12px 14px;">
-            quick favor: add <strong style="color:#333333;">${SENDER_ADDRESS}</strong>
-            to your contacts so our next pop-up drop lands in your inbox, not the promo tab.
-          </p>
-        </td></tr>
+        <!-- FOOTER (Contains legally required CAN-SPAM information and unsubscribe) -->
+        <table width="100%" border="0" cellpadding="0" cellspacing="0" style="max-width: 580px; margin-top: 24px; text-align: center;">
+          <tr>
+            <td style="font-size: 12px; color: #888888; line-height: 1.6; padding: 0 10px;">
+              <!-- INJECTED SENDER ADDRESS -->
+              you are receiving this because you subscribed to tulip & co. updates.<br>
+              ${SENDER_ADDRESS}<br><br>
+              <!-- INJECTED UNSUBSCRIBE URL -->
+              <a href="{{unsubscribe_url}}" style="color: #666666; text-decoration: underline;">
+                Unsubscribe
+              </a>
+            </td>
+          </tr>
+        </table>
 
-        <!-- footer -->
-        <tr><td style="padding:28px 8px 8px 8px;font-size:12px;color:#555;text-align:center;line-height:1.6;">
-          <div>© ${new Date().getFullYear()} tulip &amp; co. — authentic dutch design, san diego, ca.</div>
-          <div style="margin-top:6px;">
-            <a href="${SITE_URL}/support?tab=contact" style="color:#3D6E97;text-decoration:underline;">contact us</a>
-            &nbsp;·&nbsp;
-            <a href="{{unsubscribe_url}}" style="color:#3D6E97;text-decoration:underline;">unsubscribe</a>
-          </div>
-        </td></tr>
-      </table>
-    </td></tr>
+      </td>
+    </tr>
   </table>
-</body></html>`;
+
+</body>
+</html>`;
 }
 
 function renderText(firstName: string) {
   const name = firstName || "friend";
   return [
-    `hi ${name}, welcome to the tulip & co. club.`,
+    `hi ${name}, you're in.`,
+    ``,
+    `welcome to the tulip & co. club — a small circle of people who appreciate quiet, functional, hand-picked dutch design in san diego.`,
     ``,
     `your welcome perk: 10% off your first order.`,
-    `use code ${DISCOUNT_CODE} at checkout — ${SITE_URL}/shop?discount=${DISCOUNT_CODE}`,
+    `use code ${DISCOUNT_CODE} at checkout — ${SITE_URL}`,
     ``,
-    `we import small runs of quiet, functional dutch design and bring them,`,
-    `hand-delivered, to pop-ups across san diego.`,
+    `what we're about:`,
+    `tulip & co. is built on one idea: mindful minimalism. we source authentic, licensed stationery and home goods to bridge the gap between premium dutch craftsmanship and the southern california retail space.`,
     ``,
-    `start here:`,
-    `  new arrivals — ${SITE_URL}/shop?sort=new`,
-    `  best sellers — ${SITE_URL}/shop?sort=bestsellers`,
-    `  pop-up calendar — ${SITE_URL}/pop-ups`,
-    ``,
-    `add ${SENDER_ADDRESS} to your contacts so future drops don't hit the promo tab.`,
+    `shop now:`,
+    `  ${SITE_URL}`,
     ``,
     `— tulip & co.`,
+    ``,
+    `you are receiving this because you subscribed to tulip & co. updates.`,
+    `${SENDER_ADDRESS}`,
+    `unsubscribe: {{unsubscribe_url}}`,
   ].join("\n");
 }
 
