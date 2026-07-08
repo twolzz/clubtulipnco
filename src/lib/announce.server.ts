@@ -42,99 +42,205 @@ function renderHtml(popUp: PopUp, products: ProductRow[]) {
       ? `${popUp.start_time.slice(0, 5)} – ${popUp.end_time.slice(0, 5)}`
       : "";
 
+  // 1. Generate individual product cards matching the "Mindful Minimalism" aesthetic
   const cells = products
     .slice(0, 4)
     .map(
       (p) => `
-      <td width="50%" style="padding:8px;vertical-align:top;">
+      <td width="50%" style="padding: 8px; vertical-align: top;">
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
-          style="background:#ffffff;border:4px solid #333333;border-radius:16px;box-shadow:6px 6px 0 #F2B73F;">
+          style="background: #FFFFFF; border: 3px solid #000000; border-radius: 12px; overflow: hidden; box-shadow: 4px 4px 0px #000000;">
           <tr>
-            <td style="background:${p.bg_color};height:80px;border-bottom:4px solid #333333;border-radius:12px 12px 0 0;"></td>
+            <!-- COLOR BLOCK HEADER (Uses dynamic category background colors) -->
+            <td style="background: ${p.bg_color || '#F2B73F'}; height: 80px; border-bottom: 3px solid #000000; border-radius: 9px 9px 0 0;">&nbsp;</td>
           </tr>
           <tr>
-            <td style="padding:12px 14px;font-family:Inter,Arial,sans-serif;">
-              <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#555;">${p.category}</div>
-              <div style="font-size:15px;font-weight:800;color:#333333;margin-top:4px;">${p.name}</div>
-              <div style="font-size:16px;font-weight:800;color:#333333;margin-top:8px;">${fmtPrice(p.price_cents)}</div>
+            <td style="padding: 16px; font-family: Helvetica, Arial, sans-serif;">
+              <div style="font-size: 10px; font-weight: bold; text-transform: uppercase; letter-spacing: 1.5px; color: #666666; margin-bottom: 4px;">
+                ${p.category}
+              </div>
+              <div style="font-size: 15px; font-weight: bold; color: #000000; margin-top: 4px; line-height: 1.3;">
+                ${p.name}
+              </div>
+              <div style="font-size: 16px; font-weight: bold; color: #E05A36; margin-top: 10px;">
+                ${fmtPrice(p.price_cents)}
+              </div>
             </td>
           </tr>
         </table>
       </td>`,
     );
 
-  // pair cells into rows of 2
+  // 2. Structural safety: Chunk the cells into rows of 2 for clean email table layouts
   const rows: string[] = [];
   for (let i = 0; i < cells.length; i += 2) {
-    rows.push(`<tr>${cells[i] ?? ""}${cells[i + 1] ?? ""}</tr>`);
+    rows.push(`<tr>${cells.slice(i, i + 2).join("")}</tr>`);
   }
+  const productGridHtml = rows.join("");
 
-  return `<!doctype html>
-<html><head><meta charset="utf-8" /><title>new pop-up: ${popUp.name}</title></head>
-<body style="margin:0;padding:0;background:#F6F2E7;font-family:Inter,Arial,sans-serif;color:#333333;">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F6F2E7;padding:32px 16px;">
-    <tr><td align="center">
-      <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;">
-        <tr><td style="padding:0 8px 24px 8px;">
-          <div style="font-family:'Archivo',Inter,Arial,sans-serif;font-size:20px;font-weight:800;text-transform:lowercase;letter-spacing:-0.02em;">tulip &amp; co.</div>
-        </td></tr>
+  // 3. Output the beautifully structured full De Stijl canvas email
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>new pop-up announced! 🌷</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #FFFFFF; font-family: Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased;">
 
-        <tr><td style="background:#F6F2E7;border:4px solid #333333;border-radius:16px;box-shadow:12px 12px 0 #E05A36;padding:32px;">
-          <div style="display:inline-block;background:#F2B73F;border:3px solid #333333;border-radius:999px;padding:4px 14px;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;">new pop-up</div>
-          <h1 style="font-family:'Archivo',Inter,Arial,sans-serif;font-size:36px;line-height:1.05;font-weight:900;text-transform:lowercase;letter-spacing:-0.02em;margin:16px 0 8px 0;color:#333333;">${popUp.name}.</h1>
-          <p style="font-size:18px;font-weight:600;margin:0 0 4px 0;color:#333333;">${fmtDate(popUp.event_date)}</p>
-          <p style="font-size:16px;margin:0 0 4px 0;color:#333333;">${popUp.location}</p>
-          ${time ? `<p style="font-size:14px;font-weight:600;margin:0 0 24px 0;color:#555;">${time}</p>` : ""}
+  <!-- MAIN CANVAS -->
+  <table width="100%" border="0" cellpadding="0" cellspacing="0" style="background-color: #FFFFFF; padding: 45px 20px;">
+    <tr>
+      <td align="center">
 
-          <p style="font-size:16px;line-height:1.55;margin:16px 0 28px 0;color:#333333;">
-            feel the corduroy. test the pens. take home a piece of quiet dutch design —
-            hand-delivered right here in san diego.
-          </p>
+        <!-- DE STIJL BOX (4px Bold Black Outline, Warm Cream F9F6F0 Fill) -->
+        <table width="100%" border="0" cellpadding="0" cellspacing="0" style="max-width: 580px; background-color: #F9F6F0; border: 4px solid #000000; border-radius: 12px; overflow: hidden; text-align: left;">
+          <tr>
+            <td style="padding: 40px 35px;">
 
-          <a href="${SITE_URL}/pop-ups" style="display:inline-block;background:#F2B73F;color:#333333;font-weight:800;text-transform:lowercase;text-decoration:none;padding:14px 28px;border:3px solid #333333;border-radius:999px;box-shadow:6px 6px 0 #333333;">
-            see the calendar
-          </a>
-        </td></tr>
+              <!-- BRAND EMBLEM -->
+              <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-bottom: 30px;">
+                <tr>
+                  <td align="center">
+                    <!-- 🚨 IMGUR LINK: Replace this placeholder with your direct Imgur logo link (ends in .png/.jpg) -->
+                    <img src="https://i.imgur.com/ZFYdjIv.png" alt="tulip & co." style="max-width: 140px; height: auto; display: block; border: 0;">
+                  </td>
+                </tr>
+              </table>
 
-        ${
-          rows.length
-            ? `<tr><td style="padding:36px 8px 8px 8px;">
-          <h2 style="font-family:'Archivo',Inter,Arial,sans-serif;font-size:22px;font-weight:900;text-transform:lowercase;letter-spacing:-0.02em;margin:0 0 12px 0;color:#333333;">a curated look at what we're bringing.</h2>
-        </td></tr>
-        <tr><td>
-          <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
-            ${rows.join("")}
-          </table>
-        </td></tr>`
-            : ""
-        }
+              <!-- MAIN ACCENT BADGE -->
+              <div style="text-align: center; margin-bottom: 20px;">
+                <span style="background-color: #E05A36; color: #FFFFFF; font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; padding: 6px 16px; border: 2px solid #000000; border-radius: 20px; display: inline-block;">
+                  live calendar drop
+                </span>
+              </div>
 
-        <tr><td style="padding:36px 8px 8px 8px;font-size:12px;color:#555;text-align:center;">
-          <div>© ${new Date().getFullYear()} tulip &amp; co. — authentic dutch design, san diego.</div>
-          <div style="margin-top:6px;">
-            <a href="${SITE_URL}/support?tab=contact" style="color:#3D6E97;text-decoration:underline;">contact us</a>
-          </div>
-        </td></tr>
-      </table>
-    </td></tr>
+              <!-- HERO HEADLINE -->
+              <h1 style="margin: 0 0 24px 0; font-size: 28px; font-weight: bold; color: #000000; line-height: 1.2; letter-spacing: -0.8px; text-align: center;">
+                we're heading out live.
+              </h1>
+
+              <!-- BRIEF COPY -->
+              <p style="margin: 0 0 32px 0; font-size: 16px; color: #000000; line-height: 1.6; text-align: center;">
+                we are locking in weekend locations in San Diego's trendiest neighborhoods. come feel the fabrics, test the premium writing utensils, and explore our collections in person.
+              </p>
+
+              <!-- FEATURED EVENT DETAILS CARD -->
+              <table width="100%" border="0" cellpadding="0" cellspacing="0" style="background-color: #FFFFFF; border: 3px solid #000000; border-radius: 8px; margin-bottom: 32px; box-shadow: 4px 4px 0px #000000;">
+                <tr>
+                  <td style="padding: 24px;">
+                    <p style="margin: 0 0 6px 0; font-size: 12px; font-weight: bold; color: #E05A36; letter-spacing: 1px; text-transform: uppercase;">
+                      featured event
+                    </p>
+                    <h2 style="margin: 0 0 12px 0; font-size: 22px; font-weight: bold; color: #000000;">
+                      ${popUp.name}
+                    </h2>
+                    
+                    <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td style="padding: 4px 0; font-size: 15px; color: #000000; font-family: Helvetica, Arial, sans-serif;">
+                          <strong>date &amp; time:</strong> ${fmtDate(popUp.event_date)}${time ? ` (${time})` : ""}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="padding: 4px 0; font-size: 15px; color: #000000; font-family: Helvetica, Arial, sans-serif;">
+                          <strong>location:</strong> ${popUp.location}
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- PRODUCT SPOTLIGHT SECTION -->
+              <p style="margin: 0 0 12px 0; font-size: 14px; font-weight: bold; color: #000000; text-transform: uppercase; letter-spacing: 1px;">
+                on the shelves:
+              </p>
+              <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-bottom: 35px;">
+                ${productGridHtml}
+              </table>
+
+              <!-- HIGH-CONVERSION CTA (Pill-shaped Terracotta Red Button) -->
+              <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-bottom: 40px;">
+                <tr>
+                  <td align="center">
+                    <a href="${SITE_URL}/pop-ups" style="background-color: #E05A36; color: #FFFFFF; border: 3px solid #000000; border-radius: 50px; padding: 14px 36px; font-size: 16px; font-weight: bold; text-decoration: none; display: inline-block; text-align: center; box-shadow: 0 4px 0px #000000;">
+                      view upcoming dates
+                    </a>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- SOPHISTICATED BRAND STATEMENT -->
+              <p style="margin: 0 0 8px 0; font-size: 14px; font-weight: bold; color: #000000;">
+                mindful minimalism.
+              </p>
+              <p style="margin: 0; font-size: 14px; color: #666666; line-height: 1.5;">
+                tulip & co. bridges the gap between authentic, premium dutch craftsmanship and the southern california retail space. we hand-deliver curated, licensed design right to your neighborhood.
+              </p>
+
+            </td>
+          </tr>
+        </table>
+
+        <!-- FOOTER -->
+        <table width="100%" border="0" cellpadding="0" cellspacing="0" style="max-width: 580px; margin-top: 24px; text-align: center;">
+          <tr>
+            <td style="font-size: 12px; color: #888888; line-height: 1.6; padding: 0 10px; font-family: Helvetica, Arial, sans-serif;">
+              you are receiving this because you subscribed to tulip & co. updates.<br>
+              ${SENDER_ADDRESS}<br><br>
+              <a href="{{unsubscribe_url}}" style="color: #666666; text-decoration: underline;">
+                Unsubscribe
+              </a>
+            </td>
+          </tr>
+        </table>
+
+      </td>
+    </tr>
   </table>
-</body></html>`;
+
+</body>
+</html>`;
 }
 
-function renderText(popUp: PopUp) {
+function renderText(popUp: PopUp, products: ProductRow[]) {
   const time =
     popUp.start_time && popUp.end_time
-      ? ` (${popUp.start_time.slice(0, 5)}–${popUp.end_time.slice(0, 5)})`
+      ? `${popUp.start_time.slice(0, 5)} – ${popUp.end_time.slice(0, 5)}`
       : "";
+
+  // 1. Format the top 4 featured products for clean plain-text readability
+  const productList = products
+    .slice(0, 4)
+    .map((p) => `  • [${p.category.toUpperCase()}] ${p.name} — ${fmtPrice(p.price_cents)}`)
+    .join("\n");
+
+  // 2. Output the unified copy matching our redesigned De Stijl HTML layout
   return [
-    `new pop-up: ${popUp.name}`,
+    `new pop-up announced! 🌷`,
     ``,
-    `${fmtDate(popUp.event_date)}${time}`,
-    `${popUp.location}`,
+    `we are heading out live. we are locking in weekend locations in San Diego's trendiest neighborhoods. come feel the fabrics, test the premium writing utensils, and explore our collections in person.`,
     ``,
-    `see the calendar: ${SITE_URL}/pop-ups`,
+    `featured event:`,
+    `  event: ${popUp.name}`,
+    `  date & time: ${fmtDate(popUp.event_date)}${time ? ` (${time})` : ""}`,
+    `  location: ${popUp.location}`,
+    ``,
+    `on the shelves:`,
+    productList,
+    ``,
+    `view upcoming dates:`,
+    `  ${SITE_URL}/pop-ups`,
+    ``,
+    `mindful minimalism.`,
+    `tulip & co. bridges the gap between authentic, premium dutch craftsmanship and the southern california retail space. we hand-deliver curated, licensed design right to your neighborhood.`,
     ``,
     `— tulip & co.`,
+    ``,
+    `you are receiving this because you subscribed to tulip & co. updates.`,
+    `${SENDER_ADDRESS}`,
+    `unsubscribe: {{unsubscribe_url}}`,
   ].join("\n");
 }
 
