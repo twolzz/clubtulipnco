@@ -4,6 +4,9 @@ compatibility_date = "2026-07-08"
 compatibility_flags = [ "nodejs_compat" ]
 
 [vars]
+SUPABASE_URL="https://jkiijlqsrxczpazscbaj.supabase.co"
+SUPABASE_PUBLISHABLE_KEY = "sb_publishable_GmawUs-8KMl6Xp_jLBxEkw_sWCh_yMy"
+SUPABASE_PROJECT_ID = "jkiijlqsrxczpazscbaj"
 VITE_SUPABASE_URL = "https://jkiijlqsrxczpazscbaj.supabase.co"
 VITE_SUPABASE_PUBLISHABLE_KEY = "sb_publishable_GmawUs-8KMl6Xp_jLBxEkw_sWCh_yMy"
 VITE_SUPABASE_PROJECT_ID = "jkiijlqsrxczpazscbaj"
