@@ -1,0 +1,12 @@
+#:schema node_modules/wrangler/config-schema.json
+name = "tulip-popup-club"
+compatibility_date = "2026-07-08"
+compatibility_flags = [ "nodejs_compat" ]
+
+[vars]
+VITE_SUPABASE_URL = "https://nrrvkhnmaivqgaeqvcdp.supabase.co"
+VITE_SUPABASE_PUBLISHABLE_KEY = "sb_publishable_xrumNC9vci5ygzo30FBTmA_S6-mBN_P"
+VITE_SUPABASE_PROJECT_ID = "nrrvkhnmaivqgaeqvcdp"
+SITE_URL = "https://club.tulipnco.com"
+SENDER_ADDRESS = "hello@updates.tulipnco.com"
+DISCOUNT_CODE = "WELCOME10"
