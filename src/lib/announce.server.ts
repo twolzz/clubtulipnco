@@ -332,6 +332,11 @@ export async function sendPopUpAnnouncement(
     };
 
     result.attempted = emails.length;
+    console.log("[announce] attempt", {
+      popUp: popUp.name,
+      recipients: emails.length,
+      from: FROM,
+    });
 
     // ---- Resend batch API: up to 100 individual messages per call ----
     const BATCH = 100;
