@@ -6,6 +6,7 @@ import type { PopUp } from "./pop-ups.functions";
 const GATEWAY_URL = "https://connector-gateway.lovable.dev/resend";
 const FROM = "Tulip & Co. <hello@updates.tulipnco.com>";
 const REPLY_TO = "hello@tulipnco.com";
+const SENDER_ADDRESS = "hello@updates.tulipnco.com";
 const SITE_URL = process.env.SITE_URL ?? "https://tulipnco.com";
 
 type ProductRow = {
@@ -323,7 +324,7 @@ export async function sendPopUpAnnouncement(
     }
 
     const html = renderHtml(popUp, products);
-    const text = renderText(popUp);
+    const text = renderText(popUp, products);
     const subject = `new san diego pop-up — ${fmtDate(popUp.event_date)}`;
     const headers = {
       "List-Unsubscribe": `<mailto:${REPLY_TO}?subject=unsubscribe>`,
