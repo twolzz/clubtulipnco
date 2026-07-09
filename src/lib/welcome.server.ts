@@ -186,6 +186,7 @@ export async function sendWelcomeEmail(
       },
     };
 
+    console.log("[welcome] attempt", { to, from: FROM });
     const res = await fetch(`${GATEWAY_URL}/emails`, {
       method: "POST",
       headers: {

@@ -1,61 +1,90 @@
-## Overview
+## Context (please read first)
 
-Add two email flows (welcome + pop-up announcement) using the existing modern-stack pattern already in `announce.server.ts` — Resend via the Lovable connector gateway, called inline from server-side code. No Supabase Edge Functions or DB webhooks (your app runs on TanStack Start / Cloudflare, so an edge function would be a duplicate detour). Sender switches to the newly verified `hello@updates.tulipnco.com`. Existing UI, tables, and pop-up announce logic stay intact.
+You told me `club.tulipnco.com` is a **separate Cloudflare Pages deployment you built and manage yourself, outside Lovable**. That changes what I can and can't do here honestly:
 
-## Flow A — Welcome email (Join the Club)
+- I only have access to this Lovable project (source + Lovable-hosted deploy at `clubtulipnco.lovable.app`, which currently returns HTTP 200 on `/shop` and `/pop-ups` — no crash).
+- I cannot read your Cloudflare Pages logs, env vars, build output, or deploy config for `club.tulipnco.com`. I can't run `wrangler tail`, inspect your bindings, or verify what actually shipped.
+- Any "fix" I make to this repo only reaches `club.tulipnco.com` after **you** rebuild and redeploy it from your own pipeline.
 
-**Trigger:** Currently `SubscribeForm` inserts directly into `subscribers` from the browser with the anon key — a client insert can't fan out an email. Move the insert into a new public server function `subscribeToClub` that (1) inserts the row, (2) fires the welcome email after a successful insert, (3) swallows 23505 duplicates the same way the UI does today.
+So this plan does two things: **(1) hardens the code in this repo** so a Cloudflare-Pages-on-Workers deploy has the best possible chance of working, and **(2) gives you the exact Cloudflare Pages checklist** to do on your side.
 
-**Email spec (from your outline):**
-- From: `Tulip & Co. <hello@updates.tulipnco.com>`
-- Reply-To: `hello@tulipnco.com`
-- Subject: `You're in! Welcome to the Tulip & Co Club. 🌷`
-- Preview: `Inside: Your exclusive member perk + a quick introduction.`
-- Sections, in order:
-  1. Personalized greeting using `first_name` (falls back to `friend`)
-  2. Incentive block — `WELCOME10` code + pill CTA "shop now" → `${SITE_URL}/shop?discount=WELCOME10`
-  3. Brand philosophy — 3–4 sentence Mindful Minimalism paragraph
-  4. Collection shortcuts — three tag-style links (new arrivals, best sellers, pop-ups)
-  5. Whitelist micro-copy — one sentence asking to add `hello@updates.tulipnco.com` to contacts
-  6. Footer — © year, San Diego line, contact link, `{{unsubscribe_url}}` placeholder (real one-click unsubscribe is a follow-up)
+---
 
-**Design:** Pulled from the Knowledge File — cream `#F6F2E7` bg, `#333333` 4px borders, 16px radius, hard offset shadow (`6px 6px 0 #F2B73F`), pill CTA in poppy `#E05A36`, all-lowercase headings, Archivo/Inter fallbacks. Same table-based email HTML style as `announce.server.ts`.
+## Diagnosis (from the code in this repo)
 
-**Safety:** Wrapped in try/catch — insert success is never blocked by an email failure; Resend errors log full status/name/message like the announce path.
+### Issue 1 — `supabaseUrl is required` on `/shop` and `/pop-ups`
 
-## Flow B — Pop-up announcement (re-send guard)
+- **Browser client** (`src/integrations/supabase/client.ts`, lines 8–9): reads `import.meta.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL`. `VITE_*` is **inlined at build time** — if the values aren't set in your Cloudflare Pages **Build** env, they're literally missing from the JS bundle. That is the #1 cause of `supabaseUrl is required` on a self-hosted CF Pages build.
+- **Server publishable client** (`src/lib/subscribers.functions.ts`, lines 25–27): reads `process.env.SUPABASE_URL` / `SUPABASE_PUBLISHABLE_KEY` inside the handler. Correct pattern for Workers — but Workers bindings only expose these if you've added them as **Runtime environment variables** in Cloudflare Pages.
+- **Admin client** (`src/integrations/supabase/client.server.ts`): reads `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` inside a lazy factory. Correct pattern.
 
-**Schema:** add `announced_at timestamptz null` to `public.pop_ups` (single-column migration, no data loss, existing rows stay `null` so they can still fire on the next publish or manual resend).
+None of the initialization code is architecturally wrong for Workers. The failure mode "500 on `/shop`, `/pop-ups`" on your CF Pages host is almost certainly **missing envs in that Pages project**, not a code bug.
 
-**Server logic (`pop-ups.functions.ts`):**
-- `createPopUp` — send only when `is_published === true` AND `announced_at` is null. On success, stamp `announced_at = now()`.
-- `updatePopUp` — input schema gains optional `resend_announcement: boolean` (default false). Fetch the current row first; fire the email when either:
-  - `is_published` transitions `false → true` and `announced_at` is null (first publish), OR
-  - `resend_announcement === true` (explicit admin re-blast)
-- Any other edit (typo, time tweak, location change) does **not** trigger a send. `announced_at` is stamped after a successful send.
+### Issue 2 — Welcome + Announcement emails not firing
 
-**Admin UI (`admin.pop-ups.tsx`):** add a single "resend announcement to subscribers" checkbox in the edit dialog only (unchecked by default). Nothing else in the form changes.
+- `src/lib/welcome.server.ts` and `src/lib/announce.server.ts` already: read `LOVABLE_API_KEY` / `RESEND_API_KEY` inside the handler, guard for undefined, wrap `fetch` in try/catch, and log `httpStatus`, `statusCode`, `name`, `message`, and raw body on non-2xx. The instrumentation you're asking for is already there.
+- **But** `LOVABLE_API_KEY` is a Lovable-issued credential provisioned into Lovable-hosted deploys. On your own CF Pages deployment, you must add it yourself, and gateway calls fail closed if it's absent. Same for `RESEND_API_KEY`.
+- Second likely cause on your CF deploy: `console.error` from a Worker doesn't appear in your browser or in Lovable logs — you need `wrangler pages deployment tail` (or the Pages dashboard "Real-time logs") to see it. If you haven't opened that, silent-failure is the appearance, not the reality.
 
-**Sender switch:** `announce.server.ts` FROM becomes `hello@updates.tulipnco.com`; Reply-To stays `hello@tulipnco.com`.
+---
 
-## Files touched
+## Plan — changes I'll make in this repo (build mode)
 
-- `supabase/migration` — `ALTER TABLE public.pop_ups ADD COLUMN announced_at timestamptz` (approval step)
-- `src/lib/welcome.server.ts` — new, mirrors `announce.server.ts` structure
-- `src/lib/subscribers.functions.ts` — new, `subscribeToClub` public server fn (insert + fire welcome)
-- `src/components/SubscribeForm.tsx` — swap the direct `supabase.from("subscribers").insert(...)` for `useServerFn(subscribeToClub)`; UX unchanged
-- `src/lib/announce.server.ts` — FROM constant only
-- `src/lib/pop-ups.functions.ts` — add `resend_announcement`, transition/guard logic, stamp `announced_at`
-- `src/routes/_authenticated/admin.pop-ups.tsx` — one checkbox in the edit dialog
+### A. Fail loud + early on missing envs (both issues)
+Add a small `src/lib/env.server.ts` that validates required server envs on first server access and throws a descriptive `Error` naming the missing key(s). Wire `welcome.server.ts`, `announce.server.ts`, `subscribers.functions.ts`, and `pop-ups.functions.ts` to read through it. Result: instead of an opaque "supabaseUrl is required" or a silent Resend no-op, your CF Pages tail log gets a single line like `[env] missing SUPABASE_URL, LOVABLE_API_KEY at subscribeToClub`.
 
-## Out of scope (call out, don't build)
+### B. Harden the browser Supabase client
+Change `src/integrations/supabase/client.ts` to throw a descriptive error at first use listing exactly which of `VITE_SUPABASE_URL` / `VITE_SUPABASE_PUBLISHABLE_KEY` were missing at build time. Right now the message you're getting (`supabaseUrl is required`) comes from `@supabase/supabase-js` and buries the root cause.
 
-- Real one-click unsubscribe endpoint + `suppressed_emails` table — the footer will render a placeholder link and I'll flag it clearly. Wiring a real unsubscribe is a separate follow-up (adds a public route, a token table, and a suppression check before every send).
-- Marketing-list compliance (physical address in footer, CAN-SPAM). Add your business address string in a follow-up and I'll drop it into both templates.
+### C. Add a `/api/public/_healthz` server route
+Returns JSON with a boolean for each expected server env (present/absent, never the value). Lets you curl `https://club.tulipnco.com/api/public/_healthz` after a deploy and see immediately which envs are missing on that host.
 
-## Technical details
+### D. Confirm the email log surface
+No code change — verify `welcome.server.ts` / `announce.server.ts` already `console.error` the full Resend body (they do). Add one extra `console.log('[welcome] attempt', { to })` before the fetch so a tail log shows the send was reached even if it later fails.
 
-- All sends go through `https://connector-gateway.lovable.dev/resend/emails` with `Authorization: Bearer ${LOVABLE_API_KEY}` + `X-Connection-Api-Key: ${RESEND_API_KEY}` — both already present in your secrets.
-- Every non-2xx response is logged with `httpStatus`, `statusCode`, `name`, `message` (same shape as the current announce logger) and the caller sees a typed `{ ok, error }` result rather than a thrown 500.
-- Welcome send is fire-and-await inside the server fn so we can log failures, but a mail failure is never propagated to the browser — the subscriber row is already saved.
-- Pop-up transition detection uses a single `SELECT is_published, announced_at` before the update to avoid race-based double-sends.
+**I will NOT:**
+- Change `import.meta.env` to `process.env` in the browser client — that would break the Lovable-hosted deploy where it works correctly today.
+- Introduce a Cloudflare-specific `getRequestContext()` / `env` binding read — this project uses `@tanstack/react-start` on Workers, and `process.env` is the supported access pattern via `nodejs_compat`. Reading `event.locals.runtime.env` is a Nitro-adapter pattern that doesn't apply here.
+- Touch `src/routes/shop.tsx`, `src/routes/pop-ups.tsx`, or `SubscribeForm.tsx` — the crash is env-driven, not route logic.
+
+---
+
+## Plan — what you must do in the Cloudflare Pages dashboard (I can't do this for you)
+
+Open your CF Pages project → **Settings → Environment variables**. Add **both** to **Production** and **Preview**.
+
+**Runtime environment variables** (available in the Worker via `process.env` with `nodejs_compat`):
+- `SUPABASE_URL` → `https://nrrvkhnmaivqgaeqvcdp.supabase.co`
+- `SUPABASE_PUBLISHABLE_KEY` → `sb_publishable_xrumNC9vci5ygzo30FBTmA_S6-mBN_P`
+- `SUPABASE_SERVICE_ROLE_KEY` → *(you need to get this from Lovable Cloud project settings; do NOT commit it)*
+- `RESEND_API_KEY` → *(from your Resend dashboard)*
+- `LOVABLE_API_KEY` → *(required for the connector gateway; if you're on a self-hosted CF deploy and want to keep using `connector-gateway.lovable.dev`, you need this. Otherwise, switch to Resend direct — see note below)*
+- `SITE_URL` → `https://club.tulipnco.com`
+
+**Build environment variables** (inlined into the JS bundle at build time — `VITE_*` **must** be set here, not just runtime):
+- `VITE_SUPABASE_URL` → `https://nrrvkhnmaivqgaeqvcdp.supabase.co`
+- `VITE_SUPABASE_PUBLISHABLE_KEY` → `sb_publishable_xrumNC9vci5ygzo30FBTmA_S6-mBN_P`
+- `VITE_SUPABASE_PROJECT_ID` → `nrrvkhnmaivqgaeqvcdp`
+
+**Compatibility flags** (Settings → Functions → Compatibility flags): ensure `nodejs_compat` is enabled for both Production and Preview. Without it, `process.env` reads in Node-style code break in Workers.
+
+**Note on `LOVABLE_API_KEY`:** it authenticates the Lovable connector gateway. On a self-hosted CF Pages deploy outside Lovable, you may or may not have a valid one — if not, we'd need to swap `welcome.server.ts` / `announce.server.ts` to call the Resend API directly (`https://api.resend.com/emails` with `Authorization: Bearer ${RESEND_API_KEY}`). Tell me if that applies and I'll add that variant behind an env flag.
+
+---
+
+## After you redeploy
+
+1. `curl https://club.tulipnco.com/api/public/_healthz` → confirms every env is present.
+2. `curl https://club.tulipnco.com/shop -I` → expect HTTP 200.
+3. Subscribe with a test email, then `wrangler pages deployment tail --project-name=<your-project>` → look for `[welcome] attempt` then either `[welcome] sent` or the exact Resend error body.
+
+---
+
+## Files touched (build mode)
+
+- **new** `src/lib/env.server.ts`
+- **new** `src/routes/api/public/_healthz.ts`
+- **edit** `src/integrations/supabase/client.ts` (better error message only; behavior unchanged when envs are present)
+- **edit** `src/lib/welcome.server.ts`, `src/lib/announce.server.ts`, `src/lib/subscribers.functions.ts`, `src/lib/pop-ups.functions.ts` (route env reads through `env.server.ts`, add attempt log)
+
+No DB migrations. No changes to UI, cart, auth, or admin pages.

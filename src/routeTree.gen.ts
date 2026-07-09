@@ -19,6 +19,7 @@ import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
+import { Route as ApiPublicHealthzRouteImport } from './routes/api/public/_healthz'
 import { Route as AuthenticatedAdminPopUpsRouteImport } from './routes/_authenticated/admin.pop-ups'
 
 const SupportRoute = SupportRouteImport.update({
@@ -70,6 +71,11 @@ const BlogSlugRoute = BlogSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => BlogRoute,
 } as any)
+const ApiPublicHealthzRoute = ApiPublicHealthzRouteImport.update({
+  id: '/api/public/_healthz',
+  path: '/api/public',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthenticatedAdminPopUpsRoute =
   AuthenticatedAdminPopUpsRouteImport.update({
     id: '/admin/pop-ups',
@@ -88,6 +94,7 @@ export interface FileRoutesByFullPath {
   '/support': typeof SupportRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/admin/pop-ups': typeof AuthenticatedAdminPopUpsRoute
+  '/api/public': typeof ApiPublicHealthzRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -100,6 +107,7 @@ export interface FileRoutesByTo {
   '/support': typeof SupportRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/admin/pop-ups': typeof AuthenticatedAdminPopUpsRoute
+  '/api/public': typeof ApiPublicHealthzRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -114,6 +122,7 @@ export interface FileRoutesById {
   '/support': typeof SupportRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/_authenticated/admin/pop-ups': typeof AuthenticatedAdminPopUpsRoute
+  '/api/public/_healthz': typeof ApiPublicHealthzRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -128,6 +137,7 @@ export interface FileRouteTypes {
     | '/support'
     | '/blog/$slug'
     | '/admin/pop-ups'
+    | '/api/public'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -140,6 +150,7 @@ export interface FileRouteTypes {
     | '/support'
     | '/blog/$slug'
     | '/admin/pop-ups'
+    | '/api/public'
   id:
     | '__root__'
     | '/'
@@ -153,6 +164,7 @@ export interface FileRouteTypes {
     | '/support'
     | '/blog/$slug'
     | '/_authenticated/admin/pop-ups'
+    | '/api/public/_healthz'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -165,6 +177,7 @@ export interface RootRouteChildren {
   PopUpsRoute: typeof PopUpsRoute
   ShopRoute: typeof ShopRoute
   SupportRoute: typeof SupportRoute
+  ApiPublicHealthzRoute: typeof ApiPublicHealthzRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -239,6 +252,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof BlogRoute
     }
+    '/api/public/_healthz': {
+      id: '/api/public/_healthz'
+      path: '/api/public'
+      fullPath: '/api/public'
+      preLoaderRoute: typeof ApiPublicHealthzRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/admin/pop-ups': {
       id: '/_authenticated/admin/pop-ups'
       path: '/admin/pop-ups'
@@ -280,17 +300,8 @@ const rootRouteChildren: RootRouteChildren = {
   PopUpsRoute: PopUpsRoute,
   ShopRoute: ShopRoute,
   SupportRoute: SupportRoute,
+  ApiPublicHealthzRoute: ApiPublicHealthzRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
