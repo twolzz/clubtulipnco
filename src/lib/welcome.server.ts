@@ -2,7 +2,7 @@
 // Resend connector gateway. RESEND_API_KEY / LOVABLE_API_KEY are read from
 // process.env inside the handler and never bundled to the client.
 
-const GATEWAY_URL = "https://connector-gateway.lovable.dev/resend";
+const RESEND_API_URL = "https://api.resend.com";
 const FROM = "Tulip & Co. <hello@updates.tulipnco.com>";
 const REPLY_TO = "hello@tulipnco.com";
 const SENDER_ADDRESS = "hello@updates.tulipnco.com";
@@ -159,10 +159,9 @@ export async function sendWelcomeEmail(
   email: string,
 ): Promise<WelcomeResult> {
   try {
-    const lovableKey = process.env.LOVABLE_API_KEY;
     const resendKey = process.env.RESEND_API_KEY;
-    if (!lovableKey || !resendKey) {
-      const msg = `[welcome] ALERT: missing ${!lovableKey ? "LOVABLE_API_KEY" : ""}${!lovableKey && !resendKey ? " and " : ""}${!resendKey ? "RESEND_API_KEY" : ""} — cannot send welcome email.`;
+    if (!resendKey) {
+      const msg = `[welcome] ALERT: missing RESEND_API_KEY — cannot send welcome email.`;
       console.error(msg);
       return { ok: false, skipped: true, error: msg };
     }
@@ -187,12 +186,11 @@ export async function sendWelcomeEmail(
     };
 
     console.log("[welcome] attempt", { to, from: FROM });
-    const res = await fetch(`${GATEWAY_URL}/emails`, {
+    const res = await fetch(`${RESEND_API_URL}/emails`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${lovableKey}`,
-        "X-Connection-Api-Key": resendKey,
+        Authorization: `Bearer ${resendKey}`,
       },
       body: JSON.stringify(payload),
     });

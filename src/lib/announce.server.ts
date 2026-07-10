@@ -3,7 +3,7 @@
 // subdomain for list traffic, with replies routed back to hello@tulipnco.com.
 import type { PopUp } from "./pop-ups.functions";
 
-const GATEWAY_URL = "https://connector-gateway.lovable.dev/resend";
+const RESEND_API_URL = "https://api.resend.com";
 const FROM = "Tulip & Co. <hello@updates.tulipnco.com>";
 const REPLY_TO = "hello@tulipnco.com";
 const SENDER_ADDRESS = "hello@updates.tulipnco.com";
@@ -256,10 +256,9 @@ export async function sendPopUpAnnouncement(
   };
 
   try {
-    const lovableKey = process.env.LOVABLE_API_KEY;
     const resendKey = process.env.RESEND_API_KEY;
-    if (!lovableKey || !resendKey) {
-      const msg = `[announce] ALERT: missing ${!lovableKey ? "LOVABLE_API_KEY" : ""}${!lovableKey && !resendKey ? " and " : ""}${!resendKey ? "RESEND_API_KEY" : ""} — cannot send.`;
+    if (!resendKey) {
+      const msg = `[announce] ALERT: missing RESEND_API_KEY — cannot send.`;
       console.error(msg);
       result.errors.push(msg);
       return result;
@@ -353,12 +352,11 @@ export async function sendPopUpAnnouncement(
       }));
 
       try {
-        const res = await fetch(`${GATEWAY_URL}/emails/batch`, {
+        const res = await fetch(`${RESEND_API_URL}/emails/batch`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${lovableKey}`,
-            "X-Connection-Api-Key": resendKey,
+            Authorization: `Bearer ${resendKey}`,
           },
           body: JSON.stringify(payload),
         });
