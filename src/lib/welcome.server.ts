@@ -26,9 +26,7 @@ function esc(str: string) {
 
 function renderHtml(firstName: string) {
   const name = esc(firstName || "friend");
-  return `
-```typescript
-`<!DOCTYPE html>
+  return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
