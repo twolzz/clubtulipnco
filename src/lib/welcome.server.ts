@@ -26,98 +26,84 @@ function esc(str: string) {
 
 function renderHtml(firstName: string) {
   const name = esc(firstName || "friend");
-  return `<!DOCTYPE html>
+  return `
+```typescript
+`<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>you're in! welcome to the tulip & co. club.</title>
+  <title>Welcome to Tulip & Co.</title>
 </head>
-<body style="margin: 0; padding: 0; background-color: #FFFFFF; font-family: Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased;">
-
-  <!-- MAIN CANVAS (Maintains the premium boutique atmosphere) -->
-  <table width="100%" border="0" cellpadding="0" cellspacing="0" style="background-color: #FFFFFF; padding: 45px 20px;">
+<body style="margin: 0; padding: 0; background-color: #F9F6F0; font-family: Arial, Helvetica, sans-serif; -webkit-font-smoothing: antialiased;">
+  <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background-color: #F9F6F0;">
     <tr>
-      <td align="center">
-
-        <!-- DE STIJL BOX (4px Bold Black Outline, Warm Cream F9F6F0 Fill) -->
-        <table width="100%" border="0" cellpadding="0" cellspacing="0" style="max-width: 580px; background-color: #F9F6F0; border: 4px solid #000000; border-radius: 12px; overflow: hidden; text-align: left;">
+      <td align="center" style="padding: 60px 20px;">
+        
+        <!-- open, airy layout -->
+        <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="max-width: 440px; text-align: left;">
           <tr>
-            <td style="padding: 40px 35px;">
-
-              <!-- BRAND EMBLEM (Your Imgur Logo Link) -->
-              <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-bottom: 30px;">
-                <tr>
-                  <td align="center">
-                    <!-- 🚨 IMGUR LINK: Replace the placeholder URL below with your raw direct Imgur link (ends in .png/.jpg) -->
-                    <img src="https://i.imgur.com/ZFYdjIv.png" alt="tulip & co." style="max-width: 140px; height: auto; display: block; border: 0;">
-                  </td>
-                </tr>
-              </table>
-
-              <!-- HERO GREETING (Dick Bruna Style Typography) -->
-              <h1 style="margin: 0 0 24px 0; font-size: 28px; font-weight: bold; color: #000000; line-height: 1.2; letter-spacing: -0.8px; text-align: center;">
-                hi ${name}, you're in.
-              </h1>
-
-              <!-- SHORTENED BODY (Mindful, sophisticated copy to maximize reader completion rates) -->
-              <p style="margin: 0 0 32px 0; font-size: 16px; color: #000000; line-height: 1.6; text-align: center;">
-                welcome to the tulip & co. club — a small circle of people who appreciate quiet, functional, hand-picked dutch design in san diego.
+            <td>
+              
+              <!-- brand header -->
+              <p style="color: #000000; font-size: 20px; font-weight: 900; margin: 0 0 35px 0; letter-spacing: -0.5px;">
+                Tulip &amp; Co.
               </p>
 
-              <!-- WELCOME PERK CARD (Minimalist dashed border to grab immediate focus) -->
-              <table width="100%" border="0" cellpadding="0" cellspacing="0" style="background-color: #FFFFFF; border: 2px dashed #000000; border-radius: 8px; margin-bottom: 35px;">
+              <!-- de stijl color accent divider -->
+              <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin-bottom: 40px;">
                 <tr>
-                  <td style="padding: 24px; text-align: center;">
-                    <p style="margin: 0 0 8px 0; font-size: 12px; font-weight: bold; color: #000000; letter-spacing: 2px; text-transform: uppercase;">
-                      your welcome perk
-                    </p>
-                    <h2 style="margin: 0 0 16px 0; font-size: 26px; font-weight: bold; color: #E05A36;">
-                      10% off your first order
-                    </h2>
-                    <!-- INJECTED COUPON CODE -->
-                    <div style="background-color: #F9F6F0; border: 2px solid #000000; display: inline-block; padding: 10px 24px; font-size: 18px; font-family: Courier, monospace; font-weight: bold; color: #000000; letter-spacing: 1px;">
-                      ${DISCOUNT_CODE}
-                    </div>
-                  </td>
+                  <td width="33%" height="4" style="background-color: #E05A36; border: 2px solid #000000;"></td>
+                  <td width="33%" height="4" style="background-color: #F2B73F; border: 2px solid #000000; border-left: none;"></td>
+                  <td width="34%" height="4" style="background-color: #3D6E97; border: 2px solid #000000; border-left: none;"></td>
                 </tr>
               </table>
 
-              <!-- HIGH-CONVERSION CTA (Pill-shaped Terracotta Red Button) -->
-              <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-bottom: 40px;">
+              <!-- greeting -->
+              <h1 style="color: #000000; font-size: 28px; font-weight: bold; margin: 0 0 20px 0; letter-spacing: -0.5px;">
+                Hi ${name},
+              </h1>
+
+              <!-- optimized founder note -->
+              <p style="color: #000000; font-size: 16px; line-height: 1.7; font-weight: 500; margin: 0 0 20px 0;">
+                I'm Thimo. Thanks for joining us.
+              </p>
+              <p style="color: #000000; font-size: 16px; line-height: 1.7; font-weight: 500; margin: 0 0 20px 0;">
+                I started Tulip &amp; Co. to share a piece of my home in the Netherlands right here in San Diego. We just love simple, well-made Dutch design that gives you a little room to breathe.
+              </p>
+              <p style="color: #000000; font-size: 16px; line-height: 1.7; font-weight: 500; margin: 0 0 20px 0;">
+                I just wanted to send a quick note to say I’m glad you’re here. I'll email you when we have new products in the shop or upcoming pop-up market dates.
+              </p>
+              <p style="color: #000000; font-size: 16px; line-height: 1.7; font-weight: 500; margin: 0 0 40px 0;">
+                No spam, just the good stuff.
+              </p>
+
+              <!-- simple pill button -->
+              <table cellpadding="0" cellspacing="0" role="presentation">
                 <tr>
-                  <td align="center">
-                    <!-- INJECTED TARGET SITE URL -->
-                    <a href="${SITE_URL}" style="background-color: #E05A36; color: #FFFFFF; border: 3px solid #000000; border-radius: 50px; padding: 14px 36px; font-size: 16px; font-weight: bold; text-decoration: none; display: inline-block; text-align: center; box-shadow: 0 4px 0px #000000;">
-                      shop now
+                  <td align="center" style="background-color: #E05A36; border: 2px solid #000000; border-radius: 50px; box-shadow: 3px 3px 0px 0px #000000;">
+                    <a href="${SITE_URL}" style="display: block; padding: 14px 32px; color: #ffffff; font-size: 15px; font-weight: bold; text-decoration: none;">
+                      Visit the shop
                     </a>
                   </td>
                 </tr>
               </table>
 
-              <!-- SOPHISTICATED BRAND STATEMENT (Supports authenticity and authority) -->
-              <p style="margin: 0 0 8px 0; font-size: 14px; font-weight: bold; color: #000000;">
-                what we're about.
-              </p>
-              <p style="margin: 0; font-size: 14px; color: #666666; line-height: 1.5;">
-                tulip & co. is built on one idea: mindful minimalism. we source authentic, licensed stationery and home goods to bridge the gap between premium dutch craftsmanship and the southern california retail space.
-              </p>
+              <!-- spacer -->
+              <div style="height: 70px; line-height: 70px; font-size: 70px;">&nbsp;</div>
 
-            </td>
-          </tr>
-        </table>
+              <!-- clean footer & unsubscribe -->
+              <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
+                <tr>
+                  <td style="border-top: 2px solid #000000; padding-top: 30px;">
+                    <p style="color: #000000; font-size: 12px; line-height: 1.6; margin: 0; font-weight: 500;">
+                      Tulip &amp; Co. — San Diego, CA.<br><br>
+                      <a href="${SITE_URL}/unsubscribe" style="color: #000000; text-decoration: underline;">Unsubscribe</a>
+                    </p>
+                  </td>
+                </tr>
+              </table>
 
-        <!-- FOOTER (Contains legally required CAN-SPAM information and unsubscribe) -->
-        <table width="100%" border="0" cellpadding="0" cellspacing="0" style="max-width: 580px; margin-top: 24px; text-align: center;">
-          <tr>
-            <td style="font-size: 12px; color: #888888; line-height: 1.6; padding: 0 10px;">
-              <!-- INJECTED SENDER ADDRESS -->
-              you are receiving this because you subscribed to tulip & co. updates.<br>
-              ${SENDER_ADDRESS}<br><br>
-              <!-- INJECTED UNSUBSCRIBE URL -->
-              <a href="{{unsubscribe_url}}" style="color: #666666; text-decoration: underline;">
-                Unsubscribe
-              </a>
             </td>
           </tr>
         </table>
@@ -125,7 +111,6 @@ function renderHtml(firstName: string) {
       </td>
     </tr>
   </table>
-
 </body>
 </html>`;
 }
