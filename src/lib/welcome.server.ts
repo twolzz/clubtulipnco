@@ -2,7 +2,7 @@
 // Resend connector gateway. RESEND_API_KEY / LOVABLE_API_KEY are read from
 // process.env inside the handler and never bundled to the client.
 
-const GATEWAY_URL = "https://connector-gateway.lovable.dev/resend";
+const RESEND_API_URL = "https://api.resend.com";
 const FROM = "Tulip & Co. <hello@updates.tulipnco.com>";
 const REPLY_TO = "hello@tulipnco.com";
 const SENDER_ADDRESS = "hello@updates.tulipnco.com";
