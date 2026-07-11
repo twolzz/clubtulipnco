@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as UnsubscribeRouteImport } from './routes/unsubscribe'
 import { Route as SupportRouteImport } from './routes/support'
 import { Route as ShopRouteImport } from './routes/shop'
 import { Route as PopUpsRouteImport } from './routes/pop-ups'
@@ -22,6 +23,11 @@ import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as ApiPublicHealthzRouteImport } from './routes/api/public/_healthz'
 import { Route as AuthenticatedAdminPopUpsRouteImport } from './routes/_authenticated/admin.pop-ups'
 
+const UnsubscribeRoute = UnsubscribeRouteImport.update({
+  id: '/unsubscribe',
+  path: '/unsubscribe',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SupportRoute = SupportRouteImport.update({
   id: '/support',
   path: '/support',
@@ -92,6 +98,7 @@ export interface FileRoutesByFullPath {
   '/pop-ups': typeof PopUpsRoute
   '/shop': typeof ShopRoute
   '/support': typeof SupportRoute
+  '/unsubscribe': typeof UnsubscribeRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/admin/pop-ups': typeof AuthenticatedAdminPopUpsRoute
   '/api/public': typeof ApiPublicHealthzRoute
@@ -105,6 +112,7 @@ export interface FileRoutesByTo {
   '/pop-ups': typeof PopUpsRoute
   '/shop': typeof ShopRoute
   '/support': typeof SupportRoute
+  '/unsubscribe': typeof UnsubscribeRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/admin/pop-ups': typeof AuthenticatedAdminPopUpsRoute
   '/api/public': typeof ApiPublicHealthzRoute
@@ -120,6 +128,7 @@ export interface FileRoutesById {
   '/pop-ups': typeof PopUpsRoute
   '/shop': typeof ShopRoute
   '/support': typeof SupportRoute
+  '/unsubscribe': typeof UnsubscribeRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/_authenticated/admin/pop-ups': typeof AuthenticatedAdminPopUpsRoute
   '/api/public/_healthz': typeof ApiPublicHealthzRoute
@@ -135,6 +144,7 @@ export interface FileRouteTypes {
     | '/pop-ups'
     | '/shop'
     | '/support'
+    | '/unsubscribe'
     | '/blog/$slug'
     | '/admin/pop-ups'
     | '/api/public'
@@ -148,6 +158,7 @@ export interface FileRouteTypes {
     | '/pop-ups'
     | '/shop'
     | '/support'
+    | '/unsubscribe'
     | '/blog/$slug'
     | '/admin/pop-ups'
     | '/api/public'
@@ -162,6 +173,7 @@ export interface FileRouteTypes {
     | '/pop-ups'
     | '/shop'
     | '/support'
+    | '/unsubscribe'
     | '/blog/$slug'
     | '/_authenticated/admin/pop-ups'
     | '/api/public/_healthz'
@@ -177,11 +189,19 @@ export interface RootRouteChildren {
   PopUpsRoute: typeof PopUpsRoute
   ShopRoute: typeof ShopRoute
   SupportRoute: typeof SupportRoute
+  UnsubscribeRoute: typeof UnsubscribeRoute
   ApiPublicHealthzRoute: typeof ApiPublicHealthzRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/unsubscribe': {
+      id: '/unsubscribe'
+      path: '/unsubscribe'
+      fullPath: '/unsubscribe'
+      preLoaderRoute: typeof UnsubscribeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/support': {
       id: '/support'
       path: '/support'
@@ -300,6 +320,7 @@ const rootRouteChildren: RootRouteChildren = {
   PopUpsRoute: PopUpsRoute,
   ShopRoute: ShopRoute,
   SupportRoute: SupportRoute,
+  UnsubscribeRoute: UnsubscribeRoute,
   ApiPublicHealthzRoute: ApiPublicHealthzRoute,
 }
 export const routeTree = rootRouteImport

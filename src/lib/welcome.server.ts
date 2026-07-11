@@ -24,7 +24,8 @@ function esc(str: string) {
   );
 }
 
-function renderHtml(firstName: string) {
+function renderHtml(firstName: string, email: string) {
+  const unsubUrl = `${SITE_URL}/unsubscribe?email=${encodeURIComponent(email)}`;
   const name = esc(firstName || "friend");
   return `<!DOCTYPE html>
 <html lang="en">
@@ -96,7 +97,7 @@ function renderHtml(firstName: string) {
                   <td style="border-top: 2px solid #000000; padding-top: 30px;">
                     <p style="color: #000000; font-size: 12px; line-height: 1.6; margin: 0; font-weight: 500;">
                       Tulip &amp; Co. — San Diego, CA.<br><br>
-                      <a href="${SITE_URL}/unsubscribe?email=${user_email}/unsubscribe" style="color: #000000; text-decoration: underline;">Unsubscribe</a>
+                      <a href="${unsubUrl}" style="color: #000000; text-decoration: underline;">Unsubscribe</a>
                     </p>
                   </td>
                 </tr>
@@ -114,7 +115,8 @@ function renderHtml(firstName: string) {
 }
 
  
-function renderText(firstName: string) {
+function renderText(firstName: string, email: string) {
+  const unsubUrl = `${SITE_URL}/unsubscribe?email=${encodeURIComponent(email)}`;
   const name = firstName || "friend";
   return [
     `Hi ${name},`,
@@ -135,7 +137,7 @@ function renderText(firstName: string) {
     ``,
     `--`,
     `Tulip & Co. — San Diego, CA.`,
-    `Unsubscribe: ${SITE_URL}/unsubscribe?email=${user_email}/unsubscribe`,
+    `Unsubscribe: ${unsubUrl}`,
   ].join("\n");
 }
 
@@ -162,8 +164,8 @@ export async function sendWelcomeEmail(
       to: [to],
       reply_to: REPLY_TO,
       subject: "Welcome to Tulip & Co.",
-      html: renderHtml(firstName),
-      text: renderText(firstName),
+      html: renderHtml(firstName, to),
+      text: renderText(firstName, to),
       headers: {
         "List-Unsubscribe": `<mailto:${REPLY_TO}?subject=unsubscribe>`,
         "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
