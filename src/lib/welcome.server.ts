@@ -97,7 +97,7 @@ function renderHtml(firstName: string, email: string) {
                   <td style="border-top: 2px solid #000000; padding-top: 30px;">
                     <p style="color: #000000; font-size: 12px; line-height: 1.6; margin: 0; font-weight: 500;">
                       Tulip &amp; Co. — San Diego, CA.<br><br>
-                      <a href="${SITE_URL}/unsubscribe?email=${user_email}/unsubscribe" style="color: #000000; text-decoration: underline;">Unsubscribe</a>
+                      <a href="${unsubUrl}" style="color: #000000; text-decoration: underline;">Unsubscribe</a>
                     </p>
                   </td>
                 </tr>
