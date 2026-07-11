@@ -115,7 +115,8 @@ function renderHtml(firstName: string, email: string) {
 }
 
  
-function renderText(firstName: string) {
+function renderText(firstName: string, email: string) {
+  const unsubUrl = `${SITE_URL}/unsubscribe?email=${encodeURIComponent(email)}`;
   const name = firstName || "friend";
   return [
     `Hi ${name},`,
