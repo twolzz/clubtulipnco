@@ -137,7 +137,7 @@ function renderText(firstName: string, email: string) {
     ``,
     `--`,
     `Tulip & Co. — San Diego, CA.`,
-    `Unsubscribe: ${SITE_URL}/unsubscribe?email=${user_email}/unsubscribe`,
+    `Unsubscribe: ${unsubUrl}`,
   ].join("\n");
 }
 
