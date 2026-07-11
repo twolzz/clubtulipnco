@@ -24,7 +24,8 @@ function esc(str: string) {
   );
 }
 
-function renderHtml(firstName: string) {
+function renderHtml(firstName: string, email: string) {
+  const unsubUrl = `${SITE_URL}/unsubscribe?email=${encodeURIComponent(email)}`;
   const name = esc(firstName || "friend");
   return `<!DOCTYPE html>
 <html lang="en">
