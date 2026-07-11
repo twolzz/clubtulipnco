@@ -164,8 +164,8 @@ export async function sendWelcomeEmail(
       to: [to],
       reply_to: REPLY_TO,
       subject: "Welcome to Tulip & Co.",
-      html: renderHtml(firstName),
-      text: renderText(firstName),
+      html: renderHtml(firstName, to),
+      text: renderText(firstName, to),
       headers: {
         "List-Unsubscribe": `<mailto:${REPLY_TO}?subject=unsubscribe>`,
         "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
