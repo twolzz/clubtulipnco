@@ -6,7 +6,7 @@ const RESEND_API_URL = "https://api.resend.com";
 const FROM = "Tulip & Co. <hello@updates.tulipnco.com>";
 const REPLY_TO = "hello@tulipnco.com";
 const SENDER_ADDRESS = "hello@updates.tulipnco.com";
-const SITE_URL = process.env.SITE_URL ?? "https://tulipnco.com";
+const SITE_URL = process.env.SITE_URL ?? "https://club.tulipnco.com";
 const DISCOUNT_CODE = "WELCOME10";
 
 export type WelcomeResult = {
