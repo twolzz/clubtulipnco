@@ -70,7 +70,7 @@ function renderHtml(firstName: string) {
                 I started Tulip &amp; Co. to share a piece of my home in the Netherlands right here in San Diego. We just love simple, well-made Dutch design that gives you a little room to breathe.
               </p>
               <p style="color: #000000; font-size: 16px; line-height: 1.7; font-weight: 500; margin: 0 0 20px 0;">
-                I just wanted to send a quick note to say I’m glad you’re here. I'll email you when we have new products in the shop or upcoming pop-up market dates.
+                I just wanted to send a quick note to say I’m glad you’re here. I'll email you when we have new pieces in the collection or upcoming dates to meet up in person.
               </p>
               <p style="color: #000000; font-size: 16px; line-height: 1.7; font-weight: 500; margin: 0 0 40px 0;">
                 No spam, just the good stuff.
@@ -81,7 +81,7 @@ function renderHtml(firstName: string) {
                 <tr>
                   <td align="center" style="background-color: #E05A36; border: 2px solid #000000; border-radius: 50px; box-shadow: 3px 3px 0px 0px #000000;">
                     <a href="${SITE_URL}" style="display: block; padding: 14px 32px; color: #ffffff; font-size: 15px; font-weight: bold; text-decoration: none;">
-                      Visit the shop
+                      Take a look around
                     </a>
                   </td>
                 </tr>
@@ -96,7 +96,7 @@ function renderHtml(firstName: string) {
                   <td style="border-top: 2px solid #000000; padding-top: 30px;">
                     <p style="color: #000000; font-size: 12px; line-height: 1.6; margin: 0; font-weight: 500;">
                       Tulip &amp; Co. — San Diego, CA.<br><br>
-                      <a href="${SITE_URL}/unsubscribe" style="color: #000000; text-decoration: underline;">Unsubscribe</a>
+                      <a href="${SITE_URL}/unsubscribe?email=${user_email}/unsubscribe" style="color: #000000; text-decoration: underline;">Unsubscribe</a>
                     </p>
                   </td>
                 </tr>
@@ -113,27 +113,29 @@ function renderHtml(firstName: string) {
 </html>`;
 }
 
+ 
 function renderText(firstName: string) {
   const name = firstName || "friend";
   return [
-    `hi ${name}, you're in.`,
+    `Hi ${name},`,
     ``,
-    `welcome to the tulip & co. club — a small circle of people who appreciate quiet, functional, hand-picked dutch design in san diego.`,
+    `I'm Thimo. Thanks for joining us.`,
     ``,
-    `your welcome perk: 10% off your first order.`,
-    `use code ${DISCOUNT_CODE} at checkout — ${SITE_URL}`,
+    `I started Tulip & Co. to share a piece of my home in the Netherlands right here in San Diego. We just love simple, well-made Dutch design that gives you a little room to breathe.`,
     ``,
-    `what we're about:`,
-    `tulip & co. is built on one idea: mindful minimalism. we source authentic, licensed stationery and home goods to bridge the gap between premium dutch craftsmanship and the southern california retail space.`,
+    `I just wanted to send a quick note to say I’m glad you’re here. I'll email you when we have new pieces in the collection or upcoming dates to meet up in person.`,
     ``,
-    `shop now:`,
+    `No spam, just the good stuff.`,
+    ``,
+    `Take a look around:`,
     `  ${SITE_URL}`,
     ``,
-    `— tulip & co.`,
+    `Talk soon,`,
+    `Thimo`,
     ``,
-    `you are receiving this because you subscribed to tulip & co. updates.`,
-    `${SENDER_ADDRESS}`,
-    `unsubscribe: {{unsubscribe_url}}`,
+    `--`,
+    `Tulip & Co. — San Diego, CA.`,
+    `Unsubscribe: ${SITE_URL}/unsubscribe?email=${user_email}/unsubscribe`,
   ].join("\n");
 }
 
@@ -159,7 +161,7 @@ export async function sendWelcomeEmail(
       from: FROM,
       to: [to],
       reply_to: REPLY_TO,
-      subject: "you're in! welcome to the tulip & co. club. 🌷",
+      subject: "Welcome to Tulip & Co.",
       html: renderHtml(firstName),
       text: renderText(firstName),
       headers: {
