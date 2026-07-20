@@ -6,18 +6,18 @@ import { CartButton } from "./CartButton";
 import { HeaderSearch } from "./HeaderSearch";
 
 const NAV = [
-  { to: "/shop", label: "shop" },
-  { to: "/support", label: "support" },
-  { to: "/blog", label: "blog" },
-  { to: "/our-story", label: "our-story" },
-  { to: "/pop-ups", label: "pop-ups" },
+  { to: "/shop", label: "Shop" },
+  { to: "/support", label: "Support" },
+  { to: "/blog", label: "Blog" },
+  { to: "/our-story", label: "Our Story" },
+  { to: "/pop-ups", label: "Pop-ups" },
 ] as const;
 
 const FOOTER_LINKS = [
-  { to: "/support", search: { tab: "privacy" as const }, label: "privacy policy" },
-  { to: "/support", search: { tab: "terms" as const }, label: "terms of service" },
-  { to: "/support", search: { tab: "shipping" as const }, label: "shipping & returns" },
-  { to: "/support", search: { tab: "contact" as const }, label: "contact us" },
+  { to: "/support", search: { tab: "privacy" as const }, label: "Privacy Policy" },
+  { to: "/support", search: { tab: "terms" as const }, label: "Terms of Service" },
+  { to: "/support", search: { tab: "shipping" as const }, label: "Shipping & Returns" },
+  { to: "/support", search: { tab: "contact" as const }, label: "Contact Us" },
 ] as const;
 
 function TikTokIcon({ className }: { className?: string }) {
@@ -71,16 +71,16 @@ export function SiteLayout({ children }: { children: ReactNode }) {
     <div className="min-h-screen flex flex-col bg-cream text-ink">
       {/* Sticky shell: announcement + primary nav */}
       <div className="sticky top-0 z-50">
-        <div className="bg-poppy text-white text-center text-xs md:text-sm font-semibold py-2 px-4 border-b-4 border-ink lowercase tracking-wide">
-          new: san diego pop-up calendar announced
+        <div className="bg-poppy text-white text-center text-xs md:text-sm font-semibold py-2 px-4 border-b-4 border-ink">
+          NEW: San Diego Pop-up Calendar Announced!
         </div>
 
         <header className="bg-cream border-b-4 border-ink">
           <div className="max-w-7xl mx-auto flex items-center justify-between gap-4 px-5 md:px-8 py-3 md:py-4">
             {/* Left: logo */}
             <Link to="/" className="flex items-center">
-              <span className="font-display lowercase text-xl md:text-2xl font-extrabold tracking-tight text-ink">
-                tulip &amp; co.
+              <span className="font-display text-xl md:text-2xl font-extrabold tracking-tight text-ink">
+                Tulip &amp; Co.
               </span>
             </Link>
 
@@ -90,7 +90,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
                 <Link
                   key={n.to}
                   to={n.to}
-                  className="font-semibold lowercase text-ink hover:text-denim transition-colors"
+                  className="font-semibold text-ink hover:text-denim transition-colors"
                   activeProps={{
                     className: "text-denim underline decoration-2 underline-offset-8",
                   }}
@@ -113,7 +113,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
               <Link
                 key={n.to}
                 to={n.to}
-                className="px-3 py-1.5 rounded-full border-2 border-ink bg-white text-sm font-semibold lowercase"
+                className="px-3 py-1.5 rounded-full border-2 border-ink bg-white text-sm font-semibold"
                 activeProps={{ className: "bg-sun" }}
               >
                 {n.label}
@@ -131,11 +131,11 @@ export function SiteLayout({ children }: { children: ReactNode }) {
           <div className="tc-card tc-card-poppy p-8 md:p-12">
             <div className="grid md:grid-cols-2 gap-8 items-center">
               <div>
-                <h2 className="text-4xl md:text-5xl font-extrabold leading-tight lowercase">
-                  welcome to <span className="text-poppy">the club!</span>
+                <h2 className="text-4xl md:text-5xl font-extrabold leading-tight">
+                  Welcome to <span className="text-poppy">the Club!</span>
                 </h2>
                 <p className="mt-3 text-base md:text-lg text-ink/80">
-                  pop-up dates, fresh drops, and quiet dutch design — straight to your inbox.
+                  Pop-up dates, fresh drops, and quiet Dutch design — straight to your inbox.
                 </p>
               </div>
               <SubscribeForm variant="inline" />
@@ -155,7 +155,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
                   key={l.label}
                   to={l.to}
                   search={l.search}
-                  className="text-sm font-semibold lowercase text-ink hover:text-denim transition-colors"
+                  className="text-sm font-semibold text-ink hover:text-denim transition-colors"
                 >
                   {l.label}
                 </Link>
@@ -187,7 +187,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
             <div className="flex flex-wrap items-center gap-4">
               <div className="inline-flex items-center gap-2 text-ink">
                 <Lock size={16} strokeWidth={2.5} />
-                <span className="text-sm font-semibold lowercase">secure checkout</span>
+                <span className="text-sm font-semibold">Secure Checkout</span>
               </div>
               <div className="flex items-center gap-2">
                 <VisaMark />
@@ -196,8 +196,8 @@ export function SiteLayout({ children }: { children: ReactNode }) {
               </div>
             </div>
             <div className="flex items-center gap-4 text-sm text-ink/70">
-              <span className="font-display font-extrabold lowercase text-ink">tulip &amp; co.</span>
-              <span>© {new Date().getFullYear()} — authentic dutch design, san diego.</span>
+              <span className="font-display font-extrabold text-ink">Tulip &amp; Co.</span>
+              <span>© {new Date().getFullYear()} — Authentic Dutch design, San Diego.</span>
             </div>
           </div>
         </div>

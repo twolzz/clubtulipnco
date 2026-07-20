@@ -5,7 +5,7 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-display: "Archivo", "Helvetica Neue", sans-serif;
+  --font-display: "Quicksand", "Inter", "Helvetica Neue", sans-serif;
   --font-sans: "Inter", "Helvetica Neue", sans-serif;
   --radius-sm: 8px;
   --radius-md: 12px;
@@ -27,7 +27,7 @@
   --color-secondary: var(--sun);
   --color-secondary-foreground: var(--ink);
   --color-muted: var(--cream);
-  --color-muted-foreground: #555;
+  --color-muted-foreground: #4a4a4a;
   --color-accent: var(--sage);
   --color-accent-foreground: #ffffff;
   --color-destructive: var(--poppy);
@@ -41,9 +41,9 @@
 
 :root {
   --background: #F6F2E7;
-  --foreground: #333333;
+  --foreground: #000000;
   --cream: #F6F2E7;
-  --ink: #333333;
+  --ink: #000000;
   --poppy: #E05A36;
   --sun: #F2B73F;
   --sage: #5D7A51;
@@ -63,8 +63,8 @@
   }
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
-    font-weight: 800;
-    letter-spacing: -0.02em;
+    font-weight: 700;
+    letter-spacing: -0.01em;
   }
 }
 

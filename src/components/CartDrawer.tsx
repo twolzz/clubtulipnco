@@ -46,7 +46,7 @@ export function CartDrawer() {
         }`}
       >
         <header className="flex items-center justify-between px-6 py-5 border-b-4 border-ink">
-          <h2 className="font-display text-2xl font-extrabold lowercase">your cart.</h2>
+          <h2 className="font-display text-2xl font-extrabold">Your Cart.</h2>
           <button
             type="button"
             aria-label="close cart"
@@ -60,16 +60,16 @@ export function CartDrawer() {
         <div className="flex-1 overflow-y-auto px-6 py-5 space-y-4">
           {lines.length === 0 ? (
             <div className="text-center py-16">
-              <p className="font-display text-3xl font-extrabold lowercase mb-3">
-                your cart is empty.
+              <p className="font-display text-3xl font-extrabold mb-3">
+                Your cart is empty.
               </p>
-              <p className="text-ink/70 mb-6">quiet things await.</p>
+              <p className="text-ink/70 mb-6">Quiet things await.</p>
               <Link
                 to="/shop"
                 onClick={() => cartDrawer.close()}
                 className="tc-btn tc-btn-sun inline-flex"
               >
-                browse the shop
+                Browse the Shop
               </Link>
             </div>
           ) : (
@@ -127,23 +127,23 @@ export function CartDrawer() {
         {lines.length > 0 && (
           <footer className="border-t-4 border-ink px-6 py-5 space-y-3">
             <div className="flex items-center justify-between text-lg">
-              <span className="font-semibold lowercase">subtotal</span>
+              <span className="font-semibold">Subtotal</span>
               <span className="font-extrabold text-2xl">{formatPrice(subtotal)}</span>
             </div>
             <button
               type="button"
               disabled
-              title="checkout coming soon"
+              title="Checkout coming soon"
               className="w-full tc-btn tc-btn-poppy opacity-60 cursor-not-allowed"
             >
-              checkout — coming soon
+              Checkout — Coming Soon
             </button>
             <Link
               to="/cart"
               onClick={() => cartDrawer.close()}
               className="w-full tc-btn tc-btn-cream text-center"
             >
-              view full cart
+              View Full Cart
             </Link>
           </footer>
         )}

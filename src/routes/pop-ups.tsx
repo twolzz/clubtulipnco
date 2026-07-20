@@ -22,8 +22,8 @@ export const Route = createFileRoute("/pop-ups")({
   component: PopUpsPage,
   errorComponent: () => (
     <SiteLayout>
-      <section className="px-5 md:px-8 py-24 text-center font-display text-2xl lowercase">
-        calendar loading — please refresh.
+      <section className="px-5 md:px-8 py-24 text-center font-display text-2xl">
+        Calendar loading — please refresh.
       </section>
     </SiteLayout>
   ),
@@ -90,7 +90,7 @@ function PopUpsPage() {
         <div className="max-w-5xl mx-auto">
           <h2 className="text-4xl md:text-5xl font-extrabold mb-10">Upcoming Pop-ups</h2>
           {events.length === 0 ? (
-            <p className="text-ink/80 text-lg">new dates coming soon — join the club for first notice.</p>
+            <p className="text-ink/80 text-lg">New dates coming soon — join the Club for first notice.</p>
           ) : (
             <ol className="flex flex-col gap-6">
               {events.map((e) => {

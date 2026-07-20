@@ -19,7 +19,7 @@ const searchSchema = z.object({}).optional();
 export const Route = createFileRoute("/_authenticated/admin/pop-ups")({
   validateSearch: searchSchema,
   head: () => ({
-    meta: [{ title: "admin — pop-ups" }],
+    meta: [{ title: "Admin — Pop-ups" }],
   }),
   component: AdminPopUps,
 });
@@ -60,17 +60,17 @@ function AdminPopUps() {
     onSuccess: (res) => {
       const a = res.announce;
       if (a?.empty) {
-        toast.warning("pop-up added — 0 subscribers, no emails sent.");
+        toast.warning("Pop-up added — 0 subscribers, no emails sent.");
       } else if (a && a.attempted > 0 && a.failed === 0) {
         toast.success(
-          `pop-up added — ${a.succeeded} subscriber${a.succeeded === 1 ? "" : "s"} notified.`,
+          `Pop-up added — ${a.succeeded} subscriber${a.succeeded === 1 ? "" : "s"} notified.`,
         );
       } else if (a && a.failed > 0) {
         toast.error(
-          `pop-up added — sent ${a.succeeded}/${a.attempted} (${a.failed} failed, see server logs).`,
+          `Pop-up added — sent ${a.succeeded}/${a.attempted} (${a.failed} failed, see server logs).`,
         );
       } else {
-        toast.success("pop-up added.");
+        toast.success("Pop-up added.");
       }
       qc.invalidateQueries({ queryKey: ["pop-ups"] });
     },
@@ -80,7 +80,7 @@ function AdminPopUps() {
   const remove = useMutation({
     mutationFn: (id: string) => deleteFn({ data: { id } }),
     onSuccess: () => {
-      toast.success("pop-up removed.");
+      toast.success("Pop-up removed.");
       qc.invalidateQueries({ queryKey: ["pop-ups"] });
     },
     onError: (e: Error) => toast.error(e.message),
@@ -90,7 +90,7 @@ function AdminPopUps() {
     return (
       <SiteLayout>
         <section className="px-5 md:px-8 py-24 text-center text-ink/70">
-          checking access…
+          Checking access…
         </section>
       </SiteLayout>
     );
@@ -101,13 +101,13 @@ function AdminPopUps() {
       <SiteLayout>
         <section className="px-5 md:px-8 py-24">
           <div className="max-w-md mx-auto tc-card tc-card-poppy p-8 md:p-10 bg-cream text-center">
-            <h1 className="font-display text-3xl font-extrabold lowercase mb-3">
-              you don't have access.
+            <h1 className="font-display text-3xl font-extrabold mb-3">
+              You don't have access.
             </h1>
             <p className="text-ink/70 mb-6">
-              this page is for tulip &amp; co. admins only.
+              This page is for Tulip &amp; Co. admins only.
             </p>
-            <Link to="/" className="tc-btn tc-btn-sun inline-flex">back home</Link>
+            <Link to="/" className="tc-btn tc-btn-sun inline-flex">Back Home</Link>
           </div>
         </section>
       </SiteLayout>
@@ -136,8 +136,8 @@ function AdminPopUps() {
       <section className="px-5 md:px-8 py-14 md:py-20">
         <div className="max-w-5xl mx-auto">
           <div className="flex items-center justify-between flex-wrap gap-4 mb-10">
-            <h1 className="text-4xl md:text-6xl font-extrabold lowercase tracking-tight">
-              admin — pop-ups.
+            <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight">
+              Admin — Pop-ups.
             </h1>
             <button
               type="button"
@@ -147,7 +147,7 @@ function AdminPopUps() {
               }}
               className="tc-btn tc-btn-cream text-sm"
             >
-              sign out
+              Sign Out
             </button>
           </div>
 
@@ -156,25 +156,25 @@ function AdminPopUps() {
             onSubmit={handleCreate}
             className="tc-card tc-card-sun p-6 md:p-8 bg-cream space-y-4 mb-12"
           >
-            <h2 className="font-display text-2xl font-extrabold lowercase mb-2">
-              add new pop-up.
+            <h2 className="font-display text-2xl font-extrabold mb-2">
+              Add new pop-up.
             </h2>
             <div className="grid md:grid-cols-2 gap-4">
-              <Field label="name" name="name" required placeholder="mercato centrale" />
+              <Field label="Name" name="name" required placeholder="Mercato Centrale" />
               <Field
-                label="location"
+                label="Location"
                 name="location"
                 required
-                placeholder="little italy, san diego"
+                placeholder="Little Italy, San Diego"
               />
-              <Field label="date" name="event_date" type="date" required />
+              <Field label="Date" name="event_date" type="date" required />
               <div className="grid grid-cols-2 gap-3">
-                <Field label="start time" name="start_time" type="time" />
-                <Field label="end time" name="end_time" type="time" />
+                <Field label="Start time" name="start_time" type="time" />
+                <Field label="End time" name="end_time" type="time" />
               </div>
-              <Field label="tag" name="tag" defaultValue="Featured" />
+              <Field label="Tag" name="tag" defaultValue="Featured" />
               <div>
-                <label className="block text-sm font-semibold lowercase mb-2">accent</label>
+                <label className="block text-sm font-semibold mb-2">Accent</label>
                 <select
                   name="accent"
                   defaultValue="poppy"
@@ -187,37 +187,37 @@ function AdminPopUps() {
               </div>
             </div>
             <div className="flex flex-wrap items-center gap-6 pt-2">
-              <label className="inline-flex items-center gap-2 text-sm font-semibold lowercase">
+              <label className="inline-flex items-center gap-2 text-sm font-semibold">
                 <input
                   type="checkbox"
                   name="is_published"
                   defaultChecked
                   className="w-4 h-4 accent-poppy"
                 />
-                publish immediately
+                Publish immediately
               </label>
-              <label className="inline-flex items-center gap-2 text-sm font-semibold lowercase">
+              <label className="inline-flex items-center gap-2 text-sm font-semibold">
                 <input
                   type="checkbox"
                   name="send_announcement"
                   defaultChecked
                   className="w-4 h-4 accent-poppy"
                 />
-                email subscribers
+                Email subscribers
               </label>
               <button
                 type="submit"
                 disabled={create.isPending}
                 className="tc-btn tc-btn-poppy ml-auto disabled:opacity-60"
               >
-                {create.isPending ? "adding…" : "add pop-up"}
+                {create.isPending ? "Adding…" : "Add Pop-up"}
               </button>
             </div>
           </form>
 
           {/* List */}
-          <h2 className="font-display text-2xl font-extrabold lowercase mb-4">
-            all pop-ups.
+          <h2 className="font-display text-2xl font-extrabold mb-4">
+            All pop-ups.
           </h2>
           <ul className="space-y-4">
             {(popUps ?? []).map((p) => (
@@ -232,7 +232,7 @@ function AdminPopUps() {
                     </span>
                     {!p.is_published && (
                       <span className="text-xs font-bold uppercase tracking-widest text-poppy">
-                        unpublished
+                        Unpublished
                       </span>
                     )}
                   </div>
@@ -242,16 +242,16 @@ function AdminPopUps() {
                 <button
                   type="button"
                   onClick={() => {
-                    if (confirm(`delete "${p.name}"?`)) remove.mutate(p.id);
+                    if (confirm(`Delete "${p.name}"?`)) remove.mutate(p.id);
                   }}
                   className="tc-btn tc-btn-cream text-sm py-2 px-4"
                 >
-                  delete
+                  Delete
                 </button>
               </li>
             ))}
             {popUps?.length === 0 && (
-              <li className="text-ink/60">no pop-ups yet — add one above.</li>
+              <li className="text-ink/60">No pop-ups yet — add one above.</li>
             )}
           </ul>
         </div>
@@ -270,7 +270,7 @@ function Field(props: {
 }) {
   return (
     <div>
-      <label className="block text-sm font-semibold lowercase mb-2">{props.label}</label>
+      <label className="block text-sm font-semibold mb-2">{props.label}</label>
       <input
         name={props.name}
         type={props.type ?? "text"}

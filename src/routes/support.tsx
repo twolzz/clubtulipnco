@@ -12,17 +12,17 @@ export const Route = createFileRoute("/support")({
   validateSearch: (search) => tabSchema.parse(search),
   head: () => ({
     meta: [
-      { title: "support — tulip & co." },
+      { title: "Support — Tulip & Co." },
       {
         name: "description",
         content:
-          "customer care & legal hub — contact us, shipping & returns, privacy policy, and terms of service for tulip & co.",
+          "Customer care & legal hub — contact us, shipping & returns, privacy policy, and terms of service for Tulip & Co.",
       },
-      { property: "og:title", content: "support — tulip & co." },
+      { property: "og:title", content: "Support — Tulip & Co." },
       {
         property: "og:description",
         content:
-          "contact us, shipping & returns, privacy policy, and terms of service — all in one place.",
+          "Contact us, shipping & returns, privacy policy, and terms of service — all in one place.",
       },
     ],
   }),
@@ -32,10 +32,10 @@ export const Route = createFileRoute("/support")({
 type TabKey = "contact" | "shipping" | "privacy" | "terms";
 
 const TABS: { key: TabKey; label: string }[] = [
-  { key: "contact", label: "contact us" },
-  { key: "shipping", label: "shipping & returns" },
-  { key: "privacy", label: "privacy policy" },
-  { key: "terms", label: "terms of service" },
+  { key: "contact", label: "Contact Us" },
+  { key: "shipping", label: "Shipping & Returns" },
+  { key: "privacy", label: "Privacy Policy" },
+  { key: "terms", label: "Terms of Service" },
 ];
 
 const EMAIL = "hello@tulipnco.com";
@@ -65,18 +65,18 @@ function SupportPage() {
         <div className="max-w-6xl mx-auto">
           {/* Breadcrumb */}
           <nav
-            aria-label="breadcrumb"
-            className="text-sm font-semibold lowercase text-ink/70 mb-6"
+            aria-label="Breadcrumb"
+            className="text-sm font-semibold text-ink/70 mb-6"
           >
             <Link to="/" className="hover:text-denim transition-colors">
-              home
+              Home
             </Link>
             <span className="mx-2 text-ink/40">/</span>
-            <span className="text-ink">support</span>
+            <span className="text-ink">Support</span>
           </nav>
 
-          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight lowercase leading-[1.02] mb-10 md:mb-14">
-            support.
+          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight leading-[1.02] mb-10 md:mb-14">
+            Support.
           </h1>
 
           <div className="grid md:grid-cols-12 gap-8 md:gap-10">
@@ -95,7 +95,7 @@ function SupportPage() {
                           className={[
                             "w-full whitespace-nowrap md:whitespace-normal text-left",
                             "rounded-full border-[3px] border-ink px-5 py-3",
-                            "font-semibold lowercase text-ink transition-all",
+                            "font-semibold text-ink transition-all",
                             isActive
                               ? "bg-sun shadow-[4px_4px_0_var(--ink)]"
                               : "bg-cream shadow-[4px_4px_0_var(--ink)] hover:text-denim hover:shadow-[6px_6px_0_var(--ink)] hover:-translate-x-[2px] hover:-translate-y-[2px]",
@@ -130,7 +130,7 @@ function SupportPage() {
 
 function PanelHeading({ children }: { children: React.ReactNode }) {
   return (
-    <h2 className="font-display text-3xl md:text-5xl font-extrabold lowercase text-ink mb-8">
+    <h2 className="font-display text-3xl md:text-5xl font-extrabold text-ink mb-8">
       {children}
     </h2>
   );
@@ -140,7 +140,7 @@ function ContactPanel() {
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = e.currentTarget;
-    toast.success("thanks — we'll be in touch within 24–48 hours.");
+    toast.success("Thanks — we'll be in touch within 24–48 hours.");
     form.reset();
   }
 
@@ -149,7 +149,7 @@ function ContactPanel() {
 
   return (
     <div>
-      <PanelHeading>let's chat.</PanelHeading>
+      <PanelHeading>Let's chat.</PanelHeading>
       <p className="text-base md:text-lg leading-relaxed text-ink/85 mb-10 max-w-2xl">
         Have a question about our products or upcoming San Diego pop-ups? Drop us a
         line! You can reach us directly at <MailLink /> or fill out the form below.
@@ -161,9 +161,9 @@ function ContactPanel() {
         <div>
           <label
             htmlFor="support-name"
-            className="block text-sm font-semibold lowercase mb-2"
+            className="block text-sm font-semibold mb-2"
           >
-            name
+            Name
           </label>
           <input
             id="support-name"
@@ -171,7 +171,7 @@ function ContactPanel() {
             type="text"
             required
             autoComplete="name"
-            placeholder="your name"
+            placeholder="Your name"
             className={`${fieldBase} rounded-full`}
           />
         </div>
@@ -179,9 +179,9 @@ function ContactPanel() {
         <div>
           <label
             htmlFor="support-email"
-            className="block text-sm font-semibold lowercase mb-2"
+            className="block text-sm font-semibold mb-2"
           >
-            email
+            Email
           </label>
           <input
             id="support-email"
@@ -197,16 +197,16 @@ function ContactPanel() {
         <div>
           <label
             htmlFor="support-message"
-            className="block text-sm font-semibold lowercase mb-2"
+            className="block text-sm font-semibold mb-2"
           >
-            message
+            Message
           </label>
           <textarea
             id="support-message"
             name="message"
             required
             rows={5}
-            placeholder="how can we help?"
+            placeholder="How can we help?"
             className={`${fieldBase} rounded-3xl resize-none`}
           />
         </div>
@@ -214,9 +214,9 @@ function ContactPanel() {
         <div className="pt-2">
           <button
             type="submit"
-            className="inline-flex items-center justify-center rounded-full border-[3px] border-ink bg-poppy px-8 py-3 font-bold lowercase text-white shadow-[6px_6px_0_var(--ink)] hover:shadow-[8px_8px_0_var(--ink)] hover:-translate-x-[2px] hover:-translate-y-[2px] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[2px_2px_0_var(--ink)] transition-all"
+            className="inline-flex items-center justify-center rounded-full border-[3px] border-ink bg-poppy px-8 py-3 font-bold text-white shadow-[6px_6px_0_var(--ink)] hover:shadow-[8px_8px_0_var(--ink)] hover:-translate-x-[2px] hover:-translate-y-[2px] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[2px_2px_0_var(--ink)] transition-all"
           >
-            send message
+            Send Message
           </button>
         </div>
       </form>
@@ -227,7 +227,7 @@ function ContactPanel() {
 function ShippingPanel() {
   return (
     <div className="max-w-2xl">
-      <PanelHeading>shipping & returns.</PanelHeading>
+      <PanelHeading>Shipping & Returns.</PanelHeading>
       <div className="space-y-6 text-base md:text-lg leading-relaxed text-ink/85">
         <p>
           <span className="font-bold text-ink">Shipping:</span> We offer Free US
@@ -248,7 +248,7 @@ function ShippingPanel() {
 function PrivacyPanel() {
   return (
     <div className="max-w-2xl">
-      <PanelHeading>privacy policy.</PanelHeading>
+      <PanelHeading>Privacy Policy.</PanelHeading>
       <p className="text-base md:text-lg leading-relaxed text-ink/85 mb-8 font-semibold">
         Authentic Dutch design, with fiercely protected privacy.
       </p>
@@ -290,7 +290,7 @@ function PrivacyPanel() {
 function TermsPanel() {
   return (
     <div className="max-w-2xl">
-      <PanelHeading>terms of service.</PanelHeading>
+      <PanelHeading>Terms of Service.</PanelHeading>
       <p className="text-base md:text-lg leading-relaxed text-ink/85">
         Welcome to Tulip & Co. By accessing our webshop, you agree to our terms
         of service. All curated merchandise and collections are authentic and
