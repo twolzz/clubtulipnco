@@ -25,7 +25,7 @@ export const Route = createFileRoute("/shop")({
     <SiteLayout>
       <section className="px-5 md:px-8 py-24 text-center">
         <p className="font-display text-3xl font-extrabold">
-          the shop is loading slowly — please refresh.
+          The shop is loading slowly — please refresh.
         </p>
       </section>
     </SiteLayout>
@@ -111,7 +111,7 @@ function ShopPage() {
 
   function addToCart(p: Product) {
     cart.add(p.id);
-    toast.success(`added ${p.name.toLowerCase()} to cart.`);
+    toast.success(`Added ${p.name} to cart.`);
     cartDrawer.open();
   }
 
