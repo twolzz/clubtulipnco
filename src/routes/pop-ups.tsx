@@ -22,7 +22,7 @@ export const Route = createFileRoute("/pop-ups")({
   component: PopUpsPage,
   errorComponent: () => (
     <SiteLayout>
-      <section className="px-5 md:px-8 py-24 text-center font-display text-2xl lowercase">
+      <section className="px-5 md:px-8 py-24 text-center font-display text-2xl">
         calendar loading — please refresh.
       </section>
     </SiteLayout>

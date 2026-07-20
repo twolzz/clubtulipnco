@@ -101,7 +101,7 @@ function AdminPopUps() {
       <SiteLayout>
         <section className="px-5 md:px-8 py-24">
           <div className="max-w-md mx-auto tc-card tc-card-poppy p-8 md:p-10 bg-cream text-center">
-            <h1 className="font-display text-3xl font-extrabold lowercase mb-3">
+            <h1 className="font-display text-3xl font-extrabold mb-3">
               you don't have access.
             </h1>
             <p className="text-ink/70 mb-6">
@@ -136,7 +136,7 @@ function AdminPopUps() {
       <section className="px-5 md:px-8 py-14 md:py-20">
         <div className="max-w-5xl mx-auto">
           <div className="flex items-center justify-between flex-wrap gap-4 mb-10">
-            <h1 className="text-4xl md:text-6xl font-extrabold lowercase tracking-tight">
+            <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight">
               admin — pop-ups.
             </h1>
             <button
@@ -156,7 +156,7 @@ function AdminPopUps() {
             onSubmit={handleCreate}
             className="tc-card tc-card-sun p-6 md:p-8 bg-cream space-y-4 mb-12"
           >
-            <h2 className="font-display text-2xl font-extrabold lowercase mb-2">
+            <h2 className="font-display text-2xl font-extrabold mb-2">
               add new pop-up.
             </h2>
             <div className="grid md:grid-cols-2 gap-4">
@@ -174,7 +174,7 @@ function AdminPopUps() {
               </div>
               <Field label="tag" name="tag" defaultValue="Featured" />
               <div>
-                <label className="block text-sm font-semibold lowercase mb-2">accent</label>
+                <label className="block text-sm font-semibold mb-2">accent</label>
                 <select
                   name="accent"
                   defaultValue="poppy"
@@ -187,7 +187,7 @@ function AdminPopUps() {
               </div>
             </div>
             <div className="flex flex-wrap items-center gap-6 pt-2">
-              <label className="inline-flex items-center gap-2 text-sm font-semibold lowercase">
+              <label className="inline-flex items-center gap-2 text-sm font-semibold">
                 <input
                   type="checkbox"
                   name="is_published"
@@ -196,7 +196,7 @@ function AdminPopUps() {
                 />
                 publish immediately
               </label>
-              <label className="inline-flex items-center gap-2 text-sm font-semibold lowercase">
+              <label className="inline-flex items-center gap-2 text-sm font-semibold">
                 <input
                   type="checkbox"
                   name="send_announcement"
@@ -216,7 +216,7 @@ function AdminPopUps() {
           </form>
 
           {/* List */}
-          <h2 className="font-display text-2xl font-extrabold lowercase mb-4">
+          <h2 className="font-display text-2xl font-extrabold mb-4">
             all pop-ups.
           </h2>
           <ul className="space-y-4">
@@ -270,7 +270,7 @@ function Field(props: {
 }) {
   return (
     <div>
-      <label className="block text-sm font-semibold lowercase mb-2">{props.label}</label>
+      <label className="block text-sm font-semibold mb-2">{props.label}</label>
       <input
         name={props.name}
         type={props.type ?? "text"}

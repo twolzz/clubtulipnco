@@ -46,13 +46,13 @@ function LoginPage() {
           className="w-full rounded-[16px] border-4 border-[#333] bg-[#F6F2E7] p-8"
           style={{ boxShadow: "8px 8px 0px #3D6E97" }}
         >
-          <h1 className="mb-2 text-3xl font-bold lowercase text-[#333]">sign in.</h1>
-          <p className="mb-6 text-sm text-[#333]/70 lowercase">
+          <h1 className="mb-2 text-3xl font-bold text-[#333]">sign in.</h1>
+          <p className="mb-6 text-sm text-[#333]/70">
             staff access only.
           </p>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="mb-1 block text-xs lowercase text-[#333]" htmlFor="email">
+              <label className="mb-1 block text-xs text-[#333]" htmlFor="email">
                 email
               </label>
               <input
@@ -66,7 +66,7 @@ function LoginPage() {
               />
             </div>
             <div>
-              <label className="mb-1 block text-xs lowercase text-[#333]" htmlFor="password">
+              <label className="mb-1 block text-xs text-[#333]" htmlFor="password">
                 password
               </label>
               <input
@@ -80,14 +80,14 @@ function LoginPage() {
               />
             </div>
             {error && (
-              <p className="rounded-[12px] border-4 border-[#333] bg-[#E05A36] px-4 py-2 text-sm lowercase text-white">
+              <p className="rounded-[12px] border-4 border-[#333] bg-[#E05A36] px-4 py-2 text-sm text-white">
                 {error}
               </p>
             )}
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-full border-4 border-[#333] bg-[#E05A36] px-6 py-3 text-sm font-bold lowercase text-white transition-transform hover:-translate-y-0.5 disabled:opacity-60"
+              className="w-full rounded-full border-4 border-[#333] bg-[#E05A36] px-6 py-3 text-sm font-bold text-white transition-transform hover:-translate-y-0.5 disabled:opacity-60"
               style={{ boxShadow: "6px 6px 0px #333" }}
             >
               {loading ? "signing in..." : "sign in"}

@@ -24,7 +24,7 @@ export const Route = createFileRoute("/shop")({
   errorComponent: () => (
     <SiteLayout>
       <section className="px-5 md:px-8 py-24 text-center">
-        <p className="font-display text-3xl font-extrabold lowercase">
+        <p className="font-display text-3xl font-extrabold">
           the shop is loading slowly — please refresh.
         </p>
       </section>

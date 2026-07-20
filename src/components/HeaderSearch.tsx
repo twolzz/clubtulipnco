@@ -77,7 +77,7 @@ export function HeaderSearch() {
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
                 placeholder="search plushies, stationery, accessories…"
-                className="flex-1 bg-transparent focus:outline-none font-medium lowercase placeholder:text-ink/50"
+                className="flex-1 bg-transparent focus:outline-none font-medium placeholder:text-ink/50"
               />
               <button
                 type="button"
@@ -92,7 +92,7 @@ export function HeaderSearch() {
             {debounced.length >= 1 && (
               <ul className="mt-4 space-y-2">
                 {results.length === 0 ? (
-                  <li className="text-sm font-semibold lowercase text-ink/60 px-2">
+                  <li className="text-sm font-semibold text-ink/60 px-2">
                     no matches — try "miffy", "journal", or "pen".
                   </li>
                 ) : (

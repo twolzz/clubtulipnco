@@ -41,18 +41,18 @@ function CartPage() {
     <SiteLayout>
       <section className="px-5 md:px-8 py-14 md:py-20">
         <div className="max-w-4xl mx-auto">
-          <nav className="text-sm font-semibold lowercase text-ink/70 mb-6">
+          <nav className="text-sm font-semibold text-ink/70 mb-6">
             <Link to="/" className="hover:text-denim">home</Link>
             <span className="mx-2 text-ink/40">/</span>
             <span className="text-ink">cart</span>
           </nav>
-          <h1 className="text-5xl md:text-7xl font-extrabold lowercase tracking-tight mb-10">
+          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-10">
             your cart.
           </h1>
 
           {lines.length === 0 ? (
             <div className="tc-card tc-card-sun p-10 md:p-16 text-center bg-cream">
-              <p className="font-display text-3xl font-extrabold lowercase mb-3">
+              <p className="font-display text-3xl font-extrabold mb-3">
                 nothing here yet.
               </p>
               <p className="text-ink/70 mb-6">quiet things await.</p>
@@ -115,7 +115,7 @@ function CartPage() {
 
               <div className="mt-10 tc-card tc-card-poppy p-6 md:p-8 bg-cream">
                 <div className="flex items-center justify-between mb-5">
-                  <span className="font-semibold text-lg lowercase">subtotal</span>
+                  <span className="font-semibold text-lg">subtotal</span>
                   <span className="font-extrabold text-3xl">{formatPrice(subtotal)}</span>
                 </div>
                 <div className="flex flex-wrap gap-3 justify-end">

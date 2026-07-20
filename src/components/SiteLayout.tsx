@@ -71,7 +71,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
     <div className="min-h-screen flex flex-col bg-cream text-ink">
       {/* Sticky shell: announcement + primary nav */}
       <div className="sticky top-0 z-50">
-        <div className="bg-poppy text-white text-center text-xs md:text-sm font-semibold py-2 px-4 border-b-4 border-ink lowercase tracking-wide">
+        <div className="bg-poppy text-white text-center text-xs md:text-sm font-semibold py-2 px-4 border-b-4 border-ink tracking-wide">
           new: san diego pop-up calendar announced
         </div>
 
@@ -79,7 +79,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
           <div className="max-w-7xl mx-auto flex items-center justify-between gap-4 px-5 md:px-8 py-3 md:py-4">
             {/* Left: logo */}
             <Link to="/" className="flex items-center">
-              <span className="font-display lowercase text-xl md:text-2xl font-extrabold tracking-tight text-ink">
+              <span className="font-display text-xl md:text-2xl font-extrabold tracking-tight text-ink">
                 tulip &amp; co.
               </span>
             </Link>
@@ -90,7 +90,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
                 <Link
                   key={n.to}
                   to={n.to}
-                  className="font-semibold lowercase text-ink hover:text-denim transition-colors"
+                  className="font-semibold text-ink hover:text-denim transition-colors"
                   activeProps={{
                     className: "text-denim underline decoration-2 underline-offset-8",
                   }}
@@ -113,7 +113,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
               <Link
                 key={n.to}
                 to={n.to}
-                className="px-3 py-1.5 rounded-full border-2 border-ink bg-white text-sm font-semibold lowercase"
+                className="px-3 py-1.5 rounded-full border-2 border-ink bg-white text-sm font-semibold"
                 activeProps={{ className: "bg-sun" }}
               >
                 {n.label}
@@ -131,7 +131,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
           <div className="tc-card tc-card-poppy p-8 md:p-12">
             <div className="grid md:grid-cols-2 gap-8 items-center">
               <div>
-                <h2 className="text-4xl md:text-5xl font-extrabold leading-tight lowercase">
+                <h2 className="text-4xl md:text-5xl font-extrabold leading-tight">
                   welcome to <span className="text-poppy">the club!</span>
                 </h2>
                 <p className="mt-3 text-base md:text-lg text-ink/80">
@@ -155,7 +155,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
                   key={l.label}
                   to={l.to}
                   search={l.search}
-                  className="text-sm font-semibold lowercase text-ink hover:text-denim transition-colors"
+                  className="text-sm font-semibold text-ink hover:text-denim transition-colors"
                 >
                   {l.label}
                 </Link>
@@ -187,7 +187,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
             <div className="flex flex-wrap items-center gap-4">
               <div className="inline-flex items-center gap-2 text-ink">
                 <Lock size={16} strokeWidth={2.5} />
-                <span className="text-sm font-semibold lowercase">secure checkout</span>
+                <span className="text-sm font-semibold">secure checkout</span>
               </div>
               <div className="flex items-center gap-2">
                 <VisaMark />
@@ -196,7 +196,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
               </div>
             </div>
             <div className="flex items-center gap-4 text-sm text-ink/70">
-              <span className="font-display font-extrabold lowercase text-ink">tulip &amp; co.</span>
+              <span className="font-display font-extrabold text-ink">tulip &amp; co.</span>
               <span>© {new Date().getFullYear()} — authentic dutch design, san diego.</span>
             </div>
           </div>

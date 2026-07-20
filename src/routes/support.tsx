@@ -66,7 +66,7 @@ function SupportPage() {
           {/* Breadcrumb */}
           <nav
             aria-label="breadcrumb"
-            className="text-sm font-semibold lowercase text-ink/70 mb-6"
+            className="text-sm font-semibold text-ink/70 mb-6"
           >
             <Link to="/" className="hover:text-denim transition-colors">
               home
@@ -75,7 +75,7 @@ function SupportPage() {
             <span className="text-ink">support</span>
           </nav>
 
-          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight lowercase leading-[1.02] mb-10 md:mb-14">
+          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight leading-[1.02] mb-10 md:mb-14">
             support.
           </h1>
 
@@ -95,7 +95,7 @@ function SupportPage() {
                           className={[
                             "w-full whitespace-nowrap md:whitespace-normal text-left",
                             "rounded-full border-[3px] border-ink px-5 py-3",
-                            "font-semibold lowercase text-ink transition-all",
+                            "font-semibold text-ink transition-all",
                             isActive
                               ? "bg-sun shadow-[4px_4px_0_var(--ink)]"
                               : "bg-cream shadow-[4px_4px_0_var(--ink)] hover:text-denim hover:shadow-[6px_6px_0_var(--ink)] hover:-translate-x-[2px] hover:-translate-y-[2px]",
@@ -130,7 +130,7 @@ function SupportPage() {
 
 function PanelHeading({ children }: { children: React.ReactNode }) {
   return (
-    <h2 className="font-display text-3xl md:text-5xl font-extrabold lowercase text-ink mb-8">
+    <h2 className="font-display text-3xl md:text-5xl font-extrabold text-ink mb-8">
       {children}
     </h2>
   );
@@ -161,7 +161,7 @@ function ContactPanel() {
         <div>
           <label
             htmlFor="support-name"
-            className="block text-sm font-semibold lowercase mb-2"
+            className="block text-sm font-semibold mb-2"
           >
             name
           </label>
@@ -179,7 +179,7 @@ function ContactPanel() {
         <div>
           <label
             htmlFor="support-email"
-            className="block text-sm font-semibold lowercase mb-2"
+            className="block text-sm font-semibold mb-2"
           >
             email
           </label>
@@ -197,7 +197,7 @@ function ContactPanel() {
         <div>
           <label
             htmlFor="support-message"
-            className="block text-sm font-semibold lowercase mb-2"
+            className="block text-sm font-semibold mb-2"
           >
             message
           </label>
@@ -214,7 +214,7 @@ function ContactPanel() {
         <div className="pt-2">
           <button
             type="submit"
-            className="inline-flex items-center justify-center rounded-full border-[3px] border-ink bg-poppy px-8 py-3 font-bold lowercase text-white shadow-[6px_6px_0_var(--ink)] hover:shadow-[8px_8px_0_var(--ink)] hover:-translate-x-[2px] hover:-translate-y-[2px] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[2px_2px_0_var(--ink)] transition-all"
+            className="inline-flex items-center justify-center rounded-full border-[3px] border-ink bg-poppy px-8 py-3 font-bold text-white shadow-[6px_6px_0_var(--ink)] hover:shadow-[8px_8px_0_var(--ink)] hover:-translate-x-[2px] hover:-translate-y-[2px] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[2px_2px_0_var(--ink)] transition-all"
           >
             send message
           </button>
