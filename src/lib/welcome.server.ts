@@ -77,17 +77,6 @@ function renderHtml(firstName: string, email: string) {
                 No spam, just the good stuff.
               </p>
 
-              <!-- simple pill button -->
-              <table cellpadding="0" cellspacing="0" role="presentation">
-                <tr>
-                  <td align="center" style="background-color: #E05A36; border: 2px solid #000000; border-radius: 50px; box-shadow: 3px 3px 0px 0px #000000;">
-                    <a href="${SITE_URL}" style="display: block; padding: 14px 32px; color: #ffffff; font-size: 15px; font-weight: bold; text-decoration: none;">
-                      Take a look around
-                    </a>
-                  </td>
-                </tr>
-              </table>
-
               <!-- spacer -->
               <div style="height: 70px; line-height: 70px; font-size: 70px;">&nbsp;</div>
 
