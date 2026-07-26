@@ -5,6 +5,12 @@ import { useServerFn } from "@tanstack/react-start";
 import { cart, cartDrawer, useCart, useCartDrawer } from "@/lib/cart-store";
 import { listProducts } from "@/lib/products.functions";
 import type { Product } from "@/lib/products.functions";
+import { startCheckout } from "@/lib/checkout.functions";
+
+const handleCheckout = async () => {
+  const { url } = await startCheckout(checkoutItems);
+  if (url) window.location.href = url;
+};
 
 function formatPrice(cents: number) {
   return `$${(cents / 100).toFixed(cents % 100 === 0 ? 0 : 2)}`;
