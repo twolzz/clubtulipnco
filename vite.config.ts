@@ -10,8 +10,14 @@ export default defineConfig({
   tanstackStart: {
     server: { entry: "server" },
   },
-  // Add this explicit Nitro configuration
+  // We tell the engine to treat stripe as an external module [2]
+  ssr: {
+    external: ['stripe'],
+  },
   nitro: {
     preset: "cloudflare-pages",
+    externals: {
+      inline: ['stripe'],
+    }
   },
 });
