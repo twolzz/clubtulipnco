@@ -26,6 +26,42 @@ export function CartDrawer() {
     .filter((l): l is { item: typeof l.item; product: Product } => Boolean(l.product));
   const subtotal = lines.reduce((s, l) => s + l.product.price_cents * l.item.qty, 0);
 
+ // Step 3: Logic to initiate our secure transaction flow
+  const handleCheckout = async () => {
+    try {
+      // 1. Gather the selected heirlooms from the resolved 'lines' array.
+      // This ensures we have access to line.product.price_cents for our margin snapshot.
+      const checkoutItems = lines.map((line) => ({
+        productId: line.item.productId, // Matches your cart-store property
+        quantity: line.item.qty,       // Matches your cart-store property
+        priceAtPurchase: line.product.price_cents, // Snapshot in cents for accuracy
+      }));
+
+      if (checkoutItems.length === 0) return;
+
+      // 2. Request a secure checkout session from our server-side Nitro engine.
+      // This keeps your STRIPE_SECRET_KEY hidden from the public browser [4, 5].
+      const response = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ items: checkoutItems }),
+      });
+
+      const { url } = await response.json();
+
+      if (url) {
+        // 3. Quietly redirect to our customized Warm Cream Stripe page [4].
+        window.location.href = url;
+      } else {
+        throw new Error('Failed to create session');
+      }
+    } catch (error) {
+      console.error('Checkout error:', error);
+      // We maintain our calm brand voice even in error states [2, 6].
+      alert('We encountered a quiet issue while preparing your selection. Please try again.');
+    }
+  };
+  
   return (
     <>
       {/* Overlay */}
@@ -125,18 +161,20 @@ export function CartDrawer() {
         </div>
 
         {lines.length > 0 && (
-          <footer className="border-t-4 border-ink px-6 py-5 space-y-3">
-            <div className="flex items-center justify-between text-lg">
-              <span className="font-semibold">Subtotal</span>
-              <span className="font-extrabold text-2xl">{formatPrice(subtotal)}</span>
+          <footer className="p-6 flex flex-col gap-4 border-t-4 border-[#333333] bg-[#F6F2E7]">
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-sm font-medium text-[#333333]">Estimated Total</span>
+              <span className="text-lg font-bold text-[#333333]">
+                {/* Ensure logic reflects our 50% target gross margin */}
+                ${totalPrice.toFixed(2)}
+              </span>
             </div>
             <button
               type="button"
-              disabled
-              title="Checkout coming soon"
-              className="w-full tc-btn tc-btn-poppy opacity-60 cursor-not-allowed"
+              onClick={() => handleCheckout()}
+              className="w-full tc-btn tc-btn-poppy"
             >
-              Checkout — Coming Soon
+              Proceed to checkout
             </button>
             <Link
               to="/cart"
