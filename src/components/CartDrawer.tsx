@@ -164,10 +164,10 @@ export function CartDrawer() {
           <footer className="p-6 flex flex-col gap-4 border-t-4 border-[#333333] bg-[#F6F2E7]">
             <div className="flex justify-between items-center mb-2">
               <span className="text-sm font-medium text-[#333333]">Estimated Total</span>
-              <span className="text-lg font-bold text-[#333333]">
-                {/* Ensure logic reflects our 50% target gross margin */}
-                ${totalPrice.toFixed(2)}
-              </span>
+<span className="text-lg font-bold text-[#333333]">
+  {/* Convert cents to dollars for the final display */}
+  ${(subtotal / 100).toFixed(2)}
+</span>
             </div>
             <button
               type="button"
