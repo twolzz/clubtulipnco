@@ -2,3 +2,13 @@
 name = "clubtulipnco"
 compatibility_date = "2026-07-08"
 compatibility_flags = [ "nodejs_compat" ]
+pages_build_output_dir = "dist"
+
+[vars]
+# Public parameters only
+VITE_STRIPE_PUBLISHABLE_KEY = "pk_live_51TxFB0BWG3c58XbCQBqIYPYghnKYaM8lwvWUuPUndY5Ei8aqSoCBKUApc2aTzK8IdpR0Dlue5DzbVph2UGNQ4c0H00Tie24bIy"
+VITE_SUPABASE_URL = "https://jkiijlqsrxczpazscbaj.supabase.co"
+VITE_SUPABASE_PUBLISHABLE_KEY = "sb_publishable_GmawUs-8KMl6Xp_jLBxEkw_sWCh_yMy"
+VITE_SUPABASE_PROJECT_ID = "jkiijlqsrxczpazscbaj"
+SITE_URL = "https://club.tulipnco.com"
+NODE_VERSION = "22"
