@@ -8,7 +8,7 @@ import { CheckoutForm } from "@/components/CheckoutForm";
 import { useCart } from "@/lib/cart-store";
 import { listProducts, type Product } from "@/lib/products.functions";
 import { createCheckoutIntent } from "@/lib/checkout.functions";
-import { getStripe, buildAppearance } from "@/lib/stripe.client";
+import { getStripe, buildAppearance } from "@/lib/stripe-elements";
 
 /**
  * The Stripe fields render inside an iframe, which does not inherit the page
