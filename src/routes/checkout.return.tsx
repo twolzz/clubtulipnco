@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { SiteLayout } from "@/components/SiteLayout";
 import { cart } from "@/lib/cart-store";
-import { getStripe } from "@/lib/stripe.client";
+import { getStripe } from "@/lib/stripe-elements";
 
 type Status = "loading" | "succeeded" | "processing" | "failed";
 
