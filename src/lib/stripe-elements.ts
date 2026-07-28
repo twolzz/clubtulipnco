@@ -113,12 +113,29 @@ export function buildAppearance(): Appearance {
         boxShadow: `4px 4px 0 ${ink}`,
         color: "#FFFFFF",
       },
+      // Without this, the generic .Tab:hover rule above would repaint the
+      // selected tab white while its label stays white.
+      ".Tab--selected:hover": {
+        backgroundColor: denim,
+        boxShadow: `6px 6px 0 ${ink}`,
+        color: "#FFFFFF",
+      },
       ".Tab--selected:focus": {
+        backgroundColor: denim,
         boxShadow: `4px 4px 0 ${ink}`,
         color: "#FFFFFF",
       },
       ".TabIcon--selected": {
         fill: "#FFFFFF",
+      },
+      ".TabIcon:hover": {
+        fill: ink,
+      },
+      ".TabIcon--selected:hover": {
+        fill: "#FFFFFF",
+      },
+      ".TabLabel--selected": {
+        color: "#FFFFFF",
       },
       ".Block": {
         backgroundColor: "#FFFFFF",
