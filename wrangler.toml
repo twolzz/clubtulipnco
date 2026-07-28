@@ -6,7 +6,7 @@ pages_build_output_dir = "dist"
 
 [vars]
 # Public parameters only
-VITE_STRIPE_PUBLISHABLE_KEY = "pk_live_51TxFB0BWG3c58XbCQBqIYPYghnKYaM8lwvWUuPUndY5Ei8aqSoCBKUApc2aTzK8IdpR0Dlue5DzbVph2UGNQ4c0H00Tie24bIy"
+VITE_STRIPE_PUBLISHABLE_KEY = "pk_test_51TxFB0BWG3c58XbC9Kve22jmozTy1zqOsDqpcGgaz8sxOQ0CAv4b5wTi8fxRLtXjfcs9WRzA25M1GRGENnKMCpw1006iUKpXGD"
 VITE_SUPABASE_URL = "https://jkiijlqsrxczpazscbaj.supabase.co"
 VITE_SUPABASE_PUBLISHABLE_KEY = "sb_publishable_GmawUs-8KMl6Xp_jLBxEkw_sWCh_yMy"
 VITE_SUPABASE_PROJECT_ID = "jkiijlqsrxczpazscbaj"
