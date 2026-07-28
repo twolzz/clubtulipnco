@@ -26,22 +26,19 @@ const COLLECTIONS = [
     title: "Plushies",
     blurb: "Eco-corduroy bunnies & friends",
     color: "bg-poppy",
-    shadow: "tc-card-sun",
-    emoji: "🐰",
+    shadow: "tc-card-sage",
   },
   {
     title: "Stationery",
     blurb: "Journals, pens & desk goods",
     color: "bg-denim",
     shadow: "tc-card-poppy",
-    emoji: "✏️",
   },
   {
     title: "Accessories",
     blurb: "Keychains, pins & pouches",
     color: "bg-sage",
     shadow: "tc-card-denim",
-    emoji: "🔑",
   },
 ] as const;
 
@@ -50,12 +47,12 @@ function Home() {
     <SiteLayout>
       {/* Hero */}
       <section className="px-5 md:px-8 py-16 md:py-24">
-        <div className="max-w-6xl mx-auto grid lg:grid-cols-[1.3fr_1fr] gap-10 items-center">
+        <div className="max-w-7xl mx-auto grid lg:grid-cols-[1.55fr_1fr] gap-10 lg:gap-14 items-center">
           <div>
             <h1 className="text-5xl md:text-7xl font-extrabold leading-[1.02] tracking-tight">
               Dutch design is coming to <span className="text-poppy">San Diego.</span>
             </h1>
-            <p className="mt-6 text-lg md:text-xl text-ink/80 max-w-xl">
+            <p className="mt-6 text-lg md:text-xl text-ink/80 max-w-2xl">
               Tulip &amp; Co. is your curated home for premium Dutch stationery, minimalist
               plushies, and quiet design objects — sourced directly from the Netherlands.
             </p>
@@ -86,10 +83,7 @@ function Home() {
       <section className="bg-sun border-y-4 border-ink py-16 md:py-24 px-5 md:px-8">
         <div className="max-w-6xl mx-auto">
           <div className="flex items-end justify-between flex-wrap gap-4 mb-10">
-            <div>
-              <h2 className="text-4xl md:text-5xl font-extrabold">Curated Collections</h2>
-              <p className="mt-2 text-ink/80">{"\n"}</p>
-            </div>
+            <h2 className="text-4xl md:text-5xl font-extrabold">Curated Collections</h2>
             <Link to="/shop" className="tc-btn tc-btn-cream">Shop All</Link>
           </div>
 
@@ -100,9 +94,7 @@ function Home() {
                 to="/shop"
                 className={`tc-card ${c.shadow} overflow-hidden flex flex-col hover:-translate-y-1 transition-transform`}
               >
-                <div className={`${c.color} aspect-[4/3] flex items-center justify-center text-7xl`}>
-                  <span aria-hidden>{c.emoji}</span>
-                </div>
+                <div className={`${c.color} aspect-[4/3]`} />
                 <div className="p-6 border-t-4 border-ink bg-white">
                   <h3 className="text-2xl font-extrabold">{c.title}</h3>
                   <p className="text-ink/70 mt-1">{c.blurb}</p>
@@ -115,7 +107,7 @@ function Home() {
 
       {/* Pop-up sneak peek */}
       <section className="px-5 md:px-8 py-16 md:py-24">
-        <div className="max-w-5xl mx-auto tc-card tc-card-sage p-8 md:p-12 bg-sage text-white">
+        <div className="max-w-5xl mx-auto tc-card tc-card-denim p-8 md:p-12 bg-sage text-white">
           <div className="grid md:grid-cols-[1fr_auto] gap-8 items-center">
             <div>
               <span className="inline-block px-3 py-1 mb-4 rounded-full bg-sun border-[3px] border-ink text-ink text-sm font-bold">
