@@ -46,7 +46,15 @@ export function CheckoutForm({ amountCents }: { amountCents: number }) {
     <form onSubmit={handleSubmit} className="flex flex-col gap-6">
       <div>
         <h2 className="font-display text-xl font-extrabold mb-3">Ship to</h2>
-        <AddressElement options={{ mode: "shipping" }} />
+        <AddressElement
+          options={{
+            mode: "shipping",
+            // Shorten the country list to places we actually ship. This also
+            // sidesteps the unstyleable native dropdown on macOS/iOS, since a
+            // short list barely reads as a menu.
+            allowedCountries: ["US"],
+          }}
+        />
       </div>
 
       <div>
