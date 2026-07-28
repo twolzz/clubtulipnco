@@ -37,32 +37,99 @@ function TikTokIcon({ className }: { className?: string }) {
   );
 }
 
+/* ------------------------------------------------------------------ */
+/* Payment marks                                                       */
+/* Only methods actually enabled on the Stripe account are shown.      */
+/* ------------------------------------------------------------------ */
+
+function Mark({
+  label,
+  children,
+}: {
+  label: string;
+  children: ReactNode;
+}) {
+  return (
+    <div
+      role="img"
+      aria-label={label}
+      title={label}
+      className="h-8 min-w-[52px] px-2.5 flex items-center justify-center gap-1 rounded-lg border-2 border-ink bg-white"
+    >
+      {children}
+    </div>
+  );
+}
+
 function VisaMark() {
   return (
-    <div className="h-7 px-3 flex items-center justify-center rounded-md border-2 border-ink bg-white">
+    <Mark label="Visa">
       <span className="font-display font-extrabold italic text-[13px] tracking-tight text-denim">
         VISA
       </span>
-    </div>
+    </Mark>
   );
 }
 
 function MastercardMark() {
   return (
-    <div className="h-7 px-2 flex items-center justify-center rounded-md border-2 border-ink bg-white gap-[-6px]">
-      <span className="block w-4 h-4 rounded-full bg-poppy" />
-      <span className="block w-4 h-4 rounded-full bg-sun -ml-2 mix-blend-multiply" />
-    </div>
+    <Mark label="Mastercard">
+      <span className="relative flex items-center">
+        <span className="block w-[15px] h-[15px] rounded-full bg-poppy" />
+        <span className="block w-[15px] h-[15px] rounded-full bg-sun -ml-[6px] mix-blend-multiply" />
+      </span>
+    </Mark>
+  );
+}
+
+function AmexMark() {
+  return (
+    <Mark label="American Express">
+      <span className="font-display font-extrabold text-[10px] leading-none tracking-tight text-denim">
+        AMEX
+      </span>
+    </Mark>
+  );
+}
+
+function DiscoverMark() {
+  return (
+    <Mark label="Discover">
+      <span className="font-display font-bold text-[10px] leading-none tracking-tight text-ink">
+        DISC
+      </span>
+      <span className="block w-[9px] h-[9px] rounded-full bg-poppy" />
+    </Mark>
   );
 }
 
 function ApplePayMark() {
   return (
-    <div className="h-7 px-3 flex items-center justify-center rounded-md border-2 border-ink bg-white">
-      <span className="font-display font-semibold text-[12px] text-ink leading-none">
-         Pay
+    <Mark label="Apple Pay">
+      <span className="font-display font-semibold text-[12px] leading-none text-ink">
+        &#63743; Pay
       </span>
-    </div>
+    </Mark>
+  );
+}
+
+function KlarnaMark() {
+  return (
+    <Mark label="Klarna">
+      <span className="font-display font-extrabold text-[11px] leading-none tracking-tight text-ink">
+        Klarna.
+      </span>
+    </Mark>
+  );
+}
+
+function AffirmMark() {
+  return (
+    <Mark label="Affirm">
+      <span className="font-display font-extrabold text-[11px] leading-none tracking-tight text-sage">
+        affirm
+      </span>
+    </Mark>
   );
 }
 
@@ -184,18 +251,22 @@ export function SiteLayout({ children }: { children: ReactNode }) {
 
           {/* Row 2: trust signals */}
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-            <div className="flex flex-wrap items-center gap-4">
-              <div className="inline-flex items-center gap-2 text-ink">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+              <div className="inline-flex items-center gap-2 text-denim shrink-0">
                 <Lock size={16} strokeWidth={2.5} />
                 <span className="text-sm font-semibold">Secure Checkout</span>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <VisaMark />
                 <MastercardMark />
+                <AmexMark />
+                <DiscoverMark />
                 <ApplePayMark />
+                <KlarnaMark />
+                <AffirmMark />
               </div>
             </div>
-            <div className="flex items-center gap-4 text-sm text-ink/70">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 text-sm text-ink/70">
               <span className="font-display font-extrabold text-ink">Tulip &amp; Co.</span>
               <span>© {new Date().getFullYear()} — Authentic Dutch design, San Diego.</span>
             </div>
