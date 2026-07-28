@@ -11,7 +11,7 @@ import { createCheckoutIntent } from "@/lib/checkout.functions";
 import { getStripe, buildAppearance } from "@/lib/stripe-elements";
 
 /**
- * The Stripe fields render inside an iframe, which does not inherit the pageee
+ * The Stripe fields render inside an iframe, which does not inherit the page
  * stylesheet. Inter (--font-sans, used by the inputs) and Quicksand
  * (--font-display, used by the labels) both have to be passed to Elements.
  */
@@ -45,6 +45,7 @@ function CheckoutPage() {
 
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [amountCents, setAmountCents] = useState(0);
+  const [orderId, setOrderId] = useState<string | null>(null);
   const [setupError, setSetupError] = useState<string | null>(null);
 
   // The intent is created once per page load. Without this guard, React's
@@ -75,6 +76,7 @@ function CheckoutPage() {
       .then((result) => {
         setClientSecret(result.clientSecret);
         setAmountCents(result.amountCents);
+        setOrderId(result.orderId);
       })
       .catch((e) => {
         console.error("Checkout setup error:", e);
@@ -117,12 +119,12 @@ function CheckoutPage() {
                     Back to Cart
                   </Link>
                 </div>
-              ) : clientSecret ? (
+              ) : clientSecret && orderId ? (
                 <Elements
                   stripe={getStripe()}
                   options={{ clientSecret, appearance, fonts: STRIPE_FONTS }}
                 >
-                  <CheckoutForm amountCents={amountCents} />
+                  <CheckoutForm amountCents={amountCents} orderId={orderId} />
                 </Elements>
               ) : (
                 <div className="py-16 text-center">
