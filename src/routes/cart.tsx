@@ -1,10 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState } from "react";
 import { Trash2, Plus, Minus } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { SiteLayout } from "@/components/SiteLayout";
 import { cart, useCart } from "@/lib/cart-store";
 import { listProducts, type Product } from "@/lib/products.functions";
+import { startCheckout } from "@/lib/checkout.functions";
 
 export const Route = createFileRoute("/cart")({
   head: () => ({
@@ -25,6 +27,11 @@ function formatPrice(cents: number) {
 function CartPage() {
   const { items } = useCart();
   const listFn = useServerFn(listProducts);
+  const checkoutFn = useServerFn(startCheckout);
+
+  const [busy, setBusy] = useState(false);
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
+
   const { data: products } = useQuery<Product[]>({
     queryKey: ["products", "all"],
     queryFn: () => listFn({}),
@@ -36,6 +43,25 @@ function CartPage() {
     .map((i) => ({ item: i, product: map.get(i.productId) }))
     .filter((l): l is { item: typeof l.item; product: Product } => Boolean(l.product));
   const subtotal = lines.reduce((s, l) => s + l.product.price_cents * l.item.qty, 0);
+
+  async function handleCheckout() {
+    setBusy(true);
+    setCheckoutError(null);
+    try {
+      const { url } = await checkoutFn({
+        data: {
+          items: items.map((i) => ({ productId: i.productId, qty: i.qty })),
+        },
+      });
+      // Leave `busy` set — the browser is navigating away, and clearing it
+      // would allow a second click during the redirect.
+      window.location.href = url;
+    } catch (e) {
+      console.error("Checkout error:", e);
+      setCheckoutError("Checkout could not start. Try again in a moment.");
+      setBusy(false);
+    }
+  }
 
   return (
     <SiteLayout>
@@ -118,15 +144,22 @@ function CartPage() {
                   <span className="font-semibold text-lg">Subtotal</span>
                   <span className="font-extrabold text-3xl">{formatPrice(subtotal)}</span>
                 </div>
+
+                {checkoutError && (
+                  <p className="mb-4 text-sm font-semibold text-poppy" role="alert">
+                    {checkoutError}
+                  </p>
+                )}
+
                 <div className="flex flex-wrap gap-3 justify-end">
                   <Link to="/shop" className="tc-btn tc-btn-cream">Continue Shopping</Link>
                   <button
                     type="button"
-                    disabled
-                    title="Checkout coming soon"
-                    className="tc-btn tc-btn-poppy opacity-60 cursor-not-allowed"
+                    onClick={handleCheckout}
+                    disabled={busy}
+                    className="tc-btn tc-btn-poppy disabled:opacity-60 disabled:cursor-not-allowed"
                   >
-                    Checkout — Coming Soon
+                    {busy ? "Starting checkout…" : "Checkout"}
                   </button>
                 </div>
               </div>
