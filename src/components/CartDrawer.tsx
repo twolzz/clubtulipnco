@@ -5,12 +5,6 @@ import { useServerFn } from "@tanstack/react-start";
 import { cart, cartDrawer, useCart, useCartDrawer } from "@/lib/cart-store";
 import { listProducts } from "@/lib/products.functions";
 import type { Product } from "@/lib/products.functions";
-import { startCheckout } from "@/lib/checkout.functions";
-
-const handleCheckout = async () => {
-  const { url } = await startCheckout(checkoutItems);
-  if (url) window.location.href = url;
-};
 
 function formatPrice(cents: number) {
   return `$${(cents / 100).toFixed(cents % 100 === 0 ? 0 : 2)}`;
@@ -32,21 +26,20 @@ export function CartDrawer() {
     .filter((l): l is { item: typeof l.item; product: Product } => Boolean(l.product));
   const subtotal = lines.reduce((s, l) => s + l.product.price_cents * l.item.qty, 0);
 
- // Step 3: Logic to initiate our secure transaction flow
+  // Initiates the checkout flow: builds the line items, requests a
+  // Stripe session from our server route, and redirects on success.
   const handleCheckout = async () => {
     try {
-      // 1. Gather the selected heirlooms from the resolved 'lines' array.
-      // This ensures we have access to line.product.price_cents for our margin snapshot.
       const checkoutItems = lines.map((line) => ({
-        productId: line.item.productId, // Matches your cart-store property
-        quantity: line.item.qty,       // Matches your cart-store property
-        priceAtPurchase: line.product.price_cents, // Snapshot in cents for accuracy
+        productId: line.item.productId,
+        quantity: line.item.qty,
+        priceAtPurchase: line.product.price_cents,
       }));
 
       if (checkoutItems.length === 0) return;
 
-      // 2. Request a secure checkout session from our server-side Nitro engine.
-      // This keeps your STRIPE_SECRET_KEY hidden from the public browser [4, 5].
+      // Request a secure checkout session from the server.
+      // This keeps STRIPE_SECRET_KEY out of the browser bundle.
       const response = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -56,18 +49,16 @@ export function CartDrawer() {
       const { url } = await response.json();
 
       if (url) {
-        // 3. Quietly redirect to our customized Warm Cream Stripe page [4].
         window.location.href = url;
       } else {
         throw new Error('Failed to create session');
       }
     } catch (error) {
       console.error('Checkout error:', error);
-      // We maintain our calm brand voice even in error states [2, 6].
       alert('We encountered a quiet issue while preparing your selection. Please try again.');
     }
   };
-  
+
   return (
     <>
       {/* Overlay */}
@@ -170,10 +161,9 @@ export function CartDrawer() {
           <footer className="p-6 flex flex-col gap-4 border-t-4 border-[#333333] bg-[#F6F2E7]">
             <div className="flex justify-between items-center mb-2">
               <span className="text-sm font-medium text-[#333333]">Estimated Total</span>
-<span className="text-lg font-bold text-[#333333]">
-  {/* Convert cents to dollars for the final display */}
-  ${(subtotal / 100).toFixed(2)}
-</span>
+              <span className="text-lg font-bold text-[#333333]">
+                ${(subtotal / 100).toFixed(2)}
+              </span>
             </div>
             <button
               type="button"
