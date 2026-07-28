@@ -118,8 +118,8 @@ function ShopPage() {
   return (
     <SiteLayout>
       <section className="px-5 md:px-8 py-16 md:py-24">
-        <div className="max-w-6xl mx-auto">
-          <div className="max-w-3xl">
+        <div className="max-w-7xl mx-auto">
+          <div>
             <span className="inline-block px-3 py-1 mb-6 rounded-full bg-sun border-[3px] border-ink text-sm font-bold">
               The Shop
             </span>
