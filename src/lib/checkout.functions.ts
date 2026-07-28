@@ -6,7 +6,7 @@ import type { Database } from "@/integrations/supabase/types";
 
 /**
  * Service-role client. Bypasses row-level security, so it is only ever
- * constructed inside a server function — never imported by a componentss.
+ * constructed inside a server function — never imported by a component.
  */
 function adminClient() {
   return createClient<Database>(
@@ -126,4 +126,42 @@ export const createCheckoutIntent = createServerFn({ method: "POST" })
       amountCents,
       orderId: order.id as string,
     };
+  });
+
+const EmailInput = z.object({
+  orderId: z.string().uuid(),
+  email: z.string().email().max(254),
+});
+
+/**
+ * Attaches the customer's email to the order and to the PaymentIntent.
+ * Called just before payment confirmation, because the email is entered
+ * after the intent has already been created.
+ */
+export const setOrderEmail = createServerFn({ method: "POST" })
+  .inputValidator((input: unknown) => EmailInput.parse(input))
+  .handler(async ({ data }) => {
+    const supabase = adminClient();
+
+    const { data: order, error } = await supabase
+      .from("orders")
+      .update({
+        customer_email: data.email,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", data.orderId)
+      .select("stripe_payment_intent_id")
+      .single();
+
+    if (error) throw new Error(error.message);
+
+    // Also set receipt_email so Stripe's own receipt reaches the customer.
+    if (order?.stripe_payment_intent_id) {
+      const stripe = stripeClient();
+      await stripe.paymentIntents.update(order.stripe_payment_intent_id, {
+        receipt_email: data.email,
+      });
+    }
+
+    return { ok: true };
   });
