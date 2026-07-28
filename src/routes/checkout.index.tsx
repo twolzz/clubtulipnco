@@ -11,7 +11,7 @@ import { createCheckoutIntent } from "@/lib/checkout.functions";
 import { getStripe, buildAppearance } from "@/lib/stripe-elements";
 
 /**
- * The Stripe fields render inside an iframe, which does not inherit the page
+ * The Stripe fields render inside an iframe, which does not inherit the pageee
  * stylesheet. Inter (--font-sans, used by the inputs) and Quicksand
  * (--font-display, used by the labels) both have to be passed to Elements.
  */
