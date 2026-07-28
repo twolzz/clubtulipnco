@@ -1,10 +1,12 @@
 import { Link } from "@tanstack/react-router";
+import { useState } from "react";
 import { X, Trash2, Plus, Minus } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { cart, cartDrawer, useCart, useCartDrawer } from "@/lib/cart-store";
 import { listProducts } from "@/lib/products.functions";
 import type { Product } from "@/lib/products.functions";
+import { startCheckout } from "@/lib/checkout.functions";
 
 function formatPrice(cents: number) {
   return `$${(cents / 100).toFixed(cents % 100 === 0 ? 0 : 2)}`;
@@ -14,6 +16,11 @@ export function CartDrawer() {
   const open = useCartDrawer();
   const { items } = useCart();
   const listFn = useServerFn(listProducts);
+  const checkoutFn = useServerFn(startCheckout);
+
+  const [busy, setBusy] = useState(false);
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
+
   const { data: products } = useQuery<Product[]>({
     queryKey: ["products", "all"],
     queryFn: () => listFn({}),
@@ -26,36 +33,31 @@ export function CartDrawer() {
     .filter((l): l is { item: typeof l.item; product: Product } => Boolean(l.product));
   const subtotal = lines.reduce((s, l) => s + l.product.price_cents * l.item.qty, 0);
 
-  // Initiates the checkout flow: builds the line items, requests a
-  // Stripe session from our server route, and redirects on success.
+  // Calls the startCheckout server function directly. Prices are looked up
+  // again on the server, so nothing price-related is sent from the browser.
   const handleCheckout = async () => {
+    if (lines.length === 0) return;
+
+    setBusy(true);
+    setCheckoutError(null);
+
     try {
-      const checkoutItems = lines.map((line) => ({
-        productId: line.item.productId,
-        quantity: line.item.qty,
-        priceAtPurchase: line.product.price_cents,
-      }));
-
-      if (checkoutItems.length === 0) return;
-
-      // Request a secure checkout session from the server.
-      // This keeps STRIPE_SECRET_KEY out of the browser bundle.
-      const response = await fetch('/api/checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ items: checkoutItems }),
+      const { url } = await checkoutFn({
+        data: {
+          items: lines.map((line) => ({
+            productId: line.item.productId,
+            qty: line.item.qty,
+          })),
+        },
       });
 
-      const { url } = await response.json();
-
-      if (url) {
-        window.location.href = url;
-      } else {
-        throw new Error('Failed to create session');
-      }
+      // `busy` stays set — the browser is navigating away, and clearing it
+      // would allow a second click during the redirect.
+      window.location.href = url;
     } catch (error) {
-      console.error('Checkout error:', error);
-      alert('We encountered a quiet issue while preparing your selection. Please try again.');
+      console.error("Checkout error:", error);
+      setCheckoutError("Checkout could not start. Try again in a moment.");
+      setBusy(false);
     }
   };
 
@@ -158,19 +160,25 @@ export function CartDrawer() {
         </div>
 
         {lines.length > 0 && (
-          <footer className="p-6 flex flex-col gap-4 border-t-4 border-[#333333] bg-[#F6F2E7]">
+          <footer className="p-6 flex flex-col gap-4 border-t-4 border-ink bg-cream">
             <div className="flex justify-between items-center mb-2">
-              <span className="text-sm font-medium text-[#333333]">Estimated Total</span>
-              <span className="text-lg font-bold text-[#333333]">
-                ${(subtotal / 100).toFixed(2)}
-              </span>
+              <span className="text-sm font-medium text-ink">Estimated Total</span>
+              <span className="text-lg font-bold text-ink">{formatPrice(subtotal)}</span>
             </div>
+
+            {checkoutError && (
+              <p className="text-sm font-semibold text-poppy" role="alert">
+                {checkoutError}
+              </p>
+            )}
+
             <button
               type="button"
-              onClick={() => handleCheckout()}
-              className="w-full tc-btn tc-btn-poppy"
+              onClick={handleCheckout}
+              disabled={busy}
+              className="w-full tc-btn tc-btn-poppy disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              Proceed to checkout
+              {busy ? "Starting checkout…" : "Proceed to checkout"}
             </button>
             <Link
               to="/cart"
