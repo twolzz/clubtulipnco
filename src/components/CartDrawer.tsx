@@ -1,12 +1,10 @@
 import { Link } from "@tanstack/react-router";
-import { useState } from "react";
 import { X, Trash2, Plus, Minus } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { cart, cartDrawer, useCart, useCartDrawer } from "@/lib/cart-store";
 import { listProducts } from "@/lib/products.functions";
 import type { Product } from "@/lib/products.functions";
-import { startCheckout } from "@/lib/checkout.functions";
 
 function formatPrice(cents: number) {
   return `$${(cents / 100).toFixed(cents % 100 === 0 ? 0 : 2)}`;
@@ -16,11 +14,6 @@ export function CartDrawer() {
   const open = useCartDrawer();
   const { items } = useCart();
   const listFn = useServerFn(listProducts);
-  const checkoutFn = useServerFn(startCheckout);
-
-  const [busy, setBusy] = useState(false);
-  const [checkoutError, setCheckoutError] = useState<string | null>(null);
-
   const { data: products } = useQuery<Product[]>({
     queryKey: ["products", "all"],
     queryFn: () => listFn({}),
@@ -32,34 +25,6 @@ export function CartDrawer() {
     .map((i) => ({ item: i, product: productMap.get(i.productId) }))
     .filter((l): l is { item: typeof l.item; product: Product } => Boolean(l.product));
   const subtotal = lines.reduce((s, l) => s + l.product.price_cents * l.item.qty, 0);
-
-  // Calls the startCheckout server function directly. Prices are looked up
-  // again on the server, so nothing price-related is sent from the browser.
-  const handleCheckout = async () => {
-    if (lines.length === 0) return;
-
-    setBusy(true);
-    setCheckoutError(null);
-
-    try {
-      const { url } = await checkoutFn({
-        data: {
-          items: lines.map((line) => ({
-            productId: line.item.productId,
-            qty: line.item.qty,
-          })),
-        },
-      });
-
-      // `busy` stays set — the browser is navigating away, and clearing it
-      // would allow a second click during the redirect.
-      window.location.href = url;
-    } catch (error) {
-      console.error("Checkout error:", error);
-      setCheckoutError("Checkout could not start. Try again in a moment.");
-      setBusy(false);
-    }
-  };
 
   return (
     <>
@@ -165,21 +130,13 @@ export function CartDrawer() {
               <span className="text-sm font-medium text-ink">Estimated Total</span>
               <span className="text-lg font-bold text-ink">{formatPrice(subtotal)}</span>
             </div>
-
-            {checkoutError && (
-              <p className="text-sm font-semibold text-poppy" role="alert">
-                {checkoutError}
-              </p>
-            )}
-
-            <button
-              type="button"
-              onClick={handleCheckout}
-              disabled={busy}
-              className="w-full tc-btn tc-btn-poppy disabled:opacity-60 disabled:cursor-not-allowed"
+            <Link
+              to="/checkout"
+              onClick={() => cartDrawer.close()}
+              className="w-full tc-btn tc-btn-poppy text-center inline-flex justify-center"
             >
-              {busy ? "Starting checkout…" : "Proceed to checkout"}
-            </button>
+              Proceed to checkout
+            </Link>
             <Link
               to="/cart"
               onClick={() => cartDrawer.close()}
