@@ -24,10 +24,39 @@ export function CheckoutForm({ amountCents }: { amountCents: number }) {
     setSubmitting(true);
     setMessage(null);
 
+    // Billing details are collected by the AddressElement above and reused,
+    // so the Payment Element does not ask for them a second time. Because
+    // those fields are set to "never" below, we must supply them here.
+    const addressElement = elements.getElement(AddressElement);
+    if (!addressElement) {
+      setMessage("Something went wrong loading the form. Please refresh.");
+      setSubmitting(false);
+      return;
+    }
+
+    const { complete, value } = await addressElement.getValue();
+    if (!complete) {
+      setMessage("Please complete your shipping address.");
+      setSubmitting(false);
+      return;
+    }
+
     const { error } = await stripe.confirmPayment({
       elements,
       confirmParams: {
         return_url: `${window.location.origin}/checkout/return`,
+        payment_method_data: {
+          billing_details: {
+            name: value.name,
+            address: value.address,
+          },
+        },
+        // Recorded on the PaymentIntent so the address is visible in the
+        // Stripe dashboard when fulfilling the order.
+        shipping: {
+          name: value.name,
+          address: value.address,
+        },
       },
     });
 
@@ -50,8 +79,7 @@ export function CheckoutForm({ amountCents }: { amountCents: number }) {
           options={{
             mode: "shipping",
             // Shorten the country list to places we actually ship. This also
-            // sidesteps the unstyleable native dropdown on macOS/iOS, since a
-            // short list barely reads as a menu.
+            // sidesteps the unstyleable native dropdown on macOS/iOS.
             allowedCountries: ["US"],
           }}
         />
@@ -59,7 +87,23 @@ export function CheckoutForm({ amountCents }: { amountCents: number }) {
 
       <div>
         <h2 className="font-display text-xl font-extrabold mb-3">Payment</h2>
-        <PaymentElement options={{ layout: "tabs" }} />
+        <PaymentElement
+          options={{
+            layout: "tabs",
+            // Suppress Stripe's own billing name/address collection. The
+            // shipping address above is used instead, which removes the
+            // "Billing is same as shipping" checkbox entirely.
+            fields: {
+              billingDetails: {
+                name: "never",
+                address: "never",
+              },
+            },
+          }}
+        />
+        <p className="mt-3 text-xs font-semibold text-ink/60">
+          Your card will be billed to the shipping address above.
+        </p>
       </div>
 
       {message && (
