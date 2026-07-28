@@ -5,13 +5,29 @@ import {
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js";
+import { useServerFn } from "@tanstack/react-start";
+import { setOrderEmail } from "@/lib/checkout.functions";
 
-export function CheckoutForm({ amountCents }: { amountCents: number }) {
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+export function CheckoutForm({
+  amountCents,
+  orderId,
+}: {
+  amountCents: number;
+  orderId: string;
+}) {
   const stripe = useStripe();
   const elements = useElements();
+  const saveEmail = useServerFn(setOrderEmail);
 
+  const [email, setEmail] = useState("");
+  const [emailTouched, setEmailTouched] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+
+  const emailValid = EMAIL_PATTERN.test(email.trim());
+  const showEmailError = emailTouched && !emailValid;
 
   const total = `$${(amountCents / 100).toFixed(2)}`;
 
@@ -20,6 +36,12 @@ export function CheckoutForm({ amountCents }: { amountCents: number }) {
 
     // Stripe.js has not finished loading yet.
     if (!stripe || !elements) return;
+
+    if (!emailValid) {
+      setEmailTouched(true);
+      setMessage("Please enter a valid email address for your receipt.");
+      return;
+    }
 
     setSubmitting(true);
     setMessage(null);
@@ -41,6 +63,17 @@ export function CheckoutForm({ amountCents }: { amountCents: number }) {
       return;
     }
 
+    // Attach the email before confirming, so the order record and the
+    // Stripe receipt both have it even if the customer closes the tab.
+    try {
+      await saveEmail({ data: { orderId, email: email.trim() } });
+    } catch (err) {
+      console.error("Could not save email:", err);
+      setMessage("We could not save your email. Please try again.");
+      setSubmitting(false);
+      return;
+    }
+
     const { error } = await stripe.confirmPayment({
       elements,
       confirmParams: {
@@ -48,6 +81,7 @@ export function CheckoutForm({ amountCents }: { amountCents: number }) {
         payment_method_data: {
           billing_details: {
             name: value.name,
+            email: email.trim(),
             address: value.address,
           },
         },
@@ -72,7 +106,44 @@ export function CheckoutForm({ amountCents }: { amountCents: number }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-6" noValidate>
+      <div>
+        <h2 className="font-display text-xl font-extrabold mb-3">Contact</h2>
+        <label
+          htmlFor="checkout-email"
+          className="block text-xs font-bold uppercase tracking-[0.08em] text-ink/70 mb-2"
+        >
+          Email address
+        </label>
+        <input
+          id="checkout-email"
+          type="email"
+          inputMode="email"
+          autoComplete="email"
+          required
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          onBlur={() => setEmailTouched(true)}
+          aria-invalid={showEmailError}
+          aria-describedby={showEmailError ? "checkout-email-error" : "checkout-email-hint"}
+          placeholder="you@example.com"
+          className="tc-input"
+          style={showEmailError ? { borderColor: "var(--poppy)" } : undefined}
+        />
+        {showEmailError ? (
+          <p
+            id="checkout-email-error"
+            className="mt-2 text-sm font-semibold text-poppy"
+          >
+            Enter a valid email address.
+          </p>
+        ) : (
+          <p id="checkout-email-hint" className="mt-2 text-xs font-semibold text-ink/60">
+            We'll send your order confirmation here.
+          </p>
+        )}
+      </div>
+
       <div>
         <h2 className="font-display text-xl font-extrabold mb-3">Ship to</h2>
         <AddressElement
@@ -90,12 +161,13 @@ export function CheckoutForm({ amountCents }: { amountCents: number }) {
         <PaymentElement
           options={{
             layout: "tabs",
-            // Suppress Stripe's own billing name/address collection. The
-            // shipping address above is used instead, which removes the
+            // Suppress Stripe's own contact and billing collection. The email
+            // and shipping address above are used instead, which removes the
             // "Billing is same as shipping" checkbox entirely.
             fields: {
               billingDetails: {
                 name: "never",
+                email: "never",
                 address: "never",
               },
             },
