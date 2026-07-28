@@ -1,7 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { Lock, Instagram } from "lucide-react";
-import { SubscribeForm } from "./SubscribeForm";
 import { CartButton } from "./CartButton";
 import { HeaderSearch } from "./HeaderSearch";
 
@@ -92,42 +91,11 @@ function AmexMark() {
   );
 }
 
-function DiscoverMark() {
-  return (
-    <Mark label="Discover">
-      <span className="font-display font-bold text-[10px] leading-none tracking-tight text-ink">
-        DISC
-      </span>
-      <span className="block w-[9px] h-[9px] rounded-full bg-poppy" />
-    </Mark>
-  );
-}
-
-function ApplePayMark() {
-  return (
-    <Mark label="Apple Pay">
-      <span className="font-display font-semibold text-[12px] leading-none text-ink">
-        &#63743; Pay
-      </span>
-    </Mark>
-  );
-}
-
 function KlarnaMark() {
   return (
     <Mark label="Klarna">
       <span className="font-display font-extrabold text-[11px] leading-none tracking-tight text-ink">
         Klarna.
-      </span>
-    </Mark>
-  );
-}
-
-function AffirmMark() {
-  return (
-    <Mark label="Affirm">
-      <span className="font-display font-extrabold text-[11px] leading-none tracking-tight text-sage">
-        affirm
       </span>
     </Mark>
   );
@@ -192,27 +160,8 @@ export function SiteLayout({ children }: { children: ReactNode }) {
 
       <main className="flex-1">{children}</main>
 
-      {/* Subscribe block (kept above footer) */}
-      <section className="px-5 md:px-8 pt-16 pb-10">
-        <div className="max-w-5xl mx-auto">
-          <div className="tc-card tc-card-poppy p-8 md:p-12">
-            <div className="grid md:grid-cols-2 gap-8 items-center">
-              <div>
-                <h2 className="text-4xl md:text-5xl font-extrabold leading-tight">
-                  Welcome to <span className="text-poppy">the Club!</span>
-                </h2>
-                <p className="mt-3 text-base md:text-lg text-ink/80">
-                  Pop-up dates, fresh drops, and quiet Dutch design — straight to your inbox.
-                </p>
-              </div>
-              <SubscribeForm variant="inline" />
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Trust & compliance footer */}
-      <footer className="bg-cream border-t-4 border-ink mt-4">
+      <footer className="bg-cream border-t-4 border-ink mt-16">
         <div className="max-w-7xl mx-auto px-5 md:px-8 py-10 md:py-14 flex flex-col gap-10">
           {/* Row 1: links + socials */}
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
@@ -229,14 +178,14 @@ export function SiteLayout({ children }: { children: ReactNode }) {
               ))}
             </nav>
             <div className="flex items-center gap-3">
-              <a
+              
                 href="https://instagram.com"
                 aria-label="instagram"
                 className="w-10 h-10 inline-flex items-center justify-center rounded-full border-[3px] border-ink bg-cream text-ink shadow-[3px_3px_0_var(--ink)] hover:text-denim hover:shadow-[5px_5px_0_var(--ink)] hover:-translate-x-[2px] hover:-translate-y-[2px] transition-all"
               >
                 <Instagram size={18} strokeWidth={2.5} />
               </a>
-              <a
+              
                 href="https://tiktok.com"
                 aria-label="tiktok"
                 className="w-10 h-10 inline-flex items-center justify-center rounded-full border-[3px] border-ink bg-cream text-ink shadow-[3px_3px_0_var(--ink)] hover:text-denim hover:shadow-[5px_5px_0_var(--ink)] hover:-translate-x-[2px] hover:-translate-y-[2px] transition-all"
@@ -260,10 +209,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
                 <VisaMark />
                 <MastercardMark />
                 <AmexMark />
-                <DiscoverMark />
-                <ApplePayMark />
                 <KlarnaMark />
-                <AffirmMark />
               </div>
             </div>
             <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 text-sm text-ink/70">
