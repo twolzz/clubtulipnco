@@ -5,7 +5,11 @@ import { useServerFn } from "@tanstack/react-start";
 import { SiteLayout } from "@/components/SiteLayout";
 import { cart, useCart } from "@/lib/cart-store";
 import { listProducts, type Product } from "@/lib/products.functions";
-
+/**
+ * The Stripe fields render inside an iframe, which does not inherit the pageee
+ * stylesheet. Inter (--font-sans, used by the inputs) and Quicksand
+ * (--font-display, used by the labels) both have to be passed to Elements.
+ */
 export const Route = createFileRoute("/cart")({
   head: () => ({
     meta: [
