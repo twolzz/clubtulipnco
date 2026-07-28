@@ -6,7 +6,7 @@ import type { Database } from "@/integrations/supabase/types";
 
 /**
  * Service-role client. Bypasses row-level security, so it is only ever
- * constructed inside a server function — never imported by a component.
+ * constructed inside a server function — never imported by a componentss.
  */
 function adminClient() {
   return createClient<Database>(
