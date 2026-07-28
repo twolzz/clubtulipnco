@@ -38,7 +38,7 @@ function TikTokIcon({ className }: { className?: string }) {
 
 /* ------------------------------------------------------------------ */
 /* Payment marks                                                       */
-/* Only methods actually enabled on the Stripe account are shown.      */
+/* Only methods actually enabled on the Stripe account are showing.      */
 /* ------------------------------------------------------------------ */
 
 function Mark({
