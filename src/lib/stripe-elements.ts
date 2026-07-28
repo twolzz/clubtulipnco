@@ -131,6 +131,28 @@ export function buildAppearance(): Appearance {
         color: poppy,
         marginTop: "8px",
       },
+      // The payment-method overflow menu. Note: system dropdowns such as the
+      // Country selector cannot be styled on macOS or iOS — these rules apply
+      // to Stripe's own menus and to system dropdowns on Windows.
+      ".Dropdown": {
+        backgroundColor: "#FFFFFF",
+        border: `3px solid ${ink}`,
+        borderRadius: "16px",
+        boxShadow: `4px 4px 0 ${ink}`,
+        padding: "4px",
+      },
+      ".DropdownItem": {
+        backgroundColor: "#FFFFFF",
+        borderRadius: "10px",
+        color: ink,
+        fontWeight: "600",
+        padding: "10px 14px",
+      },
+      ".DropdownItem--highlight": {
+        backgroundColor: cream,
+        color: ink,
+        fontWeight: "700",
+      },
       ".CheckboxInput": {
         backgroundColor: "#FFFFFF",
         border: `2px solid ${ink}`,
