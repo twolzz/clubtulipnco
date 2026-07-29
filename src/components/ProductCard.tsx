@@ -1,13 +1,17 @@
-// Goes in: src/components/ProductCard.tsx  (new file)
+// Goes in: src/components/ProductCard.tsx  (replace the whole file)
 
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { toast } from "sonner";
 import type { Product } from "@/lib/products.functions";
 import { cart, cartDrawer } from "@/lib/cart-store";
 
 export function formatPrice(cents: number) {
   return `$${(cents / 100).toFixed(cents % 100 === 0 ? 0 : 2)}`;
+}
+
+/** "Plushies" -> "plushies". Used for the ?collection= URL param. */
+export function collectionSlug(category: string) {
+  return category.trim().toLowerCase().replace(/\s+/g, "-");
 }
 
 export const BG_CLASS: Record<string, string> = {
@@ -83,6 +87,9 @@ export function ProductGlyph({ shape, fg }: { shape: string; fg: string }) {
 /**
  * Square media block. Renders the bucket image when one exists, and silently
  * falls back to the drawn glyph if the file is missing or fails to load.
+ *
+ * Reused by the shop grid, the product page gallery, the cart drawer and the
+ * checkout summary, so a product looks identical everywhere.
  */
 export function ProductMedia({
   product,
@@ -131,7 +138,7 @@ export function ProductCard({ product }: { product: Product }) {
 
   function addToCart() {
     cart.add(product.id);
-    toast.success(`Added ${product.name} to cart.`);
+    // No toast — the drawer opening is the confirmation.
     cartDrawer.open();
   }
 
