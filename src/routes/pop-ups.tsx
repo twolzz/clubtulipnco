@@ -1,9 +1,8 @@
-// STEP 2 of 3
+// STEP 1 of 2
 // Goes in: src/routes/pop-ups.tsx  (replace the whole file)
 //
-// The blue "Be first in line." section at the bottom is gone. The "Never miss
-// a Saturday" card up in the hero already carries the same Join the Club call,
-// so nothing is lost.
+// Divider fix is at the bottom of this file — see the comment on the
+// "Upcoming Pop-ups" section.
 
 import { createFileRoute } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
@@ -93,7 +92,21 @@ function PopUpsPage() {
         </div>
       </section>
 
-      <section className="bg-sun border-y-4 border-ink py-16 md:py-24 px-5 md:px-8">
+      {/*
+        DIVIDER FIX — this is now the last section on the page, so it runs
+        straight into the footer.
+
+        What was wrong: the yellow block had a border on BOTH sides, then the
+        site footer adds a 4rem top margin and its own top border. That left a
+        thin strip of cream trapped between two black lines.
+
+        Two changes: border-t-4 instead of border-y-4 (the footer's own top
+        border closes the block now, so only one line shows), and -mb-16 to
+        cancel the footer's mt-16.
+
+        If you ever add another section below this one, drop the -mb-16.
+      */}
+      <section className="bg-sun border-t-4 border-ink py-16 md:py-24 px-5 md:px-8 -mb-16">
         <div className="max-w-5xl mx-auto">
           <h2 className="text-4xl md:text-5xl font-extrabold mb-10">Upcoming Pop-ups</h2>
           {events.length === 0 ? (
