@@ -1,3 +1,6 @@
+// STEP 4 of 7
+// Goes in: src/components/CartDrawer.tsx  (replace the whole file)
+
 import { Link } from "@tanstack/react-router";
 import { X, Trash2, Plus, Minus } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
@@ -5,10 +8,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { cart, cartDrawer, useCart, useCartDrawer } from "@/lib/cart-store";
 import { listProducts } from "@/lib/products.functions";
 import type { Product } from "@/lib/products.functions";
-
-function formatPrice(cents: number) {
-  return `$${(cents / 100).toFixed(cents % 100 === 0 ? 0 : 2)}`;
-}
+import { ProductMedia, formatPrice } from "@/components/ProductCard";
 
 export function CartDrawer() {
   const open = useCartDrawer();
@@ -45,7 +45,7 @@ export function CartDrawer() {
           open ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        <header className="flex items-center justify-between px-6 py-5 border-b-4 border-ink">
+        <header className="flex items-center justify-between px-5 sm:px-6 py-5 border-b-4 border-ink">
           <h2 className="font-display text-2xl font-extrabold">Your Cart.</h2>
           <button
             type="button"
@@ -57,7 +57,7 @@ export function CartDrawer() {
           </button>
         </header>
 
-        <div className="flex-1 overflow-y-auto px-6 py-5 space-y-4">
+        <div className="flex-1 overflow-y-auto px-5 sm:px-6 py-5 space-y-4">
           {lines.length === 0 ? (
             <div className="text-center py-16">
               <p className="font-display text-3xl font-extrabold mb-3">
@@ -76,33 +76,56 @@ export function CartDrawer() {
             lines.map(({ item, product }) => (
               <div
                 key={item.productId}
-                className="flex gap-4 items-center rounded-2xl border-[3px] border-ink bg-white p-4 shadow-[4px_4px_0_var(--ink)]"
+                className="flex gap-3 sm:gap-4 items-start rounded-2xl border-[3px] border-ink bg-white p-3 sm:p-4 shadow-[4px_4px_0_var(--ink)]"
               >
-                <div
-                  className="w-14 h-14 rounded-xl border-2 border-ink shrink-0"
-                  style={{ background: product.bg_color }}
-                  aria-hidden
-                />
+                {/* Thumbnail — real photo, glyph fallback, tap to reopen product */}
+                <Link
+                  to="/shop/$slug"
+                  params={{ slug: product.slug }}
+                  onClick={() => cartDrawer.close()}
+                  aria-label={`View ${product.name}`}
+                  className="w-16 h-16 shrink-0 rounded-xl border-2 border-ink overflow-hidden"
+                >
+                  <ProductMedia product={product} className="w-full h-full" />
+                </Link>
+
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs font-bold uppercase tracking-widest text-ink/60">
-                    {product.category}
-                  </p>
-                  <p className="font-semibold text-ink truncate">{product.name}</p>
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-ink/60">
+                        {product.category}
+                      </p>
+                      <Link
+                        to="/shop/$slug"
+                        params={{ slug: product.slug }}
+                        onClick={() => cartDrawer.close()}
+                        className="block font-semibold text-ink truncate hover:text-denim transition-colors"
+                      >
+                        {product.name}
+                      </Link>
+                    </div>
+                    <span className="font-extrabold shrink-0">
+                      {formatPrice(product.price_cents * item.qty)}
+                    </span>
+                  </div>
+
                   <div className="mt-2 flex items-center gap-2">
                     <button
                       type="button"
                       aria-label="decrease quantity"
                       onClick={() => cart.setQty(item.productId, item.qty - 1)}
-                      className="w-7 h-7 rounded-full border-2 border-ink bg-cream flex items-center justify-center"
+                      className="w-7 h-7 rounded-full border-2 border-ink bg-cream flex items-center justify-center hover:bg-sun transition-colors"
                     >
                       <Minus size={12} strokeWidth={3} />
                     </button>
-                    <span className="font-bold text-sm w-6 text-center">{item.qty}</span>
+                    <span className="font-bold text-sm w-6 text-center tabular-nums">
+                      {item.qty}
+                    </span>
                     <button
                       type="button"
                       aria-label="increase quantity"
                       onClick={() => cart.setQty(item.productId, item.qty + 1)}
-                      className="w-7 h-7 rounded-full border-2 border-ink bg-cream flex items-center justify-center"
+                      className="w-7 h-7 rounded-full border-2 border-ink bg-cream flex items-center justify-center hover:bg-sun transition-colors"
                     >
                       <Plus size={12} strokeWidth={3} />
                     </button>
@@ -110,22 +133,19 @@ export function CartDrawer() {
                       type="button"
                       aria-label="remove item"
                       onClick={() => cart.remove(item.productId)}
-                      className="ml-auto text-ink/60 hover:text-poppy"
+                      className="ml-auto text-ink/60 hover:text-poppy transition-colors"
                     >
                       <Trash2 size={16} strokeWidth={2.5} />
                     </button>
                   </div>
                 </div>
-                <span className="font-extrabold">
-                  {formatPrice(product.price_cents * item.qty)}
-                </span>
               </div>
             ))
           )}
         </div>
 
         {lines.length > 0 && (
-          <footer className="p-6 flex flex-col gap-4 border-t-4 border-ink bg-cream">
+          <footer className="p-5 sm:p-6 flex flex-col gap-4 border-t-4 border-ink bg-cream">
             <div className="flex justify-between items-center mb-2">
               <span className="text-sm font-medium text-ink">Estimated Total</span>
               <span className="text-lg font-bold text-ink">{formatPrice(subtotal)}</span>
