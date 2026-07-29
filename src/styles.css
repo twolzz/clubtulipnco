@@ -53,6 +53,8 @@
 }
 
 @layer base {
+  html { scroll-padding-top: 100px; }
+}
   * {
     border-color: var(--color-border);
   }
