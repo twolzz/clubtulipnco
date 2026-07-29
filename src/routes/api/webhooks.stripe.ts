@@ -31,6 +31,36 @@ function shippingFrom(intent: Stripe.PaymentIntent): ShippingAddress | null {
   };
 }
 
+// The same address, mapped onto the orders table columns so it's persisted
+// rather than only being emailed. Country and phone are included here (the
+// email's ShippingAddress type doesn't carry them) because a shipping label
+// needs the country, and couriers often want a contact number.
+//
+// Returns {} when Stripe has no address, so spreading it into an update is
+// always safe and never overwrites existing values with nulls.
+function shippingColumns(intent: Stripe.PaymentIntent): Record<string, string | null> {
+  const s = intent.shipping;
+  if (!s) return {};
+
+  const columns: Record<string, string | null> = {
+    shipping_name: s.name ?? null,
+    shipping_phone: s.phone ?? null,
+    shipping_address_line1: s.address?.line1 ?? null,
+    shipping_address_line2: s.address?.line2 ?? null,
+    shipping_city: s.address?.city ?? null,
+    shipping_state: s.address?.state ?? null,
+    shipping_postal_code: s.address?.postal_code ?? null,
+    shipping_country: s.address?.country ?? null,
+  };
+
+  // Drop empty keys so a partial address can't blank out fields that were
+  // already filled in (e.g. by the dashboard's Stripe sync).
+  for (const key of Object.keys(columns)) {
+    if (columns[key] === null || columns[key] === "") delete columns[key];
+  }
+  return columns;
+}
+
 export const Route = createFileRoute("/api/webhooks/stripe")({
   server: {
     handlers: {
@@ -78,6 +108,16 @@ export const Route = createFileRoute("/api/webhooks/stripe")({
             const orderId = intent.metadata?.order_id;
             if (!orderId) break;
 
+            const shipping = shippingColumns(intent);
+            if (Object.keys(shipping).length === 0) {
+              // Worth surfacing: without this the order can't be fulfilled,
+              // and the cause is upstream (no address on the PaymentIntent).
+              console.warn("[webhook] payment intent has no shipping address", {
+                orderId,
+                intentId: intent.id,
+              });
+            }
+
             // Only flip rows that are still pending. Stripe retries webhooks,
             // so this doubles as the guard against sending two receipts:
             // a replayed event updates zero rows and returns nothing.
@@ -86,6 +126,10 @@ export const Route = createFileRoute("/api/webhooks/stripe")({
               .update({
                 status: "paid",
                 customer_email: intent.receipt_email ?? undefined,
+                stripe_payment_intent_id: intent.id,
+                // Persist the shipping address so orders can actually be
+                // shipped from the database instead of only being emailed.
+                ...shipping,
                 updated_at: new Date().toISOString(),
               })
               .eq("id", orderId)
@@ -100,6 +144,22 @@ export const Route = createFileRoute("/api/webhooks/stripe")({
 
             const order = updated?.[0];
             if (!order) {
+              // Already processed. Don't re-send the receipt, but do backfill
+              // the address if an earlier run (or an older deploy) missed it —
+              // otherwise a replayed event leaves the order unshippable.
+              if (Object.keys(shipping).length > 0) {
+                const { error: backfillError } = await supabase
+                  .from("orders")
+                  .update(shipping)
+                  .eq("id", orderId)
+                  .is("shipping_address_line1", null);
+                if (backfillError) {
+                  console.error(
+                    "[webhook] shipping backfill failed",
+                    backfillError.message,
+                  );
+                }
+              }
               console.log("[webhook] order already processed, skipping", { orderId });
               break;
             }
