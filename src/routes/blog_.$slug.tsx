@@ -138,7 +138,7 @@ function ArticlePage() {
           {article.body.map((p, i) => (
             <p
               key={i}
-              className="text-xl md:text-2xl leading-relaxed text-ink font-medium"
+              className="text-lg md:text-xl leading-relaxed text-ink font-medium"
             >
               {p}
             </p>
