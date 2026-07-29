@@ -129,15 +129,15 @@ function MobileMenuPanel({ onClose }: { onClose: () => void }) {
         </nav>
 
         <div className="flex items-center gap-3 px-5 pb-5 pt-1">
-          <a
-            href="https://instagram.com"
+          
+            <a href="https://instagram.com"
             aria-label="Instagram"
             className="w-11 h-11 inline-flex items-center justify-center rounded-full border-[3px] border-ink bg-white text-ink shadow-[3px_3px_0_var(--ink)]"
           >
             <Instagram size={18} strokeWidth={2.5} />
           </a>
-          <a
-            href="https://tiktok.com"
+          
+            <a href="https://tiktok.com"
             aria-label="TikTok"
             className="w-11 h-11 inline-flex items-center justify-center rounded-full border-[3px] border-ink bg-white text-ink shadow-[3px_3px_0_var(--ink)]"
           >
@@ -243,15 +243,15 @@ export function SiteLayout({ children }: { children: ReactNode }) {
               ))}
             </nav>
             <div className="flex items-center gap-3">
-              <a
-                href="https://instagram.com"
+              
+                <a href="https://instagram.com"
                 aria-label="Instagram"
                 className="w-10 h-10 inline-flex items-center justify-center rounded-full border-[3px] border-ink bg-cream text-ink shadow-[3px_3px_0_var(--ink)] hover:text-denim hover:shadow-[5px_5px_0_var(--ink)] hover:-translate-x-[2px] hover:-translate-y-[2px] transition-all"
               >
                 <Instagram size={18} strokeWidth={2.5} />
               </a>
-              <a
-                href="https://tiktok.com"
+              
+                <a href="https://tiktok.com"
                 aria-label="TikTok"
                 className="w-10 h-10 inline-flex items-center justify-center rounded-full border-[3px] border-ink bg-cream text-ink shadow-[3px_3px_0_var(--ink)] hover:text-denim hover:shadow-[5px_5px_0_var(--ink)] hover:-translate-x-[2px] hover:-translate-y-[2px] transition-all"
               >
