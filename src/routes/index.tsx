@@ -1,4 +1,9 @@
+// STEP 5 of 7
+// Goes in: src/routes/index.tsx  (replace the whole file)
+// This is the HOME page — not the checkout one (that's step 7).
+
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { ArrowRight } from "lucide-react";
 import { SiteLayout } from "@/components/SiteLayout";
 import { JoinClubDialog } from "@/components/JoinClubDialog";
 
@@ -21,21 +26,28 @@ export const Route = createFileRoute("/")({
   component: Home,
 });
 
+/**
+ * `slug` must match the product's category lowercased — that's what the shop
+ * route reads out of ?collection=. Category "Plushies" -> slug "plushies".
+ */
 const COLLECTIONS = [
   {
     title: "Plushies",
+    slug: "plushies",
     blurb: "Eco-corduroy bunnies & friends",
     color: "bg-poppy",
     shadow: "tc-card-sage",
   },
   {
     title: "Stationery",
+    slug: "stationery",
     blurb: "Journals, pens & desk goods",
     color: "bg-denim",
     shadow: "tc-card-poppy",
   },
   {
     title: "Accessories",
+    slug: "accessories",
     blurb: "Keychains, pins & pouches",
     color: "bg-sage",
     shadow: "tc-card-denim",
@@ -79,26 +91,32 @@ function Home() {
         </div>
       </section>
 
-      {/* Collections */}
+      {/* Collections — solid colour blocks, each one a filtered shop link */}
       <section className="bg-sun border-y-4 border-ink py-16 md:py-24 px-5 md:px-8">
         <div className="max-w-6xl mx-auto">
-          <div className="flex items-end justify-between flex-wrap gap-4 mb-10">
+          <div className="flex items-end justify-between flex-wrap gap-4 mb-8 md:mb-10">
             <h2 className="text-4xl md:text-5xl font-extrabold">Curated Collections</h2>
             <Link to="/shop" className="tc-btn tc-btn-cream">Shop All</Link>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid sm:grid-cols-3 gap-5 md:gap-8">
             {COLLECTIONS.map((c) => (
               <Link
-                key={c.title}
+                key={c.slug}
                 to="/shop"
-                className={`tc-card ${c.shadow} overflow-hidden flex flex-col hover:-translate-y-1 transition-transform`}
+                search={{ collection: c.slug }}
+                className={`tc-card ${c.shadow} ${c.color} text-white p-6 md:p-8 flex flex-col justify-between gap-8 min-h-[180px] md:min-h-[210px] hover:-translate-y-1 transition-transform`}
               >
-                <div className={`${c.color} aspect-[4/3]`} />
-                <div className="p-6 border-t-4 border-ink bg-white">
-                  <h3 className="text-2xl font-extrabold">{c.title}</h3>
-                  <p className="text-ink/70 mt-1">{c.blurb}</p>
+                <div>
+                  <h3 className="text-2xl md:text-3xl font-extrabold leading-tight">
+                    {c.title}
+                  </h3>
+                  <p className="mt-2 text-white/85 leading-snug">{c.blurb}</p>
                 </div>
+                <span className="inline-flex items-center gap-2 text-sm font-bold">
+                  Shop {c.title}
+                  <ArrowRight size={16} strokeWidth={3} />
+                </span>
               </Link>
             ))}
           </div>
