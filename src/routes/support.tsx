@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState, type FormEvent } from "react";
+import { type FormEvent } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
 import { SiteLayout } from "@/components/SiteLayout";
@@ -44,7 +44,7 @@ function MailLink() {
   return (
     <a
       href={`mailto:${EMAIL}`}
-      className="font-semibold text-denim underline decoration-2 underline-offset-4 hover:text-poppy transition-colors"
+      className="font-semibold text-denim underline decoration-2 underline-offset-4 hover:text-poppy transition-colors break-all"
     >
       {EMAIL}
     </a>
@@ -53,21 +53,16 @@ function MailLink() {
 
 function SupportPage() {
   const search = Route.useSearch();
-  const [active, setActive] = useState<TabKey>(search.tab ?? "contact");
-  useEffect(() => {
-    if (search.tab && search.tab !== active) setActive(search.tab);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [search.tab]);
+  // Derived straight from the URL — no local state, so tabs work without JS,
+  // are shareable, and respond to the back button.
+  const active: TabKey = search.tab ?? "contact";
 
   return (
     <SiteLayout>
-      <section className="px-5 md:px-8 pt-10 md:pt-14 pb-20 md:pb-28">
+      <section className="px-4 sm:px-5 md:px-8 pt-8 md:pt-14 pb-16 md:pb-28">
         <div className="max-w-6xl mx-auto">
           {/* Breadcrumb */}
-          <nav
-            aria-label="Breadcrumb"
-            className="text-sm font-semibold text-ink/70 mb-6"
-          >
+          <nav aria-label="Breadcrumb" className="text-sm font-semibold text-ink/70 mb-5 md:mb-6">
             <Link to="/" className="hover:text-denim transition-colors">
               Home
             </Link>
@@ -75,34 +70,34 @@ function SupportPage() {
             <span className="text-ink">Support</span>
           </nav>
 
-          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight leading-[1.02] mb-10 md:mb-14">
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold tracking-tight leading-[1.05] md:leading-[1.02] mb-8 md:mb-14">
             Support.
           </h1>
 
-          <div className="grid md:grid-cols-12 gap-8 md:gap-10">
-            {/* Sticky pill menu */}
-            <aside className="md:col-span-4 lg:col-span-3">
+          <div className="grid md:grid-cols-12 gap-6 md:gap-10">
+            {/* Tab menu — wraps on mobile (no horizontal scroll), stacks on desktop */}
+            <aside className="md:col-span-4 lg:col-span-3 min-w-0">
               <div className="md:sticky md:top-32">
-                <ul className="flex md:flex-col gap-3 overflow-x-auto md:overflow-visible pb-1 md:pb-0">
+                <ul className="flex flex-wrap md:flex-col gap-2 md:gap-3">
                   {TABS.map((t) => {
                     const isActive = active === t.key;
                     return (
-                      <li key={t.key} className="shrink-0 md:shrink">
-                        <button
-                          type="button"
-                          onClick={() => setActive(t.key)}
-                          aria-pressed={isActive}
+                      <li key={t.key} className="md:w-full">
+                        <Link
+                          to="/support"
+                          search={{ tab: t.key }}
+                          aria-current={isActive ? "page" : undefined}
                           className={[
-                            "w-full whitespace-nowrap md:whitespace-normal text-left",
-                            "rounded-full border-[3px] border-ink px-5 py-3",
-                            "font-semibold text-ink transition-all",
+                            "block text-left md:w-full",
+                            "rounded-full border-[3px] border-ink px-4 py-2.5 md:px-5 md:py-3",
+                            "text-sm md:text-base font-semibold text-ink transition-all",
                             isActive
                               ? "bg-sun shadow-[4px_4px_0_var(--ink)]"
                               : "bg-cream shadow-[4px_4px_0_var(--ink)] hover:text-denim hover:shadow-[6px_6px_0_var(--ink)] hover:-translate-x-[2px] hover:-translate-y-[2px]",
                           ].join(" ")}
                         >
                           {t.label}
-                        </button>
+                        </Link>
                       </li>
                     );
                   })}
@@ -111,10 +106,8 @@ function SupportPage() {
             </aside>
 
             {/* Content container */}
-            <div className="md:col-span-8 lg:col-span-9">
-              <div
-                className="bg-[#F6F2E7] border-4 border-ink rounded-2xl p-8 md:p-12 shadow-[8px_8px_0_var(--ink)]"
-              >
+            <div className="md:col-span-8 lg:col-span-9 min-w-0">
+              <div className="bg-[#F6F2E7] border-[3px] sm:border-4 border-ink rounded-2xl p-5 sm:p-8 md:p-12 shadow-[5px_5px_0_var(--ink)] sm:shadow-[8px_8px_0_var(--ink)]">
                 {active === "contact" && <ContactPanel />}
                 {active === "shipping" && <ShippingPanel />}
                 {active === "privacy" && <PrivacyPanel />}
@@ -130,7 +123,7 @@ function SupportPage() {
 
 function PanelHeading({ children }: { children: React.ReactNode }) {
   return (
-    <h2 className="font-display text-3xl md:text-5xl font-extrabold text-ink mb-8">
+    <h2 className="font-display text-2xl sm:text-3xl md:text-5xl font-extrabold text-ink mb-6 md:mb-8">
       {children}
     </h2>
   );
@@ -150,7 +143,7 @@ function ContactPanel() {
   return (
     <div>
       <PanelHeading>Let's chat.</PanelHeading>
-      <p className="text-base md:text-lg leading-relaxed text-ink/85 mb-10 max-w-2xl">
+      <p className="text-base md:text-lg leading-relaxed text-ink/85 mb-8 md:mb-10 max-w-2xl">
         Have a question about our products or upcoming San Diego pop-ups? Drop us a
         line! You can reach us directly at <MailLink /> or fill out the form below.
         We are proudly based in San Diego, California, and aim to respond to all
@@ -159,10 +152,7 @@ function ContactPanel() {
 
       <form onSubmit={handleSubmit} className="space-y-5 max-w-xl">
         <div>
-          <label
-            htmlFor="support-name"
-            className="block text-sm font-semibold mb-2"
-          >
+          <label htmlFor="support-name" className="block text-sm font-semibold mb-2">
             Name
           </label>
           <input
@@ -177,10 +167,7 @@ function ContactPanel() {
         </div>
 
         <div>
-          <label
-            htmlFor="support-email"
-            className="block text-sm font-semibold mb-2"
-          >
+          <label htmlFor="support-email" className="block text-sm font-semibold mb-2">
             Email
           </label>
           <input
@@ -195,10 +182,7 @@ function ContactPanel() {
         </div>
 
         <div>
-          <label
-            htmlFor="support-message"
-            className="block text-sm font-semibold mb-2"
-          >
+          <label htmlFor="support-message" className="block text-sm font-semibold mb-2">
             Message
           </label>
           <textarea
@@ -214,7 +198,7 @@ function ContactPanel() {
         <div className="pt-2">
           <button
             type="submit"
-            className="inline-flex items-center justify-center rounded-full border-[3px] border-ink bg-poppy px-8 py-3 font-bold text-white shadow-[6px_6px_0_var(--ink)] hover:shadow-[8px_8px_0_var(--ink)] hover:-translate-x-[2px] hover:-translate-y-[2px] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[2px_2px_0_var(--ink)] transition-all"
+            className="w-full sm:w-auto inline-flex items-center justify-center rounded-full border-[3px] border-ink bg-poppy px-8 py-3 font-bold text-white shadow-[6px_6px_0_var(--ink)] hover:shadow-[8px_8px_0_var(--ink)] hover:-translate-x-[2px] hover:-translate-y-[2px] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[2px_2px_0_var(--ink)] transition-all"
           >
             Send Message
           </button>
@@ -227,11 +211,11 @@ function ContactPanel() {
 function ShippingPanel() {
   return (
     <div className="max-w-2xl">
-      <PanelHeading>Shipping & Returns.</PanelHeading>
+      <PanelHeading>Shipping &amp; Returns.</PanelHeading>
       <div className="space-y-6 text-base md:text-lg leading-relaxed text-ink/85">
         <p>
           <span className="font-bold text-ink">Shipping:</span> We offer Free US
-          Shipping on all orders over $50. All Tulip & Co. orders are carefully
+          Shipping on all orders over $50. All Tulip &amp; Co. orders are carefully
           packaged and shipped directly from San Diego, California.
         </p>
         <p>
@@ -249,27 +233,27 @@ function PrivacyPanel() {
   return (
     <div className="max-w-2xl">
       <PanelHeading>Privacy Policy.</PanelHeading>
-      <p className="text-base md:text-lg leading-relaxed text-ink/85 mb-8 font-semibold">
+      <p className="text-base md:text-lg leading-relaxed text-ink/85 mb-6 md:mb-8 font-semibold">
         Authentic Dutch design, with fiercely protected privacy.
       </p>
-      <ol className="space-y-6 text-base md:text-lg leading-relaxed text-ink/85 list-none counter-reset-[item] [counter-reset:item]">
+      <ol className="space-y-6 text-base md:text-lg leading-relaxed text-ink/85 list-none">
         <li>
           <span className="font-bold text-ink">1. Information We Collect:</span>{" "}
-          Welcome to Tulip & Co. We only collect the information necessary to
+          Welcome to Tulip &amp; Co. We only collect the information necessary to
           provide you with a premium shopping experience. This includes your
           Contact Information (when you join our club), Order Information (for
           physical purchases), and securely processed Payment Information.
         </li>
         <li>
           <span className="font-bold text-ink">2. How We Use Your Data:</span>{" "}
-          Your information is used strictly to process and ship your Tulip & Co.
+          Your information is used strictly to process and ship your Tulip &amp; Co.
           orders, communicate with you regarding your order status, and send you
           exclusive updates regarding our San Diego pop-up dates and new
           inventory arrivals.
         </li>
         <li>
           <span className="font-bold text-ink">
-            3. Third-Party Services & Security:
+            3. Third-Party Services &amp; Security:
           </span>{" "}
           We will never sell your personal data. We only share necessary data
           with trusted platforms to run our business securely. This includes our
@@ -292,7 +276,7 @@ function TermsPanel() {
     <div className="max-w-2xl">
       <PanelHeading>Terms of Service.</PanelHeading>
       <p className="text-base md:text-lg leading-relaxed text-ink/85">
-        Welcome to Tulip & Co. By accessing our webshop, you agree to our terms
+        Welcome to Tulip &amp; Co. By accessing our webshop, you agree to our terms
         of service. All curated merchandise and collections are authentic and
         officially licensed. We reserve the right to update product availability
         and pricing as our Test Batch inventory fluctuates.
