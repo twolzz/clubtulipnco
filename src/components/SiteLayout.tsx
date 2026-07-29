@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import type { ReactNode } from "react";
-import { Lock, Instagram } from "lucide-react";
+import { useEffect, useState, type ReactNode } from "react";
+import { Lock, Instagram, Menu, X } from "lucide-react";
 import { CartButton } from "./CartButton";
 import { HeaderSearch } from "./HeaderSearch";
 
@@ -41,13 +41,7 @@ function TikTokIcon({ className }: { className?: string }) {
 /* Only methods actually enabled on the Stripe account are shown.      */
 /* ------------------------------------------------------------------ */
 
-function Mark({
-  label,
-  children,
-}: {
-  label: string;
-  children: ReactNode;
-}) {
+function Mark({ label, children }: { label: string; children: ReactNode }) {
   return (
     <div
       role="img"
@@ -101,7 +95,80 @@ function KlarnaMark() {
   );
 }
 
+/* ------------------------------------------------------------------ */
+/* Mobile menu                                                         */
+/* ------------------------------------------------------------------ */
+
+function MobileMenuPanel({ onClose }: { onClose: () => void }) {
+  return (
+    <>
+      {/* Backdrop — starts below the header so the close button stays reachable */}
+      <button
+        type="button"
+        aria-label="Close menu"
+        onClick={onClose}
+        className="md:hidden absolute top-full left-0 right-0 h-screen bg-ink/40 cursor-default"
+      />
+
+      <div
+        id="mobile-menu"
+        className="md:hidden absolute top-full left-0 right-0 bg-cream border-b-4 border-ink shadow-[0_8px_0_rgba(0,0,0,0.15)] animate-in fade-in slide-in-from-top-2 duration-150"
+      >
+        <nav className="flex flex-col px-5 py-3">
+          {NAV.map((n) => (
+            <Link
+              key={n.to}
+              to={n.to}
+              onClick={onClose}
+              className="font-display text-xl font-bold py-4 border-b-2 border-ink/10 last:border-b-0 active:text-denim"
+              activeProps={{ className: "text-denim" }}
+            >
+              {n.label}
+            </Link>
+          ))}
+        </nav>
+
+        <div className="flex items-center gap-3 px-5 pb-5 pt-1">
+          <a
+            href="https://instagram.com"
+            aria-label="Instagram"
+            className="w-11 h-11 inline-flex items-center justify-center rounded-full border-[3px] border-ink bg-white text-ink shadow-[3px_3px_0_var(--ink)]"
+          >
+            <Instagram size={18} strokeWidth={2.5} />
+          </a>
+          <a
+            href="https://tiktok.com"
+            aria-label="TikTok"
+            className="w-11 h-11 inline-flex items-center justify-center rounded-full border-[3px] border-ink bg-white text-ink shadow-[3px_3px_0_var(--ink)]"
+          >
+            <TikTokIcon className="w-[18px] h-[18px]" />
+          </a>
+        </div>
+      </div>
+    </>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+
 export function SiteLayout({ children }: { children: ReactNode }) {
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  // Lock body scroll and wire up Escape while the menu is open.
+  useEffect(() => {
+    if (!menuOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMenuOpen(false);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [menuOpen]);
+
   return (
     <div className="min-h-screen flex flex-col bg-cream text-ink">
       {/* Sticky shell: announcement + primary nav */}
@@ -111,15 +178,15 @@ export function SiteLayout({ children }: { children: ReactNode }) {
         </div>
 
         <header className="bg-cream border-b-4 border-ink">
-          <div className="max-w-7xl mx-auto flex items-center justify-between gap-4 px-5 md:px-8 py-3 md:py-4">
+          <div className="max-w-7xl mx-auto flex items-center justify-between gap-3 md:gap-4 px-4 md:px-8 py-3 md:py-4">
             {/* Left: logo */}
-            <Link to="/" className="flex items-center">
+            <Link to="/" onClick={() => setMenuOpen(false)} className="flex items-center shrink-0">
               <span className="font-display text-xl md:text-2xl font-extrabold tracking-tight text-ink">
                 Tulip &amp; Co.
               </span>
             </Link>
 
-            {/* Center: links */}
+            {/* Center: links (desktop only) */}
             <nav className="hidden md:flex items-center gap-8">
               {NAV.map((n) => (
                 <Link
@@ -135,27 +202,25 @@ export function SiteLayout({ children }: { children: ReactNode }) {
               ))}
             </nav>
 
-            {/* Right: search + cart */}
-            <div className="flex items-center gap-2 md:gap-3">
+            {/* Right: search + cart + menu toggle */}
+            <div className="flex items-center gap-1.5 md:gap-3 shrink-0">
               <HeaderSearch />
               <CartButton />
+              <button
+                type="button"
+                onClick={() => setMenuOpen((v) => !v)}
+                aria-label={menuOpen ? "Close menu" : "Open menu"}
+                aria-expanded={menuOpen}
+                aria-controls="mobile-menu"
+                className="md:hidden w-11 h-11 inline-flex items-center justify-center rounded-full border-[3px] border-ink bg-white shadow-[3px_3px_0_var(--ink)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[1px_1px_0_var(--ink)] transition-all"
+              >
+                {menuOpen ? <X size={20} strokeWidth={2.5} /> : <Menu size={20} strokeWidth={2.5} />}
+              </button>
             </div>
           </div>
-
-          {/* Mobile nav row */}
-          <nav className="md:hidden flex flex-wrap gap-2 px-5 pb-3">
-            {NAV.map((n) => (
-              <Link
-                key={n.to}
-                to={n.to}
-                className="px-3 py-1.5 rounded-full border-2 border-ink bg-white text-sm font-semibold"
-                activeProps={{ className: "bg-sun" }}
-              >
-                {n.label}
-              </Link>
-            ))}
-          </nav>
         </header>
+
+        {menuOpen && <MobileMenuPanel onClose={() => setMenuOpen(false)} />}
       </div>
 
       <main className="flex-1">{children}</main>
@@ -178,16 +243,16 @@ export function SiteLayout({ children }: { children: ReactNode }) {
               ))}
             </nav>
             <div className="flex items-center gap-3">
-              
-                <a href="https://instagram.com"
-                aria-label="instagram"
+              <a
+                href="https://instagram.com"
+                aria-label="Instagram"
                 className="w-10 h-10 inline-flex items-center justify-center rounded-full border-[3px] border-ink bg-cream text-ink shadow-[3px_3px_0_var(--ink)] hover:text-denim hover:shadow-[5px_5px_0_var(--ink)] hover:-translate-x-[2px] hover:-translate-y-[2px] transition-all"
               >
                 <Instagram size={18} strokeWidth={2.5} />
               </a>
-              
-                <a href="https://tiktok.com"
-                aria-label="tiktok"
+              <a
+                href="https://tiktok.com"
+                aria-label="TikTok"
                 className="w-10 h-10 inline-flex items-center justify-center rounded-full border-[3px] border-ink bg-cream text-ink shadow-[3px_3px_0_var(--ink)] hover:text-denim hover:shadow-[5px_5px_0_var(--ink)] hover:-translate-x-[2px] hover:-translate-y-[2px] transition-all"
               >
                 <TikTokIcon className="w-[18px] h-[18px]" />
