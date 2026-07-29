@@ -1,17 +1,23 @@
-// Goes in: src/routes/shop_.$slug.tsx  (new file)
+// STEP 3 of 7
+// Goes in: src/routes/shop_.$slug.tsx
 //
-// The underscore after "shop" is REQUIRED. It gives you the URL
-// /shop/some-slug WITHOUT nesting inside shop.tsx. Name it shop.$slug.tsx
-// by mistake and the shop grid renders on top of every product page.
+// This file is NEW. The filename must be EXACTLY shop_.$slug.tsx —
+// underscore after "shop", dollar sign before "slug". That underscore gives
+// you the URL /shop/some-slug WITHOUT nesting inside shop.tsx. Name it
+// shop.$slug.tsx by mistake and the shop grid renders on every product page.
 
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { toast } from "sonner";
 import { ChevronRight, Minus, Plus, RotateCcw, ShieldCheck, Truck } from "lucide-react";
 import { SiteLayout } from "@/components/SiteLayout";
 import { getProductBySlug, listProducts, type Product } from "@/lib/products.functions";
-import { ProductCard, ProductMedia, formatPrice } from "@/components/ProductCard";
+import {
+  ProductCard,
+  ProductMedia,
+  collectionSlug,
+  formatPrice,
+} from "@/components/ProductCard";
 import { cart, cartDrawer } from "@/lib/cart-store";
 
 const productsQO = queryOptions({
@@ -57,7 +63,7 @@ export const Route = createFileRoute("/shop_/$slug")({
         <p className="font-display text-3xl font-extrabold">
           Something went wrong loading this product.
         </p>
-        <Link to="/shop" className="tc-btn tc-btn-poppy mt-8 inline-flex">
+        <Link to="/shop" search={{}} className="tc-btn tc-btn-poppy mt-8 inline-flex">
           Back to the shop
         </Link>
       </section>
@@ -80,7 +86,7 @@ function ProductRoute() {
           <p className="mt-4 text-lg text-ink/70">
             It may have sold out or been retired from the collection.
           </p>
-          <Link to="/shop" className="tc-btn tc-btn-poppy mt-8 inline-flex">
+          <Link to="/shop" search={{}} className="tc-btn tc-btn-poppy mt-8 inline-flex">
             Browse the shop
           </Link>
         </section>
@@ -121,11 +127,7 @@ function ProductDetail({
   function addToCart() {
     if (soldOut) return;
     cart.add(product.id, qty);
-    toast.success(
-      qty === 1
-        ? `Added ${product.name} to cart.`
-        : `Added ${qty} × ${product.name} to cart.`,
-    );
+    // No toast — the drawer opening is the confirmation.
     cartDrawer.open();
   }
 
@@ -156,16 +158,22 @@ function ProductDetail({
 
       <section className="px-4 sm:px-5 md:px-8 py-8 sm:py-12 md:py-16">
         <div className="max-w-7xl mx-auto">
-          {/* Breadcrumb */}
+          {/* Breadcrumb — the category now returns you to a filtered shop */}
           <nav
             aria-label="Breadcrumb"
             className="flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-ink/60 mb-6 sm:mb-10 flex-wrap"
           >
-            <Link to="/shop" className="hover:text-denim transition-colors">
+            <Link to="/shop" search={{}} className="hover:text-denim transition-colors">
               Shop
             </Link>
             <ChevronRight size={14} strokeWidth={2.5} className="shrink-0" />
-            <span>{product.category}</span>
+            <Link
+              to="/shop"
+              search={{ collection: collectionSlug(product.category) }}
+              className="hover:text-denim transition-colors"
+            >
+              {product.category}
+            </Link>
             <ChevronRight size={14} strokeWidth={2.5} className="shrink-0" />
             <span className="text-ink">{product.name}</span>
           </nav>
