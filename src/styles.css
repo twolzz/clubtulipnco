@@ -61,6 +61,12 @@
   html {
     scroll-padding-top: 100px;
   }
+  /* Belt-and-braces guard against sideways scrolling on phones.
+     Remove this once the real overflow culprit is confirmed fixed —
+     it hides the symptom, it doesn't cure it. */
+  body {
+    overflow-x: hidden;
+  }
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
     font-weight: 700;
