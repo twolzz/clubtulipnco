@@ -1,9 +1,7 @@
 @import "tailwindcss" source(none);
 @source "../src";
 @import "tw-animate-css";
-
 @custom-variant dark (&:is(.dark *));
-
 @theme inline {
   --font-display: "Quicksand", "Inter", "Helvetica Neue", sans-serif;
   --font-sans: "Inter", "Helvetica Neue", sans-serif;
@@ -38,7 +36,6 @@
   --color-popover: #ffffff;
   --color-popover-foreground: var(--ink);
 }
-
 :root {
   --background: #F6F2E7;
   --foreground: #000000;
@@ -51,10 +48,7 @@
   --card: #ffffff;
   --radius: 16px;
 }
-
 @layer base {
-  html { scroll-padding-top: 100px; }
-}
   * {
     border-color: var(--color-border);
   }
@@ -63,13 +57,16 @@
     color: var(--ink);
     font-family: var(--font-sans);
   }
+  /* Keep anchor targets clear of the sticky header */
+  html {
+    scroll-padding-top: 100px;
+  }
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
     font-weight: 700;
     letter-spacing: -0.01em;
   }
 }
-
 @layer components {
   .tc-card {
     background: #ffffff;
@@ -81,6 +78,19 @@
   .tc-card-sun { box-shadow: 8px 8px 0 var(--sun); }
   .tc-card-sage { box-shadow: 8px 8px 0 var(--sage); }
   .tc-card-denim { box-shadow: 8px 8px 0 var(--denim); }
+
+  /* Scale the brutalist chrome down on phones */
+  @media (max-width: 639px) {
+    .tc-card {
+      border-width: 3px;
+      border-radius: var(--radius-lg);
+      box-shadow: 5px 5px 0 var(--ink);
+    }
+    .tc-card-poppy { box-shadow: 5px 5px 0 var(--poppy); }
+    .tc-card-sun { box-shadow: 5px 5px 0 var(--sun); }
+    .tc-card-sage { box-shadow: 5px 5px 0 var(--sage); }
+    .tc-card-denim { box-shadow: 5px 5px 0 var(--denim); }
+  }
 
   .tc-btn {
     display: inline-flex;
@@ -99,7 +109,6 @@
   .tc-btn-sun { background: var(--sun); color: var(--ink); }
   .tc-btn-poppy { background: var(--poppy); color: #fff; }
   .tc-btn-cream { background: var(--cream); color: var(--ink); }
-
   .tc-input {
     background: #fff;
     border: 3px solid var(--ink);
