@@ -1,8 +1,13 @@
+// STEP 2 of 2
+// Goes in: src/components/SiteLayout.tsx  (replace the whole file)
+//
+// Search removed sitewide: the HeaderSearch import and the <HeaderSearch />
+// in the header cluster are both gone.
+
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState, type ReactNode } from "react";
 import { Lock, Instagram, Menu, X } from "lucide-react";
 import { CartButton } from "./CartButton";
-import { HeaderSearch } from "./HeaderSearch";
 
 const NAV = [
   { to: "/shop", label: "Shop" },
@@ -202,9 +207,8 @@ export function SiteLayout({ children }: { children: ReactNode }) {
               ))}
             </nav>
 
-            {/* Right: search + cart + menu toggle */}
-            <div className="flex items-center gap-1.5 md:gap-3 shrink-0">
-              <HeaderSearch />
+            {/* Right: cart + menu toggle */}
+            <div className="flex items-center gap-2 md:gap-3 shrink-0">
               <CartButton />
               <button
                 type="button"
