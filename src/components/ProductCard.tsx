@@ -1,4 +1,6 @@
-// Goes in: src/components/ProductCard.tsx  (replace the whole file)
+// STEP 1 of 7
+// Goes in: src/components/ProductCard.tsx
+// This file is NEW — create it if it doesn't exist yet.
 
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
@@ -88,8 +90,8 @@ export function ProductGlyph({ shape, fg }: { shape: string; fg: string }) {
  * Square media block. Renders the bucket image when one exists, and silently
  * falls back to the drawn glyph if the file is missing or fails to load.
  *
- * Reused by the shop grid, the product page gallery, the cart drawer and the
- * checkout summary, so a product looks identical everywhere.
+ * Reused by the shop grid, the product page gallery, the cart drawer, the cart
+ * page and the checkout summary, so a product looks identical everywhere.
  */
 export function ProductMedia({
   product,
