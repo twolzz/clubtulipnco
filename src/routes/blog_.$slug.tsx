@@ -1,18 +1,11 @@
-// STEP 3 of 3
-// Create as: src/routes/blog_.$slug.tsx
-// Then DELETE the old src/routes/blog.$slug.tsx
+// STEP 2 of 2
+// Goes in: src/routes/blog_.$slug.tsx  (replace the whole file)
 //
-// Why the rename: blog.$slug.tsx nests INSIDE blog.tsx, and blog.tsx renders
-// BlogPage with no <Outlet />, so the article had nowhere to render — the URL
-// changed but the page didn't. The underscore makes /blog/some-slug a
-// standalone page instead of a child of the journal listing.
-//
-// blog.tsx itself needs NO changes. Its links already point at "/blog/$slug",
-// which is still the URL this file produces.
+// Reminder: if src/routes/blog.$slug.tsx still exists, delete it. Two files
+// claiming the same URL will fight.
 
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/SiteLayout";
-import { JoinClubDialog } from "@/components/JoinClubDialog";
 
 type Article = {
   slug: string;
@@ -135,13 +128,17 @@ function ArticlePage() {
         </div>
       </section>
 
-      {/* Body — first paragraph sized up as a standfirst */}
+      {/*
+        Body — every paragraph now carries the same weight and colour the
+        opening one had. To dial the size back for longer pieces, change
+        text-xl md:text-2xl to text-lg md:text-xl on the <p> below.
+      */}
       <section className="px-5 md:px-8 py-12 md:py-16">
-        <article className="max-w-2xl mx-auto space-y-6 text-lg md:text-xl leading-relaxed text-ink/85">
+        <article className="max-w-2xl mx-auto space-y-6">
           {article.body.map((p, i) => (
             <p
               key={i}
-              className={i === 0 ? "text-xl md:text-2xl leading-relaxed text-ink font-medium" : ""}
+              className="text-xl md:text-2xl leading-relaxed text-ink font-medium"
             >
               {p}
             </p>
@@ -151,7 +148,7 @@ function ArticlePage() {
 
       {/* Next article */}
       {next && (
-        <section className="px-5 md:px-8 pb-4">
+        <section className="px-5 md:px-8 pb-16 md:pb-24">
           <div className="max-w-2xl mx-auto">
             <p className="text-xs font-bold uppercase tracking-widest text-ink/55 mb-3">
               Next in the Journal
@@ -182,19 +179,6 @@ function ArticlePage() {
           </div>
         </section>
       )}
-
-      {/* CTA */}
-      <section className="px-5 md:px-8 py-14 md:py-20">
-        <div className="max-w-3xl mx-auto tc-card tc-card-sage bg-denim text-white p-8 md:p-12 text-center">
-          <h2 className="text-3xl md:text-4xl font-extrabold">Like quiet things?</h2>
-          <p className="mt-3 text-white/90">
-            Join the Club for new essays, drops, and pop-up dates.
-          </p>
-          <JoinClubDialog className="tc-btn tc-btn-sun mt-6 inline-flex">
-            Join the Club!
-          </JoinClubDialog>
-        </div>
-      </section>
     </SiteLayout>
   );
 }
