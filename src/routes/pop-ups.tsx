@@ -1,3 +1,10 @@
+// STEP 2 of 3
+// Goes in: src/routes/pop-ups.tsx  (replace the whole file)
+//
+// The blue "Be first in line." section at the bottom is gone. The "Never miss
+// a Saturday" card up in the hero already carries the same Join the Club call,
+// so nothing is lost.
+
 import { createFileRoute } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { SiteLayout } from "@/components/SiteLayout";
@@ -122,18 +129,6 @@ function PopUpsPage() {
               })}
             </ol>
           )}
-        </div>
-      </section>
-
-      <section className="px-5 md:px-8 py-16 md:py-24">
-        <div className="max-w-4xl mx-auto tc-card tc-card-sage bg-denim text-white p-8 md:p-12 text-center">
-          <h2 className="text-4xl md:text-5xl font-extrabold">Be first in line.</h2>
-          <p className="mt-4 text-white/90 text-lg max-w-xl mx-auto">
-            Club members get pop-up dates a week early — plus first dibs on limited drops.
-          </p>
-          <JoinClubDialog className="tc-btn tc-btn-sun mt-7 inline-flex">
-            Join the Club!
-          </JoinClubDialog>
         </div>
       </section>
     </SiteLayout>
