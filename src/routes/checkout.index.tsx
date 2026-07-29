@@ -1,3 +1,8 @@
+// STEP 7 of 7
+// Goes in: the file you sent me that starts with createFileRoute("/checkout/")
+// — most likely src/routes/checkout/index.tsx (or src/routes/checkout.index.tsx).
+// Put it back exactly where it came from.
+
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -9,6 +14,7 @@ import { useCart } from "@/lib/cart-store";
 import { listProducts, type Product } from "@/lib/products.functions";
 import { createCheckoutIntent } from "@/lib/checkout.functions";
 import { getStripe, buildAppearance } from "@/lib/stripe-elements";
+import { ProductMedia, formatPrice } from "@/components/ProductCard";
 
 /**
  * The Stripe fields render inside an iframe, which does not inherit the page
@@ -31,10 +37,6 @@ export const Route = createFileRoute("/checkout/")({
   }),
   component: CheckoutPage,
 });
-
-function formatPrice(cents: number) {
-  return `$${(cents / 100).toFixed(cents % 100 === 0 ? 0 : 2)}`;
-}
 
 function CheckoutPage() {
   const navigate = useNavigate();
@@ -141,16 +143,16 @@ function CheckoutPage() {
               <ul className="space-y-3 mb-5">
                 {lines.map(({ item, product }) => (
                   <li key={item.productId} className="flex gap-3 items-center">
-                    <div
-                      className="w-11 h-11 rounded-xl border-2 border-ink shrink-0"
-                      style={{ background: product.bg_color }}
-                      aria-hidden
-                    />
+                    {/* Deliberately not a link — nothing on this page should
+                        tempt someone away mid-payment. */}
+                    <div className="w-12 h-12 rounded-xl border-2 border-ink shrink-0 overflow-hidden">
+                      <ProductMedia product={product} className="w-full h-full" />
+                    </div>
                     <div className="flex-1 min-w-0">
                       <p className="font-semibold text-sm truncate">{product.name}</p>
                       <p className="text-xs font-bold text-ink/60">Qty {item.qty}</p>
                     </div>
-                    <span className="font-extrabold text-sm">
+                    <span className="font-extrabold text-sm shrink-0">
                       {formatPrice(product.price_cents * item.qty)}
                     </span>
                   </li>
