@@ -117,43 +117,53 @@ function ShopPage() {
 
   return (
     <SiteLayout>
-      <section className="px-5 md:px-8 py-16 md:py-24">
+      <section className="px-4 sm:px-5 md:px-8 py-10 sm:py-16 md:py-24">
         <div className="max-w-7xl mx-auto">
           <div>
-            <span className="inline-block px-3 py-1 mb-6 rounded-full bg-sun border-[3px] border-ink text-sm font-bold">
+            <span className="inline-block px-3 py-1 mb-4 sm:mb-6 rounded-full bg-sun border-[3px] border-ink text-sm font-bold">
               The Shop
             </span>
-            <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight leading-[1.02]">
+            <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold tracking-tight leading-[1.05] md:leading-[1.02]">
               Quiet things, <span className="text-poppy">built to last.</span>
             </h1>
-            <p className="mt-6 text-lg md:text-xl text-ink/80">
+            <p className="mt-4 sm:mt-6 text-base sm:text-lg md:text-xl text-ink/80">
               Curated essentials. Sourced direct from Dutch makers and shipped from San Diego.
             </p>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-14">
+          {/* 2 across on phones, 3 across from 640px up */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mt-8 sm:mt-14">
             {products.map((p) => (
               <article
                 key={p.id}
                 className={`tc-card ${p.shadow} bg-white overflow-hidden flex flex-col`}
               >
                 <div
-                  className={`${BG_CLASS[p.bg_color] ?? ""} aspect-square flex items-center justify-center border-b-4 border-ink`}
+                  className={`${BG_CLASS[p.bg_color] ?? ""} aspect-square flex items-center justify-center border-b-[3px] sm:border-b-4 border-ink`}
                   style={BG_CLASS[p.bg_color] ? undefined : { background: p.bg_color }}
                 >
                   <ProductGlyph shape={p.shape} fg={p.fg_color} />
                 </div>
-                <div className="p-5 flex-1 flex flex-col">
-                  <p className="text-xs font-bold uppercase tracking-widest text-ink/60">
+
+                <div className="p-3 sm:p-5 flex-1 flex flex-col">
+                  <p className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-ink/60">
                     {p.category}
                   </p>
-                  <h2 className="mt-1 text-xl font-extrabold leading-tight">{p.name}</h2>
-                  <div className="mt-4 flex items-center justify-between gap-3">
-                    <span className="text-2xl font-extrabold">{formatPrice(p.price_cents)}</span>
+                  <h2 className="mt-1 text-sm sm:text-lg md:text-xl font-extrabold leading-tight">
+                    {p.name}
+                  </h2>
+
+                  {/* mt-auto keeps every footer aligned regardless of title length.
+                      Stacked on phones so the button gets a full-width tap target. */}
+                  <div className="mt-auto pt-3 sm:pt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-3">
+                    <span className="text-lg sm:text-xl md:text-2xl font-extrabold">
+                      {formatPrice(p.price_cents)}
+                    </span>
                     <button
                       type="button"
                       onClick={() => addToCart(p)}
-                      className="tc-btn tc-btn-poppy text-sm py-2 px-4"
+                      aria-label={`Add ${p.name} to cart`}
+                      className="tc-btn tc-btn-poppy w-full sm:w-auto text-xs sm:text-sm py-2 px-3 sm:px-4 shrink-0"
                     >
                       Add to Cart
                     </button>
