@@ -1,6 +1,5 @@
-// STEP 1 of 7
-// Goes in: src/components/ProductCard.tsx
-// This file is NEW — create it if it doesn't exist yet.
+// STEP 1 of 2
+// Goes in: src/components/ProductCard.tsx  (replace the whole file)
 
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
@@ -24,74 +23,167 @@ export const BG_CLASS: Record<string, string> = {
   "#F6F2E7": "bg-cream",
 };
 
-export function ProductGlyph({ shape, fg }: { shape: string; fg: string }) {
-  const stroke = { stroke: "#333333", strokeWidth: 4, fill: fg } as const;
+/* ------------------------------------------------------------------ */
+/* Colour helpers                                                      */
+/*                                                                     */
+/* The old icons went muddy whenever fg_color was dark — a #333333     */
+/* journal filled solid black and read as a blob at cart size. These   */
+/* two helpers pick a fill that stands apart from the tile behind it,  */
+/* and a detail colour that stays visible on top of that fill.         */
+/* ------------------------------------------------------------------ */
+
+const INK = "#000000";
+const CREAM = "#F6F2E7";
+
+function luminance(hex: string): number {
+  const clean = hex.replace("#", "").trim();
+  const full =
+    clean.length === 3
+      ? clean.split("").map((c) => c + c).join("")
+      : clean.padEnd(6, "0").slice(0, 6);
+  const r = parseInt(full.slice(0, 2), 16) / 255;
+  const g = parseInt(full.slice(2, 4), 16) / 255;
+  const b = parseInt(full.slice(4, 6), 16) / 255;
+  if ([r, g, b].some(Number.isNaN)) return 0.5;
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
+
+/** Swap the fill when it would disappear into the tile behind it. */
+function pickFill(fg: string, bg: string): string {
+  const lf = luminance(fg);
+  const lb = luminance(bg);
+  if (Math.abs(lf - lb) > 0.18) return fg;
+  return lb > 0.5 ? "#1F1F1F" : CREAM;
+}
+
+/** Eyes, zips and page lines — always legible on top of the fill. */
+function pickDetail(fill: string): string {
+  return luminance(fill) > 0.5 ? INK : CREAM;
+}
+
+/* ------------------------------------------------------------------ */
+/* Icons                                                               */
+/*                                                                     */
+/* Bold silhouettes with heavy outlines, matching the brutalist chrome */
+/* elsewhere on the site. They stay readable down to about 40px, which */
+/* is the checkout summary thumbnail.                                  */
+/* ------------------------------------------------------------------ */
+
+export function ProductGlyph({
+  shape,
+  fg,
+  bg = CREAM,
+}: {
+  shape: string;
+  fg: string;
+  bg?: string;
+}) {
+  const fill = pickFill(fg, bg);
+  const detail = pickDetail(fill);
+  const body = {
+    fill,
+    stroke: INK,
+    strokeWidth: 4,
+    strokeLinejoin: "round" as const,
+  };
+
   switch (shape) {
     case "bunny":
       return (
         <svg viewBox="0 0 120 120" className="w-3/5 h-3/5" aria-hidden>
-          <ellipse cx="42" cy="30" rx="10" ry="22" {...stroke} />
-          <ellipse cx="78" cy="30" rx="10" ry="22" {...stroke} />
-          <circle cx="60" cy="72" r="32" {...stroke} />
-          <circle cx="50" cy="70" r="3" fill="#333" />
-          <circle cx="70" cy="70" r="3" fill="#333" />
-          <path d="M55 82 Q60 86 65 82" stroke="#333" strokeWidth="3" fill="none" strokeLinecap="round" />
+          <ellipse cx="44" cy="34" rx="11" ry="24" {...body} />
+          <ellipse cx="76" cy="34" rx="11" ry="24" {...body} />
+          <circle cx="60" cy="76" r="30" {...body} />
+          <circle cx="49" cy="72" r="3.5" fill={detail} />
+          <circle cx="71" cy="72" r="3.5" fill={detail} />
+          <path
+            d="M55 84 L65 92 M65 84 L55 92"
+            stroke={detail}
+            strokeWidth="3.5"
+            strokeLinecap="round"
+          />
         </svg>
       );
+
     case "journal":
       return (
         <svg viewBox="0 0 120 120" className="w-3/5 h-3/5" aria-hidden>
-          <rect x="24" y="20" width="72" height="84" rx="6" {...stroke} />
-          <line x1="36" y1="20" x2="36" y2="104" stroke="#333" strokeWidth="4" />
-          <line x1="48" y1="42" x2="86" y2="42" stroke="#333" strokeWidth="3" />
-          <line x1="48" y1="56" x2="86" y2="56" stroke="#333" strokeWidth="3" />
-          <line x1="48" y1="70" x2="74" y2="70" stroke="#333" strokeWidth="3" />
+          <rect x="26" y="18" width="68" height="84" rx="9" {...body} />
+          <line x1="43" y1="20" x2="43" y2="100" stroke={INK} strokeWidth="4" />
+          <line x1="57" y1="44" x2="82" y2="44" stroke={detail} strokeWidth="4" strokeLinecap="round" />
+          <line x1="57" y1="60" x2="82" y2="60" stroke={detail} strokeWidth="4" strokeLinecap="round" />
+          <line x1="57" y1="76" x2="72" y2="76" stroke={detail} strokeWidth="4" strokeLinecap="round" />
         </svg>
       );
+
     case "pen":
       return (
         <svg viewBox="0 0 120 120" className="w-3/5 h-3/5" aria-hidden>
-          <rect x="32" y="18" width="20" height="84" rx="4" {...stroke} />
-          <polygon points="32,102 52,102 42,118" {...stroke} />
-          <rect x="62" y="28" width="20" height="74" rx="4" {...stroke} />
-          <polygon points="62,102 82,102 72,118" {...stroke} />
+          <g transform="rotate(18 60 60)">
+            <rect x="49" y="14" width="23" height="66" rx="7" {...body} />
+            <polygon points="49,80 72,80 60.5,104" {...body} />
+            <line x1="49" y1="38" x2="72" y2="38" stroke={INK} strokeWidth="4" />
+            <polygon points="56,94 65,94 60.5,104" fill={INK} />
+          </g>
         </svg>
       );
+
     case "keychain":
       return (
         <svg viewBox="0 0 120 120" className="w-3/5 h-3/5" aria-hidden>
-          <circle cx="42" cy="60" r="22" fill="none" stroke="#333" strokeWidth="6" />
-          <line x1="62" y1="60" x2="86" y2="60" stroke="#333" strokeWidth="6" />
-          <path d="M60 38 Q70 50 60 60 Q50 50 60 38 Z" {...stroke} />
-          <path d="M52 60 Q60 78 68 60 Z" {...stroke} />
+          <circle cx="38" cy="36" r="17" fill="none" stroke={INK} strokeWidth="7" />
+          <rect x="46" y="50" width="46" height="50" rx="12" {...body} />
+          <circle cx="69" cy="75" r="7" fill={detail} stroke={INK} strokeWidth="3" />
         </svg>
       );
+
+    case "pin":
+      return (
+        <svg viewBox="0 0 120 120" className="w-3/5 h-3/5" aria-hidden>
+          <line x1="60" y1="76" x2="60" y2="106" stroke={INK} strokeWidth="6" strokeLinecap="round" />
+          <circle cx="60" cy="52" r="30" {...body} />
+          <path
+            d="M60 34 L65 47 L78 52 L65 57 L60 70 L55 57 L42 52 L55 47 Z"
+            fill={detail}
+            stroke={INK}
+            strokeWidth="2.5"
+            strokeLinejoin="round"
+          />
+        </svg>
+      );
+
     case "pouch":
       return (
         <svg viewBox="0 0 120 120" className="w-3/5 h-3/5" aria-hidden>
-          <rect x="20" y="38" width="80" height="62" rx="8" {...stroke} />
-          <path d="M40 38 Q40 22 60 22 Q80 22 80 38" fill="none" stroke="#333" strokeWidth="4" />
-          <circle cx="60" cy="68" r="6" fill="#333" />
+          <path d="M40 46 Q40 24 60 24 Q80 24 80 46" fill="none" stroke={INK} strokeWidth="5" />
+          <rect x="18" y="44" width="84" height="56" rx="15" {...body} />
+          <line x1="22" y1="61" x2="98" y2="61" stroke={INK} strokeWidth="4" />
+          <circle cx="60" cy="61" r="7" fill={detail} stroke={INK} strokeWidth="3" />
         </svg>
       );
+
     default:
+      // Tulip — the house fallback for anything without its own icon.
       return (
         <svg viewBox="0 0 120 120" className="w-3/5 h-3/5" aria-hidden>
-          <circle cx="60" cy="58" r="32" {...stroke} />
-          <ellipse cx="52" cy="48" rx="5" ry="10" fill="#333" />
-          <ellipse cx="68" cy="48" rx="5" ry="10" fill="#333" />
-          <path d="M52 70 Q60 76 68 70" stroke="#333" strokeWidth="3" fill="none" strokeLinecap="round" />
+          <line x1="60" y1="70" x2="60" y2="104" stroke={INK} strokeWidth="5" strokeLinecap="round" />
+          <path d="M60 92 Q42 90 34 76" fill="none" stroke={INK} strokeWidth="5" strokeLinecap="round" />
+          <path d="M60 86 Q78 84 86 70" fill="none" stroke={INK} strokeWidth="5" strokeLinecap="round" />
+          <path
+            d="M36 34 C36 62 44 76 60 80 C76 76 84 62 84 34 C75 44 68 32 60 26 C52 32 45 44 36 34 Z"
+            {...body}
+          />
         </svg>
       );
   }
 }
 
 /**
- * Square media block. Renders the bucket image when one exists, and silently
- * falls back to the drawn glyph if the file is missing or fails to load.
+ * Square media block. Renders the bucket image when one exists, and falls
+ * back to the icon above when a product has no photo yet.
  *
- * Reused by the shop grid, the product page gallery, the cart drawer, the cart
- * page and the checkout summary, so a product looks identical everywhere.
+ * Shared by the shop grid, product page, cart drawer, cart page and checkout
+ * summary, so a product looks identical everywhere.
  */
 export function ProductMedia({
   product,
@@ -129,7 +221,7 @@ export function ProductMedia({
           onError={() => setFailed(true)}
         />
       ) : (
-        <ProductGlyph shape={product.shape} fg={product.fg_color} />
+        <ProductGlyph shape={product.shape} fg={product.fg_color} bg={product.bg_color} />
       )}
     </div>
   );
