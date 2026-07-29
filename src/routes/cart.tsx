@@ -1,3 +1,6 @@
+// STEP 6 of 7
+// Goes in: src/routes/cart.tsx  (replace the whole file)
+
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Trash2, Plus, Minus } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
@@ -5,11 +8,8 @@ import { useServerFn } from "@tanstack/react-start";
 import { SiteLayout } from "@/components/SiteLayout";
 import { cart, useCart } from "@/lib/cart-store";
 import { listProducts, type Product } from "@/lib/products.functions";
-/**
- * The Stripe fields render inside an iframe, which does not inherit the pageee
- * stylesheet. Inter (--font-sans, used by the inputs) and Quicksand
- * (--font-display, used by the labels) both have to be passed to Elements.
- */
+import { ProductMedia, formatPrice } from "@/components/ProductCard";
+
 export const Route = createFileRoute("/cart")({
   head: () => ({
     meta: [
@@ -21,10 +21,6 @@ export const Route = createFileRoute("/cart")({
   }),
   component: CartPage,
 });
-
-function formatPrice(cents: number) {
-  return `$${(cents / 100).toFixed(cents % 100 === 0 ? 0 : 2)}`;
-}
 
 function CartPage() {
   const { items } = useCart();
@@ -70,33 +66,53 @@ function CartPage() {
                 {lines.map(({ item, product }) => (
                   <li
                     key={item.productId}
-                    className="flex gap-4 items-center rounded-2xl border-4 border-ink bg-white p-5 shadow-[6px_6px_0_var(--ink)]"
+                    className="flex gap-4 sm:gap-5 items-start rounded-2xl border-4 border-ink bg-white p-4 sm:p-5 shadow-[6px_6px_0_var(--ink)]"
                   >
-                    <div
-                      className="w-20 h-20 rounded-2xl border-[3px] border-ink shrink-0"
-                      style={{ background: product.bg_color }}
-                      aria-hidden
-                    />
+                    <Link
+                      to="/shop/$slug"
+                      params={{ slug: product.slug }}
+                      aria-label={`View ${product.name}`}
+                      className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl border-[3px] border-ink shrink-0 overflow-hidden"
+                    >
+                      <ProductMedia product={product} className="w-full h-full" />
+                    </Link>
+
                     <div className="flex-1 min-w-0">
-                      <p className="text-xs font-bold uppercase tracking-widest text-ink/60">
-                        {product.category}
-                      </p>
-                      <p className="font-semibold text-lg">{product.name}</p>
-                      <div className="mt-2 flex items-center gap-3">
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="min-w-0">
+                          <p className="text-xs font-bold uppercase tracking-widest text-ink/60">
+                            {product.category}
+                          </p>
+                          <Link
+                            to="/shop/$slug"
+                            params={{ slug: product.slug }}
+                            className="block font-semibold text-base sm:text-lg hover:text-denim transition-colors"
+                          >
+                            {product.name}
+                          </Link>
+                        </div>
+                        <span className="font-extrabold text-lg sm:text-xl shrink-0">
+                          {formatPrice(product.price_cents * item.qty)}
+                        </span>
+                      </div>
+
+                      <div className="mt-3 flex items-center gap-3">
                         <button
                           type="button"
                           aria-label="decrease"
                           onClick={() => cart.setQty(item.productId, item.qty - 1)}
-                          className="w-8 h-8 rounded-full border-2 border-ink bg-cream flex items-center justify-center"
+                          className="w-8 h-8 rounded-full border-2 border-ink bg-cream flex items-center justify-center hover:bg-sun transition-colors"
                         >
                           <Minus size={14} strokeWidth={3} />
                         </button>
-                        <span className="font-bold w-6 text-center">{item.qty}</span>
+                        <span className="font-bold w-6 text-center tabular-nums">
+                          {item.qty}
+                        </span>
                         <button
                           type="button"
                           aria-label="increase"
                           onClick={() => cart.setQty(item.productId, item.qty + 1)}
-                          className="w-8 h-8 rounded-full border-2 border-ink bg-cream flex items-center justify-center"
+                          className="w-8 h-8 rounded-full border-2 border-ink bg-cream flex items-center justify-center hover:bg-sun transition-colors"
                         >
                           <Plus size={14} strokeWidth={3} />
                         </button>
@@ -104,15 +120,12 @@ function CartPage() {
                           type="button"
                           aria-label="remove"
                           onClick={() => cart.remove(item.productId)}
-                          className="ml-4 text-ink/60 hover:text-poppy"
+                          className="ml-auto text-ink/60 hover:text-poppy transition-colors"
                         >
                           <Trash2 size={18} strokeWidth={2.5} />
                         </button>
                       </div>
                     </div>
-                    <span className="font-extrabold text-xl">
-                      {formatPrice(product.price_cents * item.qty)}
-                    </span>
                   </li>
                 ))}
               </ul>
