@@ -1,3 +1,6 @@
+// STEP 1 of 3
+// Goes in: src/routes/our-story.tsx  (replace the whole file)
+
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/SiteLayout";
 import { JoinClubDialog } from "@/components/JoinClubDialog";
@@ -32,41 +35,52 @@ function OurStoryPage() {
       {/* Story body */}
       <section className="px-5 md:px-8 pb-20 md:pb-28">
         <article className="max-w-2xl mx-auto text-lg md:text-xl leading-relaxed text-ink/85 space-y-10">
-          <div>
+          <div className="space-y-6">
             <h2 className="font-display text-3xl md:text-4xl font-extrabold text-ink mb-4">
               The Story
             </h2>
             <p>
-              Hoi! I'm Thimo Wilts, the founder of Tulip &amp; Co. Growing up in the Netherlands,
-              I was surrounded by the timeless, minimalist charm of Dutch design — most notably,
-              Dick Bruna's beloved Nijntje (known to the rest of the world as Miffy). When I moved
-              to Southern California, I noticed a gap in the market. While there was a huge
-              appreciation for cozy, aesthetic lifestyle products, finding genuine, high-quality
-              Dutch design was incredibly difficult. Too often, fans and collectors had to settle
-              for cheap counterfeits or pay astronomical international shipping fees.
-              That is why I started Tulip &amp; Co.
+              Hoi! I'm Thimo Wilts, the founder of Tulip &amp; Co. Growing up in the
+              Netherlands, I was surrounded by a design culture that prioritized peace,
+              intentionality, and practicality. That's where we find Dick Bruna's beloved
+              Nijntje (Miffy), a character whose simple lines and primary colors represent a
+              global icon of visual quiet.
+            </p>
+            <p>
+              When I moved to Southern California, I saw a deep appreciation for "cozy" and
+              aesthetic lifestyle products. And while Nijntje is finally beginning to find its
+              way into larger American stores, the native story behind these pieces is often
+              lost in the noise of mass-market retail.
+            </p>
+            <p>
+              I started Tulip &amp; Co. to offer something different — a personal touch. As
+              someone who grew up with Nijntje, I wanted to go beyond simple transactions and
+              build a real community: a place for people to meet, share stories, and discover
+              Nijntje and Dutch culture.
             </p>
           </div>
 
-          {/* Pull quote / divider */}
+          {/* Pull quote */}
           <div className="tc-card tc-card-poppy bg-sun p-6 md:p-8">
             <p className="font-display text-2xl md:text-3xl font-extrabold leading-tight text-ink">
-              "A piece of authentic Dutch heritage, delivered to your neighborhood."
+              "one quiet moment at a time."
             </p>
           </div>
 
-          <div>
+          <div className="space-y-6">
             <h2 className="font-display text-3xl md:text-4xl font-extrabold text-ink mb-4">
               Our Mission
             </h2>
             <p>
-              Based in San Diego, Tulip &amp; Co. is a boutique curator of authentic Dutch design.
-              We bypass the mass market by sourcing our premium, officially licensed stationery,
-              eco-friendly plushies, and lifestyle accessories directly from authorized European
-              suppliers. Whether you are a collector looking for that perfect handmade crochet
-              collectible, or you are simply building a cozy, aesthetic desk setup, our mission
-              is to bring a piece of authentic Dutch heritage directly to your neighborhood.
-              We can't wait to meet you at our upcoming San Diego pop-up markets!
+              Tulip &amp; Co. is a boutique curator dedicated to design integrity and authentic
+              sourcing. We bypass the cold, clinical feel of big-box retail by working with
+              authorized suppliers to bring you a hand-picked portfolio of licensed stationery,
+              collectibles, and plushies.
+            </p>
+            <p>
+              We focus on pieces that honor the legacy of Dick Bruna's minimalist vision.
+              Whether you're a long-time collector or just building a quiet workspace, our
+              mission is to bring a piece of Dutch heritage to you, one quiet moment at a time.
             </p>
           </div>
         </article>
