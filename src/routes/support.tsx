@@ -1,8 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { type FormEvent } from "react";
+import { useRef, type FormEvent } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 import { z } from "zod";
 import { SiteLayout } from "@/components/SiteLayout";
+import { sendSupportMessage } from "@/lib/support.functions";
 
 const tabSchema = z.object({
   tab: z.enum(["contact", "shipping", "privacy", "terms"]).optional(),
@@ -130,11 +132,40 @@ function PanelHeading({ children }: { children: React.ReactNode }) {
 }
 
 function ContactPanel() {
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  const send = useServerFn(sendSupportMessage);
+  // A ref, not state: an in-flight flag held in state would re-render and could
+  // alter the button, and this panel has to look and behave identically.
+  const sending = useRef(false);
+
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (sending.current) return;
+
     const form = e.currentTarget;
-    toast.success("Thanks — we'll be in touch within 24–48 hours.");
-    form.reset();
+    const fd = new FormData(form);
+    const payload = {
+      name: String(fd.get("name") ?? "").trim(),
+      email: String(fd.get("email") ?? "").trim(),
+      message: String(fd.get("message") ?? "").trim(),
+    };
+
+    sending.current = true;
+    try {
+      const res = await send({ data: payload });
+      if (res.ok) {
+        toast.success("Thanks — we'll be in touch within 24–48 hours.");
+        form.reset();
+      } else {
+        toast.error(
+          "We couldn't send that. Please email hello@tulipnco.com directly.",
+        );
+      }
+    } catch (err) {
+      console.error("[support] send failed", err);
+      toast.error("We couldn't send that. Please email hello@tulipnco.com directly.");
+    } finally {
+      sending.current = false;
+    }
   }
 
   const fieldBase =
