@@ -270,9 +270,13 @@ export async function sendPopUpAnnouncement(
     const admin = supabaseAdmin as any;
 
     // ---- Subscribers ----
+    // Only people who are still opted in. `unsubscribed_at` is stamped by
+    // unsubscribeByEmail(); without this filter the column is written and
+    // never read, and opted-out people keep receiving every blast.
     const { data: subs, error: subErr } = await admin
       .from("subscribers")
-      .select("email");
+      .select("email")
+      .is("unsubscribed_at", null);
     if (subErr) {
       console.error("[announce] subscribers query failed:", {
         code: (subErr as any).code,
@@ -294,7 +298,7 @@ export async function sendPopUpAnnouncement(
 
     if (emails.length === 0) {
       console.warn(
-        "[announce] ALERT: subscribers table returned 0 rows — nothing to send for pop-up:",
+        "[announce] ALERT: 0 opted-in subscribers — nothing to send for pop-up:",
         { id: popUp.id, name: popUp.name },
       );
       result.empty = true;
