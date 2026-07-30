@@ -7,7 +7,19 @@ const RESEND_API_URL = "https://api.resend.com";
 const FROM = "Tulip & Co. <hello@updates.tulipnco.com>";
 const REPLY_TO = "hello@tulipnco.com";
 const SENDER_ADDRESS = "hello@updates.tulipnco.com";
-const SITE_URL = process.env.SITE_URL ?? "https://tulipnco.com";
+/**
+ * Read inside a handler, never at module scope: Cloudflare Workers inject
+ * bindings per request, so process.env is still empty when this module is
+ * first evaluated.
+ */
+function siteUrl() {
+  return process.env.SITE_URL ?? "https://club.tulipnco.com";
+}
+
+/** The opt-out link for one specific recipient. */
+function unsubscribeUrlFor(email: string) {
+  return `${siteUrl()}/unsubscribe?email=${encodeURIComponent(email)}`;
+}
 
 type ProductRow = {
   name: string;
@@ -37,7 +49,7 @@ function fmtPrice(cents: number) {
   return `$${(cents / 100).toFixed(cents % 100 === 0 ? 0 : 2)}`;
 }
 
-function renderHtml(popUp: PopUp, products: ProductRow[]) {
+function renderHtml(popUp: PopUp, products: ProductRow[], unsubscribeUrl: string) {
   const time =
     popUp.start_time && popUp.end_time
       ? `${popUp.start_time.slice(0, 5)} – ${popUp.end_time.slice(0, 5)}`
@@ -165,7 +177,7 @@ function renderHtml(popUp: PopUp, products: ProductRow[]) {
               <table width="100%" border="0" cellpadding="0" cellspacing="0" style="margin-bottom: 40px;">
                 <tr>
                   <td align="center">
-                    <a href="${SITE_URL}/pop-ups" style="background-color: #E05A36; color: #FFFFFF; border: 3px solid #000000; border-radius: 50px; padding: 14px 36px; font-size: 16px; font-weight: bold; text-decoration: none; display: inline-block; text-align: center; box-shadow: 0 4px 0px #000000;">
+                    <a href="${siteUrl()}/pop-ups" style="background-color: #E05A36; color: #FFFFFF; border: 3px solid #000000; border-radius: 50px; padding: 14px 36px; font-size: 16px; font-weight: bold; text-decoration: none; display: inline-block; text-align: center; box-shadow: 0 4px 0px #000000;">
                       view upcoming dates
                     </a>
                   </td>
@@ -190,7 +202,7 @@ function renderHtml(popUp: PopUp, products: ProductRow[]) {
             <td style="font-size: 12px; color: #888888; line-height: 1.6; padding: 0 10px; font-family: Helvetica, Arial, sans-serif;">
               you are receiving this because you subscribed to tulip & co. updates.<br>
               ${SENDER_ADDRESS}<br><br>
-              <a href="{{unsubscribe_url}}" style="color: #666666; text-decoration: underline;">
+              <a href="${unsubscribeUrl}" style="color: #666666; text-decoration: underline;">
                 Unsubscribe
               </a>
             </td>
@@ -205,7 +217,7 @@ function renderHtml(popUp: PopUp, products: ProductRow[]) {
 </html>`;
 }
 
-function renderText(popUp: PopUp, products: ProductRow[]) {
+function renderText(popUp: PopUp, products: ProductRow[], unsubscribeUrl: string) {
   const time =
     popUp.start_time && popUp.end_time
       ? `${popUp.start_time.slice(0, 5)} – ${popUp.end_time.slice(0, 5)}`
@@ -232,7 +244,7 @@ function renderText(popUp: PopUp, products: ProductRow[]) {
     productList,
     ``,
     `view upcoming dates:`,
-    `  ${SITE_URL}/pop-ups`,
+    `  ${siteUrl()}/pop-ups`,
     ``,
     `mindful minimalism.`,
     `tulip & co. bridges the gap between authentic, premium dutch craftsmanship and the southern california retail space. we hand-deliver curated, licensed design right to your neighborhood.`,
@@ -241,7 +253,7 @@ function renderText(popUp: PopUp, products: ProductRow[]) {
     ``,
     `you are receiving this because you subscribed to tulip & co. updates.`,
     `${SENDER_ADDRESS}`,
-    `unsubscribe: {{unsubscribe_url}}`,
+    `unsubscribe: ${unsubscribeUrl}`,
   ].join("\n");
 }
 
@@ -326,13 +338,10 @@ export async function sendPopUpAnnouncement(
       console.error("[announce] products query threw (non-fatal):", e);
     }
 
-    const html = renderHtml(popUp, products);
-    const text = renderText(popUp, products);
     const subject = `new san diego pop-up — ${fmtDate(popUp.event_date)}`;
-    const headers = {
-      "List-Unsubscribe": `<mailto:${REPLY_TO}?subject=unsubscribe>`,
-      "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
-    };
+    // RFC 8058 one-click target. Mail providers POST here; it must opt the
+    // address out with no confirmation step, which is what the route does.
+    const oneClickEndpoint = `${siteUrl()}/api/public/unsubscribe`;
 
     result.attempted = emails.length;
     console.log("[announce] attempt", {
@@ -345,15 +354,23 @@ export async function sendPopUpAnnouncement(
     const BATCH = 100;
     for (let i = 0; i < emails.length; i += BATCH) {
       const chunk = emails.slice(i, i + BATCH);
-      const payload = chunk.map((to) => ({
-        from: FROM,
-        to: [to],
-        reply_to: REPLY_TO,
-        subject,
-        html,
-        text,
-        headers,
-      }));
+      // Rendered per recipient: the unsubscribe link has to carry that
+      // person's address, so one shared body cannot be reused across the batch.
+      const payload = chunk.map((to) => {
+        const unsubscribeUrl = unsubscribeUrlFor(to);
+        return {
+          from: FROM,
+          to: [to],
+          reply_to: REPLY_TO,
+          subject,
+          html: renderHtml(popUp, products, unsubscribeUrl),
+          text: renderText(popUp, products, unsubscribeUrl),
+          headers: {
+            "List-Unsubscribe": `<${oneClickEndpoint}?email=${encodeURIComponent(to)}>, <mailto:${REPLY_TO}?subject=unsubscribe>`,
+            "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+          },
+        };
+      });
 
       try {
         const res = await fetch(`${RESEND_API_URL}/emails/batch`, {
