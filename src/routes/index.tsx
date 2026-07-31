@@ -129,14 +129,19 @@ function Home() {
           <div className="grid md:grid-cols-[1fr_auto] gap-8 items-center">
             <div>
               <span className="inline-block px-3 py-1 mb-4 rounded-full bg-sun border-[3px] border-ink text-ink text-sm font-bold">
-                This Weekend
+                Live Calendar
               </span>
+              <div className="w-24 h-2.5 rounded-full overflow-hidden border-2 border-ink flex mb-5" aria-hidden="true">
+                <span className="flex-1 bg-poppy" />
+                <span className="flex-1 bg-sun" />
+                <span className="flex-1 bg-denim" />
+              </div>
               <h2 className="text-4xl md:text-5xl font-extrabold">
                 Find Us Live in San Diego.
               </h2>
               <p className="mt-4 text-white/90 max-w-xl text-lg">
-                Select Saturdays. Feel the corduroy, test the pens,
-                and meet Miffy in person.
+                New dates all year, all around San Diego. Come feel the
+                corduroy, browse fresh drops, and meet Miffy in person.
               </p>
             </div>
             <Link to="/pop-ups" className="tc-btn tc-btn-sun whitespace-nowrap">
