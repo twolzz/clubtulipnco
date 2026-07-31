@@ -6,20 +6,20 @@ import {
   useElements,
 } from "@stripe/react-stripe-js";
 import { useServerFn } from "@tanstack/react-start";
-import { setOrderEmail } from "@/lib/checkout.functions";
+import { createOrderAndIntent } from "@/lib/checkout.functions";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export function CheckoutForm({
   amountCents,
-  orderId,
+  items,
 }: {
   amountCents: number;
-  orderId: string;
+  items: { productId: string; qty: number }[];
 }) {
   const stripe = useStripe();
   const elements = useElements();
-  const saveEmail = useServerFn(setOrderEmail);
+  const startOrder = useServerFn(createOrderAndIntent);
 
   const [email, setEmail] = useState("");
   const [emailTouched, setEmailTouched] = useState(false);
@@ -63,19 +63,37 @@ export function CheckoutForm({
       return;
     }
 
-    // Attach the email before confirming, so the order record and the
-    // Stripe receipt both have it even if the customer closes the tab.
+    // Required by Stripe's deferred flow: validates and collects the payment
+    // details before we do anything on the server.
+    const { error: submitError } = await elements.submit();
+    if (submitError) {
+      setMessage(submitError.message ?? "Please check your payment details.");
+      setSubmitting(false);
+      return;
+    }
+
+    // The order row and the PaymentIntent are both created here — at the
+    // moment Pay is pressed — rather than when the page loaded.
+    let clientSecret: string;
     try {
-      await saveEmail({ data: { orderId, email: email.trim() } });
+      const result = await startOrder({
+        data: { items, email: email.trim(), expectedAmountCents: amountCents },
+      });
+      clientSecret = result.clientSecret;
     } catch (err) {
-      console.error("Could not save email:", err);
-      setMessage("We could not save your email. Please try again.");
+      console.error("Could not start the order:", err);
+      setMessage(
+        err instanceof Error && err.message
+          ? err.message
+          : "We could not start your order. No charge was made — please try again.",
+      );
       setSubmitting(false);
       return;
     }
 
     const { error } = await stripe.confirmPayment({
       elements,
+      clientSecret,
       confirmParams: {
         return_url: `${window.location.origin}/checkout/return`,
         payment_method_data: {
