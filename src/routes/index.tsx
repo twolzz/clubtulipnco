@@ -58,7 +58,7 @@ function Home() {
   return (
     <SiteLayout>
       {/* Hero */}
-      <section className="px-5 md:px-8 py-16 md:py-24">
+      <section className="px-5 md:px-8 py-10 md:py-14">
         <div className="max-w-7xl mx-auto grid lg:grid-cols-[1.55fr_1fr] gap-10 lg:gap-14 items-center">
           <div>
             <h1 className="text-5xl md:text-7xl font-extrabold leading-[1.02] tracking-tight">
@@ -84,7 +84,7 @@ function Home() {
             <div className="tc-card tc-card-denim aspect-[3/4] flex items-end p-5 mt-8 bg-poppy text-white">
               <span className="font-display text-2xl">Tulip & Co.</span>
             </div>
-            <div className="tc-card tc-card-sage aspect-square flex items-end p-5 bg-denim text-white col-span-2">
+            <div className="tc-card tc-card-sage aspect-[3/2] flex items-end p-5 bg-denim text-white col-span-2">
               <span className="font-display text-xl">De Stijl, brought home.</span>
             </div>
           </div>
