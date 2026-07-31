@@ -14,6 +14,7 @@ import { useCart } from "@/lib/cart-store";
 import { listProducts, type Product } from "@/lib/products.functions";
 import { getStripe, buildAppearance } from "@/lib/stripe-elements";
 import { ProductMedia, formatPrice } from "@/components/ProductCard";
+import { shippingCentsFor } from "@/lib/shipping";
 
 /**
  * The Stripe fields render inside an iframe, which does not inherit the page
@@ -54,11 +55,16 @@ function CheckoutPage() {
     .map((i) => ({ item: i, product: productMap.get(i.productId) }))
     .filter((l): l is { item: typeof l.item; product: Product } => Boolean(l.product));
   const subtotal = lines.reduce((s, l) => s + l.product.price_cents * l.item.qty, 0);
+  // Same rule the server applies in checkout.functions.ts — imported from the
+  // same file so this number and the amount actually charged can never
+  // disagree with each other.
+  const shipping = shippingCentsFor(subtotal);
+  const total = subtotal + shipping;
 
   // Stripe's deferred flow mounts the form from an amount alone, so the form
   // cannot render until the product prices have loaded. 50 cents is Stripe's
   // minimum charge.
-  const ready = lines.length > 0 && subtotal >= 50;
+  const ready = lines.length > 0 && total >= 50;
 
   // An empty cart has nothing to pay for.
   useEffect(() => {
@@ -93,14 +99,14 @@ function CheckoutPage() {
                   stripe={getStripe()}
                   options={{
                     mode: "payment",
-                    amount: subtotal,
+                    amount: total,
                     currency: "usd",
                     appearance,
                     fonts: STRIPE_FONTS,
                   }}
                 >
                   <CheckoutForm
-                    amountCents={subtotal}
+                    amountCents={total}
                     items={items.map((i) => ({ productId: i.productId, qty: i.qty }))}
                   />
                 </Elements>
@@ -134,11 +140,23 @@ function CheckoutPage() {
                   </li>
                 ))}
               </ul>
-              <div className="border-t-2 border-ink/15 pt-4 flex justify-between items-center">
-                <span className="font-semibold">Total</span>
-                <span className="font-extrabold text-2xl">
-                  {formatPrice(subtotal)}
-                </span>
+              <div className="border-t-2 border-ink/15 pt-4 space-y-2">
+                <div className="flex justify-between items-center text-sm font-semibold text-ink/70">
+                  <span>Subtotal</span>
+                  <span>{formatPrice(subtotal)}</span>
+                </div>
+                <div className="flex justify-between items-center text-sm font-semibold text-ink/70">
+                  <span>Shipping</span>
+                  <span className={shipping === 0 ? "text-sage font-extrabold" : undefined}>
+                    {shipping === 0 ? "Free" : formatPrice(shipping)}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center pt-2 border-t-2 border-ink/15">
+                  <span className="font-semibold">Total</span>
+                  <span className="font-extrabold text-2xl">
+                    {formatPrice(total)}
+                  </span>
+                </div>
               </div>
               <Link
                 to="/cart"
