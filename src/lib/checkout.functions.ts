@@ -37,11 +37,31 @@ const CheckoutInput = z.object({
     )
     .min(1)
     .max(50),
+  email: z.string().email().max(254),
+  // What the customer was shown on screen. Compared against the server's own
+  // total before anything is written, so nobody is ever charged an amount
+  // different from the one they agreed to.
+  expectedAmountCents: z.number().int().min(50),
 });
 
 type ProductRow = { id: string; name: string; price_cents: number };
 
-export const createCheckoutIntent = createServerFn({ method: "POST" })
+/**
+ * Creates the order and its Stripe PaymentIntent, in that order, and only
+ * when the customer has actually pressed Pay.
+ *
+ * This used to run on checkout page load, which meant every visit — including
+ * people who opened the page and immediately left — wrote a `pending` row and
+ * an abandoned PaymentIntent. Now the form mounts with nothing but an amount
+ * (Stripe's deferred intent creation), and this runs on submit.
+ *
+ * A `pending` row therefore now means "pressed Pay, outcome not yet confirmed"
+ * rather than "loaded the page". The row still has to exist before the payment
+ * is confirmed, because the webhook finds the order through
+ * paymentIntent.metadata.order_id — so a declined card can still leave one
+ * behind. That is expected and unavoidable.
+ */
+export const createOrderAndIntent = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => CheckoutInput.parse(input))
   .handler(async ({ data }) => {
     const supabase = adminClient();
@@ -78,13 +98,21 @@ export const createCheckoutIntent = createServerFn({ method: "POST" })
       throw new Error("Order total is below the minimum charge amount.");
     }
 
-    // Record the order as pending. The webhook flips it to paid.
-    // user_id stays null for guest checkout.
+    // Checked BEFORE any insert, so a stale price never leaves a junk row
+    // behind. Only possible if a product's price changed mid-checkout.
+    if (amountCents !== data.expectedAmountCents) {
+      throw new Error(
+        "Your cart total has changed. Please go back to your cart and check it.",
+      );
+    }
+
+    // user_id stays null for guest checkout. The webhook flips status to paid.
     const { data: order, error: orderError } = await supabase
       .from("orders")
       .insert({
         status: "pending",
         total_amount: amountCents,
+        customer_email: data.email,
         user_id: null,
       })
       .select("id")
@@ -109,6 +137,9 @@ export const createCheckoutIntent = createServerFn({ method: "POST" })
       amount: amountCents,
       currency: "usd",
       automatic_payment_methods: { enabled: true },
+      // The customer types their email before pressing Pay, so unlike the old
+      // flow this can be set at creation instead of patched in afterwards.
+      receipt_email: data.email,
       // The webhook reads this to find the order it belongs to.
       metadata: { order_id: order.id },
     });
@@ -126,42 +157,4 @@ export const createCheckoutIntent = createServerFn({ method: "POST" })
       amountCents,
       orderId: order.id as string,
     };
-  });
-
-const EmailInput = z.object({
-  orderId: z.string().uuid(),
-  email: z.string().email().max(254),
-});
-
-/**
- * Attaches the customer's email to the order and to the PaymentIntent.
- * Called just before payment confirmation, because the email is entered
- * after the intent has already been created.
- */
-export const setOrderEmail = createServerFn({ method: "POST" })
-  .inputValidator((input: unknown) => EmailInput.parse(input))
-  .handler(async ({ data }) => {
-    const supabase = adminClient();
-
-    const { data: order, error } = await supabase
-      .from("orders")
-      .update({
-        customer_email: data.email,
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", data.orderId)
-      .select("stripe_payment_intent_id")
-      .single();
-
-    if (error) throw new Error(error.message);
-
-    // Also set receipt_email so Stripe's own receipt reaches the customer.
-    if (order?.stripe_payment_intent_id) {
-      const stripe = stripeClient();
-      await stripe.paymentIntents.update(order.stripe_payment_intent_id, {
-        receipt_email: data.email,
-      });
-    }
-
-    return { ok: true };
   });
