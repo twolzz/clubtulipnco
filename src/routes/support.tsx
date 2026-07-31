@@ -264,37 +264,86 @@ function PrivacyPanel() {
   return (
     <div className="max-w-2xl">
       <PanelHeading>Privacy Policy.</PanelHeading>
-      <p className="text-base md:text-lg leading-relaxed text-ink/85 mb-6 md:mb-8 font-semibold">
+      <p className="text-base md:text-lg leading-relaxed text-ink/85 mb-2 font-semibold">
         Authentic Dutch design, with fiercely protected privacy.
       </p>
+      <p className="text-sm text-ink/60 mb-6 md:mb-8">Last updated: July 2026</p>
       <ol className="space-y-6 text-base md:text-lg leading-relaxed text-ink/85 list-none">
         <li>
-          <span className="font-bold text-ink">1. Information We Collect:</span>{" "}
-          Welcome to Tulip &amp; Co. We only collect the information necessary to
-          provide you with a premium shopping experience. This includes your
-          Contact Information (when you join our club), Order Information (for
-          physical purchases), and securely processed Payment Information.
+          <span className="font-bold text-ink">1. Information we collect:</span>{" "}
+          When you join our club, we collect your first name and email address.
+          When you place an order, we collect your email, shipping address, and
+          the items you purchased — your payment card details go directly to our
+          payment processor and never touch our servers. Your shopping cart is
+          stored locally in your own browser and is not saved on our servers
+          until you check out. If you contact us through our support form, we
+          receive your name, email, and message by email — that message is not
+          stored in our database.
         </li>
         <li>
-          <span className="font-bold text-ink">2. How We Use Your Data:</span>{" "}
-          Your information is used strictly to process and ship your Tulip &amp; Co.
-          orders, communicate with you regarding your order status, and send you
-          exclusive updates regarding our San Diego pop-up dates and new
-          inventory arrivals.
+          <span className="font-bold text-ink">2. How we use your information:</span>{" "}
+          We use your information to process and ship your orders, send order
+          confirmations, respond to questions you send us, and — only if you've
+          joined the club — send you occasional emails about upcoming San Diego
+          pop-up dates and new arrivals. We do not use tracking cookies or
+          analytics scripts to follow you across the web, and we do not sell
+          your personal information to anyone.
         </li>
         <li>
-          <span className="font-bold text-ink">
-            3. Third-Party Services &amp; Security:
-          </span>{" "}
-          We will never sell your personal data. We only share necessary data
-          with trusted platforms to run our business securely. This includes our
-          SSL-encrypted Lovable/Supabase host, Stripe/PayPal (for secure
-          transactions), and our email marketing provider.
+          <span className="font-bold text-ink">3. Who we share it with:</span>{" "}
+          We share information only with the services that let us run Tulip
+          &amp; Co., and only as much as each one needs to do its job:
+          Stripe (payment processing — they receive your payment details
+          directly; we never see your full card number), Supabase (our secure
+          database host), Resend (delivering our emails), and Cloudflare (our
+          website hosting). We do not sell, rent, or trade your personal
+          information to third parties for marketing purposes.
         </li>
         <li>
-          <span className="font-bold text-ink">4. Contact Us:</span> If you have
-          any questions about how we handle your data or wish to request
-          deletion of your information, please reach out to us directly at{" "}
+          <span className="font-bold text-ink">4. Email preferences:</span>{" "}
+          Joining the club is optional and every marketing email we send
+          includes a working unsubscribe link. Order confirmations and shipping
+          updates are sent regardless of club membership, since they relate
+          directly to a purchase you made.
+        </li>
+        <li>
+          <span className="font-bold text-ink">5. Data retention:</span>{" "}
+          We keep order records for as long as needed for accounting, tax, and
+          customer service purposes. If you unsubscribe from the club, we keep
+          your email on file only to remember that you've opted out, so we
+          don't accidentally email you again.
+        </li>
+        <li>
+          <span className="font-bold text-ink">6. Your rights:</span>{" "}
+          You can ask us what information we hold about you, ask us to correct
+          it, or ask us to delete it, at any time. California residents have
+          additional rights under state law to know, delete, or opt out of the
+          sale of personal information — though as noted above, we don't sell
+          personal information in the first place. To make any request, email
+          us at <MailLink />.
+        </li>
+        <li>
+          <span className="font-bold text-ink">7. Children's privacy:</span>{" "}
+          Tulip &amp; Co. is not directed at children, and we do not knowingly
+          collect information from anyone under 13. If you believe a child has
+          provided us with personal information, please contact us and we'll
+          remove it.
+        </li>
+        <li>
+          <span className="font-bold text-ink">8. Security:</span>{" "}
+          We rely on industry-standard, encrypted infrastructure from the
+          providers listed above to protect your information. No method of
+          transmission or storage is ever 100% secure, but we take reasonable
+          steps to protect what you share with us.
+        </li>
+        <li>
+          <span className="font-bold text-ink">9. Changes to this policy:</span>{" "}
+          If we materially change how we handle your information, we'll update
+          this page and revise the date at the top.
+        </li>
+        <li>
+          <span className="font-bold text-ink">10. Contact us:</span> Questions
+          about this policy, or a request about your data, can go to{" "}
           <MailLink />.
         </li>
       </ol>
@@ -306,12 +355,69 @@ function TermsPanel() {
   return (
     <div className="max-w-2xl">
       <PanelHeading>Terms of Service.</PanelHeading>
-      <p className="text-base md:text-lg leading-relaxed text-ink/85">
-        Welcome to Tulip &amp; Co. By accessing our webshop, you agree to our terms
-        of service. All curated merchandise and collections are authentic and
-        officially licensed. We reserve the right to update product availability
-        and pricing as our Test Batch inventory fluctuates.
-      </p>
+      <p className="text-sm text-ink/60 mb-6 md:mb-8">Last updated: July 2026</p>
+      <ol className="space-y-6 text-base md:text-lg leading-relaxed text-ink/85 list-none">
+        <li>
+          <span className="font-bold text-ink">1. Acceptance of terms:</span>{" "}
+          By using this website or placing an order, you agree to these terms.
+          If you don't agree with them, please don't use the site.
+        </li>
+        <li>
+          <span className="font-bold text-ink">2. Products:</span> We carry
+          authentic, officially licensed Dutch design goods and collectibles.
+          Product availability, descriptions, and pricing may change without
+          notice, and we reserve the right to limit quantities on any item.
+        </li>
+        <li>
+          <span className="font-bold text-ink">3. Pricing &amp; payment:</span>{" "}
+          All prices are listed in US dollars. Payment is processed securely by
+          Stripe at checkout — we never see or store your full card details.
+          We reserve the right to correct pricing errors, and to cancel or
+          refuse any order we reasonably suspect to be fraudulent.
+        </li>
+        <li>
+          <span className="font-bold text-ink">4. Shipping:</span> We currently
+          ship within the United States only. See our Shipping &amp; Returns
+          tab for current rates and delivery details.
+        </li>
+        <li>
+          <span className="font-bold text-ink">5. Returns:</span> Returns are
+          accepted under the policy described in our Shipping &amp; Returns tab.
+          Contact <MailLink /> with your order number to start a return.
+        </li>
+        <li>
+          <span className="font-bold text-ink">6. Club emails:</span> Joining
+          our email club is optional and not required to place an order. You
+          can unsubscribe from marketing emails at any time using the link in
+          any email we send.
+        </li>
+        <li>
+          <span className="font-bold text-ink">7. Intellectual property:</span>{" "}
+          The Tulip &amp; Co. name, logo, and website content are our property
+          and may not be copied or reused without our permission. Product
+          designs and characters remain the property of their respective
+          rights holders.
+        </li>
+        <li>
+          <span className="font-bold text-ink">8. Limitation of liability:</span>{" "}
+          Tulip &amp; Co. is not liable for indirect, incidental, or
+          consequential damages arising from your use of this site or your
+          purchase, to the fullest extent permitted by law.
+        </li>
+        <li>
+          <span className="font-bold text-ink">9. Governing law:</span> These
+          terms are governed by the laws of the State of California.
+        </li>
+        <li>
+          <span className="font-bold text-ink">10. Changes to these terms:</span>{" "}
+          We may update these terms occasionally. Continued use of the site
+          after a change means you accept the updated terms.
+        </li>
+        <li>
+          <span className="font-bold text-ink">11. Contact us:</span> Questions
+          about these terms can go to <MailLink />.
+        </li>
+      </ol>
     </div>
   );
 }
