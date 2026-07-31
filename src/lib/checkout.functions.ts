@@ -3,6 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import Stripe from "stripe";
 import { z } from "zod";
 import type { Database } from "@/integrations/supabase/types";
+import { shippingCentsFor } from "@/lib/shipping";
 
 /**
  * Service-role client. Bypasses row-level security, so it is only ever
@@ -38,9 +39,9 @@ const CheckoutInput = z.object({
     .min(1)
     .max(50),
   email: z.string().email().max(254),
-  // What the customer was shown on screen. Compared against the server's own
-  // total before anything is written, so nobody is ever charged an amount
-  // different from the one they agreed to.
+  // The grand total (products + shipping) the customer was shown on screen.
+  // Compared against the server's own total before anything is written, so
+  // nobody is ever charged an amount different from the one they agreed to.
   expectedAmountCents: z.number().int().min(50),
 });
 
@@ -89,29 +90,40 @@ export const createOrderAndIntent = createServerFn({ method: "POST" })
     });
 
     // All amounts are in cents, matching products.price_cents.
-    const amountCents = lines.reduce(
+    const subtotalCents = lines.reduce(
       (sum, l) => sum + l.product.price_cents * l.qty,
       0,
     );
 
-    if (amountCents < 50) {
+    // Computed from the server's own re-priced subtotal, never trusted from
+    // the browser — the same rule as the product prices above. Free at $50+,
+    // flat $6 below it. Change the two numbers in src/lib/shipping.ts, not here.
+    const shippingCents = shippingCentsFor(subtotalCents);
+    const totalCents = subtotalCents + shippingCents;
+
+    if (totalCents < 50) {
       throw new Error("Order total is below the minimum charge amount.");
     }
 
     // Checked BEFORE any insert, so a stale price never leaves a junk row
-    // behind. Only possible if a product's price changed mid-checkout.
-    if (amountCents !== data.expectedAmountCents) {
+    // behind. Only possible if a product's price (or the shipping rule)
+    // changed mid-checkout.
+    if (totalCents !== data.expectedAmountCents) {
       throw new Error(
         "Your cart total has changed. Please go back to your cart and check it.",
       );
     }
 
     // user_id stays null for guest checkout. The webhook flips status to paid.
+    // shipping_cents is stored separately from total_amount specifically so a
+    // return can refund the product price while keeping the shipping fee —
+    // that split isn't recoverable later if only the combined total is saved.
     const { data: order, error: orderError } = await supabase
       .from("orders")
       .insert({
         status: "pending",
-        total_amount: amountCents,
+        total_amount: totalCents,
+        shipping_cents: shippingCents,
         customer_email: data.email,
         user_id: null,
       })
@@ -134,7 +146,7 @@ export const createOrderAndIntent = createServerFn({ method: "POST" })
 
     const stripe = stripeClient();
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: amountCents,
+      amount: totalCents,
       currency: "usd",
       automatic_payment_methods: { enabled: true },
       // The customer types their email before pressing Pay, so unlike the old
@@ -154,7 +166,7 @@ export const createOrderAndIntent = createServerFn({ method: "POST" })
 
     return {
       clientSecret: paymentIntent.client_secret!,
-      amountCents,
+      amountCents: totalCents,
       orderId: order.id as string,
     };
   });
