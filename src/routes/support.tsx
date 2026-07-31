@@ -243,19 +243,40 @@ function ShippingPanel() {
   return (
     <div className="max-w-2xl">
       <PanelHeading>Shipping &amp; Returns.</PanelHeading>
-      <div className="space-y-6 text-base md:text-lg leading-relaxed text-ink/85">
-        <p>
-          <span className="font-bold text-ink">Shipping:</span> We offer Free US
-          Shipping on all orders over $50. All Tulip &amp; Co. orders are carefully
-          packaged and shipped directly from San Diego, California.
-        </p>
-        <p>
-          <span className="font-bold text-ink">Returns:</span> We offer a 30-Day
-          Return Policy for unused, unopened stationery and plushies in their
-          original packaging. To initiate a return, please contact us at{" "}
-          <MailLink /> with your order number.
-        </p>
-      </div>
+      <p className="text-sm text-ink/60 mb-6 md:mb-8">Last updated: July 2026</p>
+      <ol className="space-y-6 text-base md:text-lg leading-relaxed text-ink/85 list-none">
+        <li>
+          <span className="font-bold text-ink">1. Shipping rates:</span> Orders
+          of $50 or more ship free. Orders under $50 ship for a flat $6.00.
+          Every Tulip &amp; Co. order is packaged and shipped from San Diego,
+          California, via a major US carrier. We currently ship within the
+          United States only.
+        </li>
+        <li>
+          <span className="font-bold text-ink">2. Return window:</span> We
+          accept returns within 30 days of delivery. Items must be unused,
+          unopened, and in their original packaging. There's no restocking
+          fee.
+        </li>
+        <li>
+          <span className="font-bold text-ink">3. If you've changed your mind:</span>{" "}
+          We'll refund the price of the item to your original payment method.
+          The original shipping charge (if any was applied) isn't refunded,
+          and return shipping — getting the item back to us — is your
+          responsibility.
+        </li>
+        <li>
+          <span className="font-bold text-ink">4. If we made a mistake:</span>{" "}
+          If you received the wrong item, or it arrived damaged or defective,
+          that's on us. Contact us and we'll cover return shipping and refund
+          you in full, including the original shipping charge.
+        </li>
+        <li>
+          <span className="font-bold text-ink">5. How to start a return:</span>{" "}
+          Email <MailLink /> with your order number and we'll walk you through
+          the next steps.
+        </li>
+      </ol>
     </div>
   );
 }
