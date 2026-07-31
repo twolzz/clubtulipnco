@@ -8,6 +8,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { SiteLayout } from "@/components/SiteLayout";
 import { JoinClubDialog } from "@/components/JoinClubDialog";
+import { MapPin } from "lucide-react";
 import { listPopUps, type PopUp } from "@/lib/pop-ups.functions";
 
 const popUpsQO = queryOptions({
@@ -134,9 +135,20 @@ function PopUpsPage() {
                       <p className="mt-1 text-ink/80">{e.location}</p>
                       <p className="text-ink/60 text-sm font-semibold mt-0.5">{formatTime(e.start_time, e.end_time)}</p>
                     </div>
-                    <JoinClubDialog className="tc-btn tc-btn-cream whitespace-nowrap inline-flex">
-                      Notify Me
-                    </JoinClubDialog>
+                    <div className="flex flex-col gap-2 shrink-0">
+                      <a
+                        href={`/api/public/maps?address=${encodeURIComponent(e.location)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="tc-btn tc-btn-poppy whitespace-nowrap inline-flex items-center gap-2"
+                      >
+                        <MapPin className="w-4 h-4" aria-hidden="true" />
+                        Get Directions
+                      </a>
+                      <JoinClubDialog className="tc-btn tc-btn-cream whitespace-nowrap inline-flex justify-center">
+                        Notify Me
+                      </JoinClubDialog>
+                    </div>
                   </li>
                 );
               })}
