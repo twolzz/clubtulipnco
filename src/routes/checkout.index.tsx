@@ -4,7 +4,7 @@
 // Put it back exactly where it came from.
 
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { Elements } from "@stripe/react-stripe-js";
@@ -12,7 +12,6 @@ import { SiteLayout } from "@/components/SiteLayout";
 import { CheckoutForm } from "@/components/CheckoutForm";
 import { useCart } from "@/lib/cart-store";
 import { listProducts, type Product } from "@/lib/products.functions";
-import { createCheckoutIntent } from "@/lib/checkout.functions";
 import { getStripe, buildAppearance } from "@/lib/stripe-elements";
 import { ProductMedia, formatPrice } from "@/components/ProductCard";
 
@@ -43,16 +42,6 @@ function CheckoutPage() {
   const { items } = useCart();
 
   const listFn = useServerFn(listProducts);
-  const intentFn = useServerFn(createCheckoutIntent);
-
-  const [clientSecret, setClientSecret] = useState<string | null>(null);
-  const [amountCents, setAmountCents] = useState(0);
-  const [orderId, setOrderId] = useState<string | null>(null);
-  const [setupError, setSetupError] = useState<string | null>(null);
-
-  // The intent is created once per page load. Without this guard, React's
-  // development double-render would create two orders.
-  const requested = useRef(false);
 
   const { data: products } = useQuery<Product[]>({
     queryKey: ["products", "all"],
@@ -66,32 +55,17 @@ function CheckoutPage() {
     .filter((l): l is { item: typeof l.item; product: Product } => Boolean(l.product));
   const subtotal = lines.reduce((s, l) => s + l.product.price_cents * l.item.qty, 0);
 
-  useEffect(() => {
-    if (requested.current) return;
-    if (items.length === 0) return;
-
-    requested.current = true;
-
-    intentFn({
-      data: { items: items.map((i) => ({ productId: i.productId, qty: i.qty })) },
-    })
-      .then((result) => {
-        setClientSecret(result.clientSecret);
-        setAmountCents(result.amountCents);
-        setOrderId(result.orderId);
-      })
-      .catch((e) => {
-        console.error("Checkout setup error:", e);
-        setSetupError("We could not start checkout. Please try again.");
-      });
-  }, [items, intentFn]);
+  // Stripe's deferred flow mounts the form from an amount alone, so the form
+  // cannot render until the product prices have loaded. 50 cents is Stripe's
+  // minimum charge.
+  const ready = lines.length > 0 && subtotal >= 50;
 
   // An empty cart has nothing to pay for.
   useEffect(() => {
-    if (items.length === 0 && !clientSecret) {
+    if (items.length === 0) {
       navigate({ to: "/cart" });
     }
-  }, [items.length, clientSecret, navigate]);
+  }, [items.length, navigate]);
 
   const appearance = buildAppearance();
 
@@ -114,19 +88,21 @@ function CheckoutPage() {
           <div className="grid lg:grid-cols-[1fr_380px] gap-8 items-start">
             {/* Payment */}
             <div className="tc-card p-6 md:p-8 order-2 lg:order-1">
-              {setupError ? (
-                <div className="py-10 text-center">
-                  <p className="font-semibold text-poppy mb-4">{setupError}</p>
-                  <Link to="/cart" className="tc-btn tc-btn-cream inline-flex">
-                    Back to Cart
-                  </Link>
-                </div>
-              ) : clientSecret && orderId ? (
+              {ready ? (
                 <Elements
                   stripe={getStripe()}
-                  options={{ clientSecret, appearance, fonts: STRIPE_FONTS }}
+                  options={{
+                    mode: "payment",
+                    amount: subtotal,
+                    currency: "usd",
+                    appearance,
+                    fonts: STRIPE_FONTS,
+                  }}
                 >
-                  <CheckoutForm amountCents={amountCents} orderId={orderId} />
+                  <CheckoutForm
+                    amountCents={subtotal}
+                    items={items.map((i) => ({ productId: i.productId, qty: i.qty }))}
+                  />
                 </Elements>
               ) : (
                 <div className="py-16 text-center">
@@ -161,7 +137,7 @@ function CheckoutPage() {
               <div className="border-t-2 border-ink/15 pt-4 flex justify-between items-center">
                 <span className="font-semibold">Total</span>
                 <span className="font-extrabold text-2xl">
-                  {formatPrice(amountCents || subtotal)}
+                  {formatPrice(subtotal)}
                 </span>
               </div>
               <Link
