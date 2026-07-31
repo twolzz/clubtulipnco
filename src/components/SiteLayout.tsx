@@ -176,12 +176,8 @@ export function SiteLayout({ children }: { children: ReactNode }) {
 
   return (
     <div className="min-h-screen flex flex-col bg-cream text-ink">
-      {/* Sticky shell: announcement + primary nav */}
+      {/* Sticky shell: primary nav */}
       <div className="sticky top-0 z-50">
-        <div className="bg-poppy text-white text-center text-xs md:text-sm font-semibold py-2 px-4 border-b-4 border-ink">
-          NEW: San Diego Pop-up Calendar Announced!
-        </div>
-
         <header className="bg-cream border-b-4 border-ink">
           <div className="max-w-7xl mx-auto flex items-center justify-between gap-3 md:gap-4 px-4 md:px-8 py-3 md:py-4">
             {/* Left: logo */}
