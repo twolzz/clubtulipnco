@@ -3,11 +3,17 @@
 // process.env inside the handler and never bundled to the client.
 
 const RESEND_API_URL = "https://api.resend.com";
-const FROM = "Tulip & Co. <hello@updates.tulipnco.com>";
+const FROM = "Tulip & Co. <hello@club.tulipnco.com>";
 const REPLY_TO = "hello@tulipnco.com";
-const SENDER_ADDRESS = "hello@updates.tulipnco.com";
-const SITE_URL = process.env.SITE_URL ?? "https://club.tulipnco.com";
-const DISCOUNT_CODE = "WELCOME10";
+const SENDER_ADDRESS = "hello@club.tulipnco.com";
+
+/**
+ * Read inside the render, not at module scope: Cloudflare Workers inject
+ * bindings per request, so process.env is empty when this module loads.
+ */
+function siteUrl() {
+  return process.env.SITE_URL ?? "https://club.tulipnco.com";
+}
 
 export type WelcomeResult = {
   ok: boolean;
@@ -25,7 +31,7 @@ function esc(str: string) {
 }
 
 function renderHtml(firstName: string, email: string) {
-  const unsubUrl = `${SITE_URL}/unsubscribe?email=${encodeURIComponent(email)}`;
+  const unsubUrl = `${siteUrl()}/unsubscribe?email=${encodeURIComponent(email)}`;
   const name = esc(firstName || "friend");
   return `<!DOCTYPE html>
 <html lang="en">
@@ -44,9 +50,11 @@ function renderHtml(firstName: string, email: string) {
           <tr>
             <td>
               
-              <!-- brand header -->
-              <p style="color: #000000; font-size: 20px; font-weight: 900; margin: 0 0 35px 0; letter-spacing: -0.5px;">
-                Tulip &amp; Co.
+              <!-- brand header, links home -->
+              <p style="margin: 0 0 35px 0;">
+                <a href="${siteUrl()}" style="color: #000000; text-decoration: none;">
+                  <span style="color: #000000; font-size: 20px; font-weight: 900; letter-spacing: -0.5px; text-decoration: none;">Tulip &amp; Co.</span>
+                </a>
               </p>
 
               <!-- de stijl color accent divider -->
@@ -77,19 +85,8 @@ function renderHtml(firstName: string, email: string) {
                 No spam, just the good stuff.
               </p>
 
-              <!-- simple pill button -->
-              <table cellpadding="0" cellspacing="0" role="presentation">
-                <tr>
-                  <td align="center" style="background-color: #E05A36; border: 2px solid #000000; border-radius: 50px; box-shadow: 3px 3px 0px 0px #000000;">
-                    <a href="${SITE_URL}/shop" style="display: block; padding: 14px 32px; color: #ffffff; font-size: 15px; font-weight: bold; text-decoration: none;">
-                      Take a look around
-                    </a>
-                  </td>
-                </tr>
-              </table>
-
               <!-- spacer -->
-              <div style="height: 70px; line-height: 70px; font-size: 70px;">&nbsp;</div>
+              <div style="height: 40px; line-height: 40px; font-size: 40px;">&nbsp;</div>
 
               <!-- clean footer & unsubscribe -->
               <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
@@ -116,7 +113,7 @@ function renderHtml(firstName: string, email: string) {
 
  
 function renderText(firstName: string, email: string) {
-  const unsubUrl = `${SITE_URL}/unsubscribe?email=${encodeURIComponent(email)}`;
+  const unsubUrl = `${siteUrl()}/unsubscribe?email=${encodeURIComponent(email)}`;
   const name = firstName || "friend";
   return [
     `Hi ${name},`,
@@ -128,9 +125,6 @@ function renderText(firstName: string, email: string) {
     `I just wanted to send a quick note to say I’m glad you’re here. I'll email you when we have new pieces in the collection or upcoming dates to meet up in person.`,
     ``,
     `No spam, just the good stuff.`,
-    ``,
-    `Take a look around:`,
-    `  ${SITE_URL}`,
     ``,
     `Talk soon,`,
     `Thimo`,
