@@ -33,10 +33,6 @@ function esc(str: string) {
 function renderHtml(firstName: string, email: string) {
   const unsubUrl = `${siteUrl()}/unsubscribe?email=${encodeURIComponent(email)}`;
   const name = esc(firstName || "friend");
-  // Deliberately plain: no table layout, no colored divider, no styled
-  // header, no button, no background color. Every one of those reads as
-  // "template" to Gmail's Promotions classifier, independent of the wording.
-  // This is meant to look like an email a person actually typed.
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -44,18 +40,70 @@ function renderHtml(firstName: string, email: string) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Welcome to Tulip & Co.</title>
 </head>
-<body style="margin: 0; padding: 0; font-family: Arial, Helvetica, sans-serif; color: #000000; font-size: 15px; line-height: 1.6;">
-  <div style="max-width: 480px; margin: 0 auto; padding: 24px 16px;">
-    <p>Hi ${name},</p>
-    <p>I'm Thimo. Thanks for joining us.</p>
-    <p>I started Tulip &amp; Co. to share a piece of my home in the Netherlands right here in San Diego. We just love simple, well-made Dutch design that gives you a little room to breathe.</p>
-    <p>I'll email you when we have new pieces in the collection or upcoming dates to meet up in person. No spam, just the good stuff.</p>
-    <p>Talk soon,<br>Thimo</p>
-    <p style="color: #666666; font-size: 12px; margin-top: 32px;">
-      Tulip &amp; Co. — San Diego, CA.<br>
-      <a href="${unsubUrl}" style="color: #666666;">Unsubscribe</a>
-    </p>
-  </div>
+<body style="margin: 0; padding: 0; background-color: #F9F6F0; font-family: Arial, Helvetica, sans-serif; -webkit-font-smoothing: antialiased;">
+  <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background-color: #F9F6F0;">
+    <tr>
+      <td align="center" style="padding: 60px 20px;">
+
+        <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="max-width: 440px; text-align: left;">
+          <tr>
+            <td>
+
+              <!-- brand header, links home -->
+              <p style="margin: 0 0 35px 0;">
+                <a href="${siteUrl()}" style="color: #000000; text-decoration: none;">
+                  <span style="color: #000000; font-size: 20px; font-weight: 900; letter-spacing: -0.5px; text-decoration: none;">Tulip &amp; Co.</span>
+                </a>
+              </p>
+
+              <!-- de stijl color accent divider -->
+              <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="margin-bottom: 40px;">
+                <tr>
+                  <td width="33%" height="4" style="background-color: #E05A36; border: 2px solid #000000;"></td>
+                  <td width="33%" height="4" style="background-color: #F2B73F; border: 2px solid #000000; border-left: none;"></td>
+                  <td width="34%" height="4" style="background-color: #3D6E97; border: 2px solid #000000; border-left: none;"></td>
+                </tr>
+              </table>
+
+              <h1 style="color: #000000; font-size: 28px; font-weight: bold; margin: 0 0 20px 0; letter-spacing: -0.5px;">
+                Hi ${name},
+              </h1>
+
+              <p style="color: #000000; font-size: 16px; line-height: 1.7; font-weight: 500; margin: 0 0 20px 0;">
+                I'm Thimo. Thanks for joining us.
+              </p>
+              <p style="color: #000000; font-size: 16px; line-height: 1.7; font-weight: 500; margin: 0 0 20px 0;">
+                I started Tulip &amp; Co. to share a piece of my home in the Netherlands right here in San Diego. We just love simple, well-made Dutch design that gives you a little room to breathe.
+              </p>
+              <p style="color: #000000; font-size: 16px; line-height: 1.7; font-weight: 500; margin: 0 0 40px 0;">
+                I'll email you when we have new pieces in the collection or upcoming dates to meet up in person. No spam, just the good stuff.
+              </p>
+              <p style="color: #000000; font-size: 16px; line-height: 1.7; font-weight: 500; margin: 0 0 0 0;">
+                Talk soon,<br>Thimo
+              </p>
+
+              <!-- spacer -->
+              <div style="height: 40px; line-height: 40px; font-size: 40px;">&nbsp;</div>
+
+              <!-- clean footer & unsubscribe -->
+              <table width="100%" cellpadding="0" cellspacing="0" role="presentation">
+                <tr>
+                  <td style="border-top: 2px solid #000000; padding-top: 30px;">
+                    <p style="color: #000000; font-size: 12px; line-height: 1.6; margin: 0; font-weight: 500;">
+                      Tulip &amp; Co. — San Diego, CA.<br><br>
+                      <a href="${unsubUrl}" style="color: #000000; text-decoration: underline;">Unsubscribe</a>
+                    </p>
+                  </td>
+                </tr>
+              </table>
+
+            </td>
+          </tr>
+        </table>
+
+      </td>
+    </tr>
+  </table>
 </body>
 </html>`;
 }
@@ -108,7 +156,7 @@ export async function sendWelcomeEmail(
       html: renderHtml(firstName, to),
       text: renderText(firstName, to),
       headers: {
-        "List-Unsubscribe": `<mailto:${REPLY_TO}?subject=unsubscribe>`,
+        "List-Unsubscribe": `<${siteUrl()}/api/public/unsubscribe?email=${encodeURIComponent(to)}>, <mailto:${REPLY_TO}?subject=unsubscribe>`,
         "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
       },
     };
