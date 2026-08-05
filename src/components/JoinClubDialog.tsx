@@ -48,13 +48,13 @@ export function JoinClubDialog({ children, className }: Props) {
           <DialogPrimitive.Overlay
             forceMount
             data-state={visible ? "open" : "closed"}
-            className="fixed inset-0 z-50 bg-ink/60 transition-opacity duration-base ease-glide data-[state=closed]:opacity-0 data-[state=closed]:duration-exit data-[state=closed]:pointer-events-none"
+            className="fixed inset-0 z-50 bg-ink/60 [will-change:opacity] transition-opacity duration-base ease-glide data-[state=closed]:opacity-0 data-[state=closed]:duration-exit data-[state=closed]:pointer-events-none"
           />
           <DialogPrimitive.Content
             forceMount
             data-state={visible ? "open" : "closed"}
             inert={!open || undefined}
-            className="fixed left-1/2 top-1/2 z-50 w-[calc(100%-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 bg-cream border-4 border-ink rounded-2xl p-7 md:p-9 outline-none scale-100 opacity-100 transition-[opacity,transform] duration-base ease-spring data-[state=closed]:opacity-0 data-[state=closed]:scale-95 data-[state=closed]:duration-exit data-[state=closed]:ease-snap"
+            className="fixed left-1/2 top-1/2 z-50 w-[calc(100%-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 bg-cream border-4 border-ink rounded-2xl p-7 md:p-9 outline-none scale-100 opacity-100 [will-change:opacity,scale] transition-[opacity,scale] duration-base ease-spring data-[state=closed]:opacity-0 data-[state=closed]:scale-95 data-[state=closed]:duration-exit data-[state=closed]:ease-snap"
             style={{ boxShadow: "8px 8px 0 var(--poppy)" }}
           >
             <DialogPrimitive.Close
@@ -67,7 +67,8 @@ export function JoinClubDialog({ children, className }: Props) {
               Join the Club!
             </DialogPrimitive.Title>
             <DialogPrimitive.Description className="mt-2 text-ink/80">
-              Join our community to stay in the loop on upcoming pop-ups, new Miffy arrivals, and special surprises!
+              Join our community to stay in the loop on upcoming pop-ups, new Miffy arrivals, and
+              special surprises!
             </DialogPrimitive.Description>
             <div className="mt-6">
               <SubscribeForm variant="modal" onSuccess={handleSuccess} />

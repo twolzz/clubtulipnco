@@ -164,7 +164,7 @@ function ContactPanel() {
   }
 
   const fieldBase =
-    "w-full bg-cream border-[3px] border-ink text-ink placeholder:text-ink/50 px-5 py-3 font-medium shadow-[4px_4px_0_var(--ink)] transition-[transform,box-shadow] duration-fast ease-snap focus:outline-none focus:shadow-[6px_6px_0_var(--ink)] focus:-translate-x-[1px] focus:-translate-y-[1px]";
+    "w-full bg-cream border-[3px] border-ink text-ink placeholder:text-ink/50 px-5 py-3 font-medium [filter:drop-shadow(4px_4px_0_var(--ink))] transition-[translate,filter] duration-fast ease-snap focus:outline-none focus:[filter:drop-shadow(6px_6px_0_var(--ink))] focus:-translate-x-[1px] focus:-translate-y-[1px]";
 
   return (
     <div>

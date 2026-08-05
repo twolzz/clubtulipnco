@@ -177,9 +177,9 @@ function ProductDetail({ product, related }: { product: Product; related: Produc
                       onClick={() => setActiveImage(i)}
                       aria-label={`View image ${i + 1} of ${product.images.length}`}
                       aria-current={i === activeImage}
-                      className={`rounded-lg overflow-hidden border-[3px] bg-white transition-all ${
+                      className={`rounded-lg overflow-hidden border-[3px] bg-white transition-[filter,opacity,border-color] duration-fast ease-snap ${
                         i === activeImage
-                          ? "border-poppy shadow-[3px_3px_0_var(--ink)]"
+                          ? "border-poppy [filter:drop-shadow(3px_3px_0_var(--ink))]"
                           : "border-ink opacity-70 hover:opacity-100"
                       }`}
                     >

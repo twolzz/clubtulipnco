@@ -300,8 +300,15 @@
     --press-active: 2px;
     --press-color: var(--ink);
 
-    box-shadow: var(--press-rest) var(--press-rest) 0 var(--press-color);
-    transition-property: transform, box-shadow;
+    /* filter: drop-shadow(), not box-shadow. Same hard-edged look (blur is
+       0 either way), but box-shadow is a paint property — the browser must
+       re-rasterize it on the main thread every frame, which is exactly what
+       reads as "choppy" under any main-thread load (a weaker GPU, other tabs,
+       React re-renders). drop-shadow runs on the compositor alongside
+       transform, so this animates at a steady frame rate independent of
+       main-thread load — this is the fix, not a duration/easing tweak. */
+    filter: drop-shadow(var(--press-rest) var(--press-rest) 0 var(--press-color));
+    transition-property: transform, filter;
     transition-duration: var(--dur-press);
     transition-timing-function: var(--ease-snap);
 
@@ -320,14 +327,14 @@
     .tc-btn:hover:not(:disabled):not([aria-disabled="true"]),
     .tc-press:hover:not(:disabled):not([aria-disabled="true"]) {
       transform: translate(calc(var(--press-travel) * -1), calc(var(--press-travel) * -1));
-      box-shadow: var(--press-hover) var(--press-hover) 0 var(--press-color);
+      filter: drop-shadow(var(--press-hover) var(--press-hover) 0 var(--press-color));
     }
   }
 
   .tc-btn:active:not(:disabled):not([aria-disabled="true"]),
   .tc-press:active:not(:disabled):not([aria-disabled="true"]) {
     transform: translate(var(--press-travel), var(--press-travel));
-    box-shadow: var(--press-active) var(--press-active) 0 var(--press-color);
+    filter: drop-shadow(var(--press-active) var(--press-active) 0 var(--press-color));
     transition-duration: var(--dur-instant);
   }
 
@@ -374,7 +381,7 @@
     font-weight: 500;
     color: var(--ink);
     width: 100%;
-    transition-property: box-shadow, border-color;
+    transition-property: filter, border-color;
     transition-duration: var(--dur-fast);
     transition-timing-function: var(--ease-snap);
     -webkit-tap-highlight-color: transparent;
@@ -383,11 +390,11 @@
     outline: none;
   }
   .tc-input:focus-visible {
-    box-shadow: 4px 4px 0 var(--ink);
+    filter: drop-shadow(4px 4px 0 var(--ink));
   }
   .tc-input[aria-invalid="true"] {
     border-color: var(--poppy);
-    box-shadow: 4px 4px 0 var(--poppy);
+    filter: drop-shadow(4px 4px 0 var(--poppy));
   }
 
   /* Card hover-lift — shared by index/blog/blog article "next post" cards

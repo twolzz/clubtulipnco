@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import type { PointerEvent as ReactPointerEvent } from "react";
 import { usePresence } from "@/hooks/use-presence";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
@@ -19,15 +19,33 @@ const CLOSE_VELOCITY = 0.5; // px/ms
 
 // Slightly longer than --dur-exit (280ms) so the slide-out finishes first.
 const EXIT_MS = 320;
+// Matches --dur-base (380ms) — see the focus useEffect below.
+const ENTER_MS = 380;
 
 export function CartDrawer() {
   const open = useCartDrawer();
+
+  const panelRef = useRef<HTMLDivElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
+  const drag = useRef({ startX: 0, startT: 0, active: false });
 
   // Mounts closed, transitions in on a later frame, and stays mounted through
   // the slide-out. It must genuinely unmount once closed: Radix's cleanup
   // (restoring body pointer-events, releasing the scroll lock) is tied to
   // unmount, so staying mounted makes the whole page unclickable.
   const { present, visible } = usePresence(open, EXIT_MS);
+
+  // Calling .focus() on the panel while its slide-in transform is still
+  // interpolating is what was causing the drawer to animate smoothly partway,
+  // then jump straight to its final position — focusing an element forces the
+  // browser to resolve its layout/visibility synchronously, which can conflict
+  // with an in-flight transform/translate transition on that same element.
+  // Waiting until the transition has actually finished avoids it entirely.
+  useEffect(() => {
+    if (!visible) return;
+    const t = window.setTimeout(() => panelRef.current?.focus(), ENTER_MS);
+    return () => window.clearTimeout(t);
+  }, [visible]);
 
   const { items } = useCart();
   const listFn = useServerFn(listProducts);
@@ -42,10 +60,6 @@ export function CartDrawer() {
     .map((i) => ({ item: i, product: productMap.get(i.productId) }))
     .filter((l): l is { item: typeof l.item; product: Product } => Boolean(l.product));
   const subtotal = lines.reduce((s, l) => s + l.product.price_cents * l.item.qty, 0);
-
-  const panelRef = useRef<HTMLDivElement>(null);
-  const overlayRef = useRef<HTMLDivElement>(null);
-  const drag = useRef({ startX: 0, startT: 0, active: false });
 
   // touch-action: pan-y on the panel means the browser itself arbitrates the
   // axis — a vertical drag scrolls natively (we never see it), a horizontal
@@ -93,7 +107,7 @@ export function CartDrawer() {
           ref={overlayRef}
           forceMount
           data-state={visible ? "open" : "closed"}
-          className="fixed inset-0 z-[60] bg-ink/40 transition-opacity duration-base ease-glide data-[state=closed]:opacity-0 data-[state=closed]:pointer-events-none data-[state=closed]:duration-exit"
+          className="fixed inset-0 z-[60] bg-ink/40 [will-change:opacity] transition-opacity duration-base ease-glide data-[state=closed]:opacity-0 data-[state=closed]:pointer-events-none data-[state=closed]:duration-exit"
         />
         <DialogPrimitive.Content
           ref={panelRef}
@@ -106,12 +120,13 @@ export function CartDrawer() {
           onPointerUp={onPointerUp}
           onPointerCancel={onPointerUp}
           onOpenAutoFocus={(e) => {
-            // The close button stealing focus on every open is more jarring
-            // than useful here — let the panel itself receive focus instead.
+            // Block Radix's default (focusing the close button) — the panel
+            // itself gets focus instead, but only once the slide-in finishes
+            // (see the useEffect above); doing it here, on Radix's own timing,
+            // fires while the transform is still animating.
             e.preventDefault();
-            panelRef.current?.focus();
           }}
-          className="fixed top-0 right-0 bottom-0 z-[61] w-full sm:w-[440px] bg-cream border-l-4 border-ink flex flex-col outline-none [touch-action:pan-y] transition-transform duration-base ease-glide data-[state=closed]:translate-x-full data-[state=closed]:duration-exit data-[dragging]:transition-none"
+          className="fixed top-0 right-0 bottom-0 z-[61] w-full sm:w-[440px] bg-cream border-l-4 border-ink flex flex-col outline-none [touch-action:pan-y] [will-change:translate] transition-transform duration-base ease-glide data-[state=closed]:translate-x-full data-[state=closed]:duration-exit data-[dragging]:transition-none"
         >
           <DialogPrimitive.Title className="sr-only">Your Cart</DialogPrimitive.Title>
           <DialogPrimitive.Description className="sr-only">

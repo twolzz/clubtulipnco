@@ -117,14 +117,14 @@ function MobileMenuPanel({ open, onClose }: { open: boolean; onClose: () => void
         tabIndex={open ? 0 : -1}
         onClick={onClose}
         data-state={open ? "open" : "closed"}
-        className="md:hidden absolute top-full left-0 right-0 h-[calc(100dvh-var(--header-h))] bg-ink/40 cursor-default transition-opacity duration-base ease-glide data-[state=closed]:opacity-0 data-[state=closed]:pointer-events-none data-[state=closed]:duration-exit"
+        className="md:hidden absolute top-full left-0 right-0 h-[calc(100dvh-var(--header-h))] bg-ink/40 cursor-default [will-change:opacity] transition-opacity duration-base ease-glide data-[state=closed]:opacity-0 data-[state=closed]:pointer-events-none data-[state=closed]:duration-exit"
       />
 
       <div
         id="mobile-menu"
         inert={!open || undefined}
         data-state={open ? "open" : "closed"}
-        className="md:hidden absolute top-full left-0 right-0 bg-cream border-b-4 border-ink shadow-[0_8px_0_rgba(0,0,0,0.15)] transition-[opacity,transform] duration-base ease-glide data-[state=closed]:opacity-0 data-[state=closed]:-translate-y-2 data-[state=closed]:pointer-events-none data-[state=closed]:duration-exit"
+        className="md:hidden absolute top-full left-0 right-0 bg-cream border-b-4 border-ink shadow-[0_8px_0_rgba(0,0,0,0.15)] [will-change:opacity,translate] transition-[opacity,translate] duration-base ease-glide data-[state=closed]:opacity-0 data-[state=closed]:-translate-y-2 data-[state=closed]:pointer-events-none data-[state=closed]:duration-exit"
       >
         <nav className="flex flex-col px-5 py-3">
           {NAV.map((n) => (
