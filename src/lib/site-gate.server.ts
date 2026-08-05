@@ -83,7 +83,13 @@ export async function isSessionValid(cookieHeader: string | null): Promise<boole
 }
 
 export function gateCookieHeader(value: string): string {
-  return `${GATE_COOKIE_NAME}=${value}; Path=/; Max-Age=2592000; HttpOnly; Secure; SameSite=Lax`;
+  // Secure requires HTTPS — dropped only in dev, since `bun dev` is served
+  // over plain HTTP on the LAN for phone testing, and browsers silently
+  // discard a Secure cookie set over an insecure connection. The production
+  // build (and every Cloudflare deploy) always runs with NODE_ENV=production
+  // and keeps Secure.
+  const secure = process.env.NODE_ENV === "production" ? " Secure;" : "";
+  return `${GATE_COOKIE_NAME}=${value}; Path=/; Max-Age=2592000; HttpOnly;${secure} SameSite=Lax`;
 }
 
 /** Only ever redirect to a same-origin relative path — never an open redirect. */
@@ -95,10 +101,7 @@ export function safeRedirectTarget(raw: string | null): string {
 
 function esc(str: string) {
   return str.replace(/[&<>"']/g, (c) =>
-    c === "&" ? "&amp;" :
-    c === "<" ? "&lt;" :
-    c === ">" ? "&gt;" :
-    c === '"' ? "&quot;" : "&#39;",
+    c === "&" ? "&amp;" : c === "<" ? "&lt;" : c === ">" ? "&gt;" : c === '"' ? "&quot;" : "&#39;",
   );
 }
 
@@ -128,7 +131,7 @@ export function renderGatePage(opts: { error: boolean; redirectTo: string }): st
     margin: 0; min-height: 100%; background: var(--cream); color: var(--ink);
     font-family: "Inter", "Helvetica Neue", sans-serif;
   }
-  body { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 24px; }
+  body { display: flex; align-items: center; justify-content: center; min-height: 100vh; min-height: 100dvh; padding: 24px; }
   .card {
     max-width: 380px; width: 100%; text-align: center;
     background: #fff; border: 4px solid var(--ink); border-radius: 16px;
@@ -172,7 +175,7 @@ export function renderGatePage(opts: { error: boolean; redirectTo: string }): st
   <div class="card">
     <div class="wordmark">Tulip &amp; Co.</div>
     <div class="accent-bar" aria-hidden="true"><span></span><span></span><span></span></div>
-    <h1>Not open yet.</h1>
+    <h1>Not open yet</h1>
     <p class="sub">This site is private while we get ready. Enter the pincode to continue.</p>
     <form method="POST" action="/__gate">
       <input type="hidden" name="redirect" value="${redirectTo}">

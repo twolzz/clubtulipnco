@@ -3,9 +3,9 @@
 
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
-import { SiteLayout } from "@/components/SiteLayout";
 import { listProducts } from "@/lib/products.functions";
 import { ProductCard, collectionSlug } from "@/components/ProductCard";
+import { ShopSkeleton } from "@/components/Skeletons";
 
 export const productsQO = queryOptions({
   queryKey: ["products", "all"] as const,
@@ -17,7 +17,7 @@ type ShopSearch = {
   collection?: string;
 };
 
-export const Route = createFileRoute("/shop")({
+export const Route = createFileRoute("/_app/shop")({
   /**
    * Reads ?collection= off the URL. Anything unrecognised is dropped rather
    * than throwing, so a mistyped link still lands on a working shop page.
@@ -33,19 +33,23 @@ export const Route = createFileRoute("/shop")({
       { title: "Shop — Tulip & Co." },
       { name: "description", content: "Curated Dutch plushies, stationery, and accessories." },
       { property: "og:title", content: "Shop — Tulip & Co." },
-      { property: "og:description", content: "Curated Dutch plushies, stationery, and accessories." },
+      {
+        property: "og:description",
+        content: "Curated Dutch plushies, stationery, and accessories.",
+      },
     ],
   }),
   loader: ({ context }) => context.queryClient.ensureQueryData(productsQO),
   component: ShopPage,
+  pendingComponent: ShopSkeleton,
   errorComponent: () => (
-    <SiteLayout>
+    <>
       <section className="px-5 md:px-8 py-24 text-center">
         <p className="font-display text-3xl font-extrabold">
           The shop is loading slowly — please refresh.
         </p>
       </section>
-    </SiteLayout>
+    </>
   ),
 });
 
@@ -62,9 +66,7 @@ function ShopPage() {
 
   const active = collection ?? "all";
   const visible =
-    active === "all"
-      ? products
-      : products.filter((p) => collectionSlug(p.category) === active);
+    active === "all" ? products : products.filter((p) => collectionSlug(p.category) === active);
 
   const activeLabel = categories.find((c) => collectionSlug(c) === active);
 
@@ -74,7 +76,7 @@ function ShopPage() {
   ];
 
   return (
-    <SiteLayout>
+    <>
       <section className="px-4 sm:px-5 md:px-8 py-10 sm:py-16 md:py-24">
         <div className="max-w-7xl mx-auto">
           <div>
@@ -82,11 +84,8 @@ function ShopPage() {
               The Shop
             </span>
             <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold tracking-tight leading-[1.05] md:leading-[1.02]">
-              Quiet things, <span className="text-poppy">built to last.</span>
+              Quiet things, <span className="text-poppy">built to last</span>
             </h1>
-            <p className="mt-4 sm:mt-6 text-base sm:text-lg md:text-xl text-ink/80">
-              Curated essentials. Sourced direct from Dutch makers and shipped from San Diego.
-            </p>
           </div>
 
           {/* ---------- Collection filter ---------- */}
@@ -103,10 +102,10 @@ function ShopPage() {
                   search={f.slug === "all" ? {} : { collection: f.slug }}
                   resetScroll={false}
                   aria-current={isActive ? "page" : undefined}
-                  className={`px-4 sm:px-5 py-2 rounded-full border-[3px] border-ink text-sm font-bold transition-all ${
+                  className={`px-4 sm:px-5 py-2 rounded-full border-[3px] border-ink text-sm font-bold ${
                     isActive
                       ? "bg-ink text-cream shadow-[3px_3px_0_var(--poppy)]"
-                      : "bg-white hover:-translate-x-[2px] hover:-translate-y-[2px] hover:shadow-[3px_3px_0_var(--ink)]"
+                      : "bg-white tc-press [--press-rest:0px] [--press-hover:3px]"
                   }`}
                 >
                   {f.label}
@@ -139,6 +138,6 @@ function ShopPage() {
           )}
         </div>
       </section>
-    </SiteLayout>
+    </>
   );
 }

@@ -238,7 +238,7 @@ export function ProductCard({ product }: { product: Product }) {
 
   return (
     <article
-      className={`tc-card ${product.shadow} bg-white overflow-hidden flex flex-col transition-transform duration-150 hover:-translate-x-[2px] hover:-translate-y-[2px]`}
+      className={`tc-card ${product.shadow} bg-white overflow-hidden flex flex-col tc-lift [--lift-transform:translate(-2px,-2px)]`}
     >
       <Link
         to="/shop/$slug"

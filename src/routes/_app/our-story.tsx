@@ -2,16 +2,21 @@
 // Goes in: src/routes/our-story.tsx  (replace the whole file)
 
 import { createFileRoute } from "@tanstack/react-router";
-import { SiteLayout } from "@/components/SiteLayout";
 import { JoinClubDialog } from "@/components/JoinClubDialog";
 
-export const Route = createFileRoute("/our-story")({
+export const Route = createFileRoute("/_app/our-story")({
   head: () => ({
     meta: [
       { title: "Our Story — Tulip & Co." },
-      { name: "description", content: "Why we started Tulip & Co. — authentic Dutch design in San Diego." },
+      {
+        name: "description",
+        content: "Why we started Tulip & Co. — authentic Dutch design in San Diego.",
+      },
       { property: "og:title", content: "Our Story — Tulip & Co." },
-      { property: "og:description", content: "Why we started Tulip & Co. — authentic Dutch design in San Diego." },
+      {
+        property: "og:description",
+        content: "Why we started Tulip & Co. — authentic Dutch design in San Diego.",
+      },
     ],
   }),
   component: OurStoryPage,
@@ -19,7 +24,7 @@ export const Route = createFileRoute("/our-story")({
 
 function OurStoryPage() {
   return (
-    <SiteLayout>
+    <>
       {/* Hero */}
       <section className="px-5 md:px-8 pt-16 md:pt-24 pb-10">
         <div className="max-w-3xl mx-auto">
@@ -40,23 +45,22 @@ function OurStoryPage() {
               The Story
             </h2>
             <p>
-              Hoi! I'm Thimo Wilts, the founder of Tulip &amp; Co. Growing up in the
-              Netherlands, I was surrounded by a design culture that prioritized peace,
-              intentionality, and practicality. That's where we find Dick Bruna's beloved
-              Nijntje (Miffy), a character whose simple lines and primary colors represent a
-              global icon of visual quiet.
+              Hoi! I'm Thimo Wilts, the founder of Tulip &amp; Co. Growing up in the Netherlands, I
+              was surrounded by a design culture that prioritized peace, intentionality, and
+              practicality. That's where we find Dick Bruna's beloved Nijntje (Miffy), a character
+              whose simple lines and primary colors represent a global icon of visual quiet.
             </p>
             <p>
               When I moved to Southern California, I saw a deep appreciation for "cozy" and
-              aesthetic lifestyle products. And while Nijntje is finally beginning to find its
-              way into larger American stores, the native story behind these pieces is often
-              lost in the noise of mass-market retail.
+              aesthetic lifestyle products. And while Nijntje is finally beginning to find its way
+              into larger American stores, the native story behind these pieces is often lost in the
+              noise of mass-market retail.
             </p>
             <p>
-              I started Tulip &amp; Co. to offer something different — a personal touch. As
-              someone who grew up with Nijntje, I wanted to go beyond simple transactions and
-              build a real community: a place for people to meet, share stories, and discover
-              Nijntje and Dutch culture.
+              I started Tulip &amp; Co. to offer something different — a personal touch. As someone
+              who grew up with Nijntje, I wanted to go beyond simple transactions and build a real
+              community: a place for people to meet, share stories, and discover Nijntje and Dutch
+              culture.
             </p>
           </div>
 
@@ -78,9 +82,9 @@ function OurStoryPage() {
               collectibles, and plushies.
             </p>
             <p>
-              We focus on pieces that honor the legacy of Dick Bruna's minimalist vision.
-              Whether you're a long-time collector or just building a quiet workspace, our
-              mission is to bring a piece of Dutch heritage to you, one quiet moment at a time.
+              We focus on pieces that honor the legacy of Dick Bruna's minimalist vision. Whether
+              you're a long-time collector or just building a quiet workspace, our mission is to
+              bring a piece of Dutch heritage to you, one quiet moment at a time.
             </p>
           </div>
         </article>
@@ -98,6 +102,6 @@ function OurStoryPage() {
           </JoinClubDialog>
         </div>
       </section>
-    </SiteLayout>
+    </>
   );
 }

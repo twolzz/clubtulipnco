@@ -10,187 +10,256 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as UnsubscribeRouteImport } from './routes/unsubscribe'
-import { Route as SupportRouteImport } from './routes/support'
-import { Route as ShopRouteImport } from './routes/shop'
-import { Route as PopUpsRouteImport } from './routes/pop-ups'
-import { Route as OurStoryRouteImport } from './routes/our-story'
-import { Route as LoginRouteImport } from './routes/login'
-import { Route as CartRouteImport } from './routes/cart'
-import { Route as BlogRouteImport } from './routes/blog'
-import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
+import { Route as AppRouteRouteImport } from './routes/_app/route'
+import { Route as AppIndexRouteImport } from './routes/_app/index'
+import { Route as AppSupportRouteImport } from './routes/_app/support'
+import { Route as AppShopRouteImport } from './routes/_app/shop'
+import { Route as AppPopUpsRouteImport } from './routes/_app/pop-ups'
+import { Route as AppOurStoryRouteImport } from './routes/_app/our-story'
+import { Route as AppCartRouteImport } from './routes/_app/cart'
+import { Route as AppBlogRouteImport } from './routes/_app/blog'
+import { Route as AppCheckoutIndexRouteImport } from './routes/_app/checkout.index'
+import { Route as ApiWebhooksStripeRouteImport } from './routes/api/webhooks.stripe'
+import { Route as ApiWebhooksPopUpAnnounceRouteImport } from './routes/api/webhooks/pop-up-announce'
+import { Route as ApiPublicUnsubscribeRouteImport } from './routes/api/public/unsubscribe'
+import { Route as ApiPublicSubscribeRouteImport } from './routes/api/public/subscribe'
+import { Route as ApiPublicMapsRouteImport } from './routes/api/public/maps'
 import { Route as ApiPublicHealthzRouteImport } from './routes/api/public/_healthz'
-import { Route as AuthenticatedAdminPopUpsRouteImport } from './routes/_authenticated/admin.pop-ups'
+import { Route as AppShopSlugRouteImport } from './routes/_app/shop_.$slug'
+import { Route as AppCheckoutReturnRouteImport } from './routes/_app/checkout.return'
+import { Route as AppBlogSlugRouteImport } from './routes/_app/blog_.$slug'
 
 const UnsubscribeRoute = UnsubscribeRouteImport.update({
   id: '/unsubscribe',
   path: '/unsubscribe',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SupportRoute = SupportRouteImport.update({
-  id: '/support',
-  path: '/support',
+const AppRouteRoute = AppRouteRouteImport.update({
+  id: '/_app',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ShopRoute = ShopRouteImport.update({
-  id: '/shop',
-  path: '/shop',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PopUpsRoute = PopUpsRouteImport.update({
-  id: '/pop-ups',
-  path: '/pop-ups',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const OurStoryRoute = OurStoryRouteImport.update({
-  id: '/our-story',
-  path: '/our-story',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CartRoute = CartRouteImport.update({
-  id: '/cart',
-  path: '/cart',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BlogRoute = BlogRouteImport.update({
-  id: '/blog',
-  path: '/blog',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
-  id: '/_authenticated',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const IndexRoute = IndexRouteImport.update({
+const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppSupportRoute = AppSupportRouteImport.update({
+  id: '/support',
+  path: '/support',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppShopRoute = AppShopRouteImport.update({
+  id: '/shop',
+  path: '/shop',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppPopUpsRoute = AppPopUpsRouteImport.update({
+  id: '/pop-ups',
+  path: '/pop-ups',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppOurStoryRoute = AppOurStoryRouteImport.update({
+  id: '/our-story',
+  path: '/our-story',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppCartRoute = AppCartRouteImport.update({
+  id: '/cart',
+  path: '/cart',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppBlogRoute = AppBlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppCheckoutIndexRoute = AppCheckoutIndexRouteImport.update({
+  id: '/checkout/',
+  path: '/checkout/',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const ApiWebhooksStripeRoute = ApiWebhooksStripeRouteImport.update({
+  id: '/api/webhooks/stripe',
+  path: '/api/webhooks/stripe',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BlogSlugRoute = BlogSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => BlogRoute,
+const ApiWebhooksPopUpAnnounceRoute =
+  ApiWebhooksPopUpAnnounceRouteImport.update({
+    id: '/api/webhooks/pop-up-announce',
+    path: '/api/webhooks/pop-up-announce',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ApiPublicUnsubscribeRoute = ApiPublicUnsubscribeRouteImport.update({
+  id: '/api/public/unsubscribe',
+  path: '/api/public/unsubscribe',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicSubscribeRoute = ApiPublicSubscribeRouteImport.update({
+  id: '/api/public/subscribe',
+  path: '/api/public/subscribe',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPublicMapsRoute = ApiPublicMapsRouteImport.update({
+  id: '/api/public/maps',
+  path: '/api/public/maps',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPublicHealthzRoute = ApiPublicHealthzRouteImport.update({
   id: '/api/public/_healthz',
   path: '/api/public',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedAdminPopUpsRoute =
-  AuthenticatedAdminPopUpsRouteImport.update({
-    id: '/admin/pop-ups',
-    path: '/admin/pop-ups',
-    getParentRoute: () => AuthenticatedRouteRoute,
-  } as any)
+const AppShopSlugRoute = AppShopSlugRouteImport.update({
+  id: '/shop_/$slug',
+  path: '/shop/$slug',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppCheckoutReturnRoute = AppCheckoutReturnRouteImport.update({
+  id: '/checkout/return',
+  path: '/checkout/return',
+  getParentRoute: () => AppRouteRoute,
+} as any)
+const AppBlogSlugRoute = AppBlogSlugRouteImport.update({
+  id: '/blog_/$slug',
+  path: '/blog/$slug',
+  getParentRoute: () => AppRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/blog': typeof BlogRouteWithChildren
-  '/cart': typeof CartRoute
-  '/login': typeof LoginRoute
-  '/our-story': typeof OurStoryRoute
-  '/pop-ups': typeof PopUpsRoute
-  '/shop': typeof ShopRoute
-  '/support': typeof SupportRoute
+  '/': typeof AppIndexRoute
   '/unsubscribe': typeof UnsubscribeRoute
-  '/blog/$slug': typeof BlogSlugRoute
-  '/admin/pop-ups': typeof AuthenticatedAdminPopUpsRoute
+  '/blog': typeof AppBlogRoute
+  '/cart': typeof AppCartRoute
+  '/our-story': typeof AppOurStoryRoute
+  '/pop-ups': typeof AppPopUpsRoute
+  '/shop': typeof AppShopRoute
+  '/support': typeof AppSupportRoute
+  '/blog/$slug': typeof AppBlogSlugRoute
+  '/checkout/return': typeof AppCheckoutReturnRoute
+  '/shop/$slug': typeof AppShopSlugRoute
   '/api/public': typeof ApiPublicHealthzRoute
+  '/api/public/maps': typeof ApiPublicMapsRoute
+  '/api/public/subscribe': typeof ApiPublicSubscribeRoute
+  '/api/public/unsubscribe': typeof ApiPublicUnsubscribeRoute
+  '/api/webhooks/pop-up-announce': typeof ApiWebhooksPopUpAnnounceRoute
+  '/api/webhooks/stripe': typeof ApiWebhooksStripeRoute
+  '/checkout/': typeof AppCheckoutIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/blog': typeof BlogRouteWithChildren
-  '/cart': typeof CartRoute
-  '/login': typeof LoginRoute
-  '/our-story': typeof OurStoryRoute
-  '/pop-ups': typeof PopUpsRoute
-  '/shop': typeof ShopRoute
-  '/support': typeof SupportRoute
   '/unsubscribe': typeof UnsubscribeRoute
-  '/blog/$slug': typeof BlogSlugRoute
-  '/admin/pop-ups': typeof AuthenticatedAdminPopUpsRoute
+  '/blog': typeof AppBlogRoute
+  '/cart': typeof AppCartRoute
+  '/our-story': typeof AppOurStoryRoute
+  '/pop-ups': typeof AppPopUpsRoute
+  '/shop': typeof AppShopRoute
+  '/support': typeof AppSupportRoute
+  '/': typeof AppIndexRoute
+  '/blog/$slug': typeof AppBlogSlugRoute
+  '/checkout/return': typeof AppCheckoutReturnRoute
+  '/shop/$slug': typeof AppShopSlugRoute
   '/api/public': typeof ApiPublicHealthzRoute
+  '/api/public/maps': typeof ApiPublicMapsRoute
+  '/api/public/subscribe': typeof ApiPublicSubscribeRoute
+  '/api/public/unsubscribe': typeof ApiPublicUnsubscribeRoute
+  '/api/webhooks/pop-up-announce': typeof ApiWebhooksPopUpAnnounceRoute
+  '/api/webhooks/stripe': typeof ApiWebhooksStripeRoute
+  '/checkout': typeof AppCheckoutIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
-  '/blog': typeof BlogRouteWithChildren
-  '/cart': typeof CartRoute
-  '/login': typeof LoginRoute
-  '/our-story': typeof OurStoryRoute
-  '/pop-ups': typeof PopUpsRoute
-  '/shop': typeof ShopRoute
-  '/support': typeof SupportRoute
+  '/_app': typeof AppRouteRouteWithChildren
   '/unsubscribe': typeof UnsubscribeRoute
-  '/blog/$slug': typeof BlogSlugRoute
-  '/_authenticated/admin/pop-ups': typeof AuthenticatedAdminPopUpsRoute
+  '/_app/blog': typeof AppBlogRoute
+  '/_app/cart': typeof AppCartRoute
+  '/_app/our-story': typeof AppOurStoryRoute
+  '/_app/pop-ups': typeof AppPopUpsRoute
+  '/_app/shop': typeof AppShopRoute
+  '/_app/support': typeof AppSupportRoute
+  '/_app/': typeof AppIndexRoute
+  '/_app/blog_/$slug': typeof AppBlogSlugRoute
+  '/_app/checkout/return': typeof AppCheckoutReturnRoute
+  '/_app/shop_/$slug': typeof AppShopSlugRoute
   '/api/public/_healthz': typeof ApiPublicHealthzRoute
+  '/api/public/maps': typeof ApiPublicMapsRoute
+  '/api/public/subscribe': typeof ApiPublicSubscribeRoute
+  '/api/public/unsubscribe': typeof ApiPublicUnsubscribeRoute
+  '/api/webhooks/pop-up-announce': typeof ApiWebhooksPopUpAnnounceRoute
+  '/api/webhooks/stripe': typeof ApiWebhooksStripeRoute
+  '/_app/checkout/': typeof AppCheckoutIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/unsubscribe'
     | '/blog'
     | '/cart'
-    | '/login'
     | '/our-story'
     | '/pop-ups'
     | '/shop'
     | '/support'
-    | '/unsubscribe'
     | '/blog/$slug'
-    | '/admin/pop-ups'
+    | '/checkout/return'
+    | '/shop/$slug'
     | '/api/public'
+    | '/api/public/maps'
+    | '/api/public/subscribe'
+    | '/api/public/unsubscribe'
+    | '/api/webhooks/pop-up-announce'
+    | '/api/webhooks/stripe'
+    | '/checkout/'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/'
+    | '/unsubscribe'
     | '/blog'
     | '/cart'
-    | '/login'
     | '/our-story'
     | '/pop-ups'
     | '/shop'
     | '/support'
-    | '/unsubscribe'
+    | '/'
     | '/blog/$slug'
-    | '/admin/pop-ups'
+    | '/checkout/return'
+    | '/shop/$slug'
     | '/api/public'
+    | '/api/public/maps'
+    | '/api/public/subscribe'
+    | '/api/public/unsubscribe'
+    | '/api/webhooks/pop-up-announce'
+    | '/api/webhooks/stripe'
+    | '/checkout'
   id:
     | '__root__'
-    | '/'
-    | '/_authenticated'
-    | '/blog'
-    | '/cart'
-    | '/login'
-    | '/our-story'
-    | '/pop-ups'
-    | '/shop'
-    | '/support'
+    | '/_app'
     | '/unsubscribe'
-    | '/blog/$slug'
-    | '/_authenticated/admin/pop-ups'
+    | '/_app/blog'
+    | '/_app/cart'
+    | '/_app/our-story'
+    | '/_app/pop-ups'
+    | '/_app/shop'
+    | '/_app/support'
+    | '/_app/'
+    | '/_app/blog_/$slug'
+    | '/_app/checkout/return'
+    | '/_app/shop_/$slug'
     | '/api/public/_healthz'
+    | '/api/public/maps'
+    | '/api/public/subscribe'
+    | '/api/public/unsubscribe'
+    | '/api/webhooks/pop-up-announce'
+    | '/api/webhooks/stripe'
+    | '/_app/checkout/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
-  BlogRoute: typeof BlogRouteWithChildren
-  CartRoute: typeof CartRoute
-  LoginRoute: typeof LoginRoute
-  OurStoryRoute: typeof OurStoryRoute
-  PopUpsRoute: typeof PopUpsRoute
-  ShopRoute: typeof ShopRoute
-  SupportRoute: typeof SupportRoute
+  AppRouteRoute: typeof AppRouteRouteWithChildren
   UnsubscribeRoute: typeof UnsubscribeRoute
   ApiPublicHealthzRoute: typeof ApiPublicHealthzRoute
+  ApiPublicMapsRoute: typeof ApiPublicMapsRoute
+  ApiPublicSubscribeRoute: typeof ApiPublicSubscribeRoute
+  ApiPublicUnsubscribeRoute: typeof ApiPublicUnsubscribeRoute
+  ApiWebhooksPopUpAnnounceRoute: typeof ApiWebhooksPopUpAnnounceRoute
+  ApiWebhooksStripeRoute: typeof ApiWebhooksStripeRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -202,75 +271,103 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof UnsubscribeRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/support': {
-      id: '/support'
-      path: '/support'
-      fullPath: '/support'
-      preLoaderRoute: typeof SupportRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/shop': {
-      id: '/shop'
-      path: '/shop'
-      fullPath: '/shop'
-      preLoaderRoute: typeof ShopRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/pop-ups': {
-      id: '/pop-ups'
-      path: '/pop-ups'
-      fullPath: '/pop-ups'
-      preLoaderRoute: typeof PopUpsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/our-story': {
-      id: '/our-story'
-      path: '/our-story'
-      fullPath: '/our-story'
-      preLoaderRoute: typeof OurStoryRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/cart': {
-      id: '/cart'
-      path: '/cart'
-      fullPath: '/cart'
-      preLoaderRoute: typeof CartRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/blog': {
-      id: '/blog'
-      path: '/blog'
-      fullPath: '/blog'
-      preLoaderRoute: typeof BlogRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_authenticated': {
-      id: '/_authenticated'
+    '/_app': {
+      id: '/_app'
       path: ''
       fullPath: '/'
-      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      preLoaderRoute: typeof AppRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
+    '/_app/': {
+      id: '/_app/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_app/support': {
+      id: '/_app/support'
+      path: '/support'
+      fullPath: '/support'
+      preLoaderRoute: typeof AppSupportRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_app/shop': {
+      id: '/_app/shop'
+      path: '/shop'
+      fullPath: '/shop'
+      preLoaderRoute: typeof AppShopRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_app/pop-ups': {
+      id: '/_app/pop-ups'
+      path: '/pop-ups'
+      fullPath: '/pop-ups'
+      preLoaderRoute: typeof AppPopUpsRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_app/our-story': {
+      id: '/_app/our-story'
+      path: '/our-story'
+      fullPath: '/our-story'
+      preLoaderRoute: typeof AppOurStoryRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_app/cart': {
+      id: '/_app/cart'
+      path: '/cart'
+      fullPath: '/cart'
+      preLoaderRoute: typeof AppCartRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_app/blog': {
+      id: '/_app/blog'
+      path: '/blog'
+      fullPath: '/blog'
+      preLoaderRoute: typeof AppBlogRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_app/checkout/': {
+      id: '/_app/checkout/'
+      path: '/checkout'
+      fullPath: '/checkout/'
+      preLoaderRoute: typeof AppCheckoutIndexRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/api/webhooks/stripe': {
+      id: '/api/webhooks/stripe'
+      path: '/api/webhooks/stripe'
+      fullPath: '/api/webhooks/stripe'
+      preLoaderRoute: typeof ApiWebhooksStripeRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/blog/$slug': {
-      id: '/blog/$slug'
-      path: '/$slug'
-      fullPath: '/blog/$slug'
-      preLoaderRoute: typeof BlogSlugRouteImport
-      parentRoute: typeof BlogRoute
+    '/api/webhooks/pop-up-announce': {
+      id: '/api/webhooks/pop-up-announce'
+      path: '/api/webhooks/pop-up-announce'
+      fullPath: '/api/webhooks/pop-up-announce'
+      preLoaderRoute: typeof ApiWebhooksPopUpAnnounceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/unsubscribe': {
+      id: '/api/public/unsubscribe'
+      path: '/api/public/unsubscribe'
+      fullPath: '/api/public/unsubscribe'
+      preLoaderRoute: typeof ApiPublicUnsubscribeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/subscribe': {
+      id: '/api/public/subscribe'
+      path: '/api/public/subscribe'
+      fullPath: '/api/public/subscribe'
+      preLoaderRoute: typeof ApiPublicSubscribeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/public/maps': {
+      id: '/api/public/maps'
+      path: '/api/public/maps'
+      fullPath: '/api/public/maps'
+      preLoaderRoute: typeof ApiPublicMapsRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/api/public/_healthz': {
       id: '/api/public/_healthz'
@@ -279,50 +376,82 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicHealthzRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/admin/pop-ups': {
-      id: '/_authenticated/admin/pop-ups'
-      path: '/admin/pop-ups'
-      fullPath: '/admin/pop-ups'
-      preLoaderRoute: typeof AuthenticatedAdminPopUpsRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
+    '/_app/shop_/$slug': {
+      id: '/_app/shop_/$slug'
+      path: '/shop/$slug'
+      fullPath: '/shop/$slug'
+      preLoaderRoute: typeof AppShopSlugRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_app/checkout/return': {
+      id: '/_app/checkout/return'
+      path: '/checkout/return'
+      fullPath: '/checkout/return'
+      preLoaderRoute: typeof AppCheckoutReturnRouteImport
+      parentRoute: typeof AppRouteRoute
+    }
+    '/_app/blog_/$slug': {
+      id: '/_app/blog_/$slug'
+      path: '/blog/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof AppBlogSlugRouteImport
+      parentRoute: typeof AppRouteRoute
     }
   }
 }
 
-interface AuthenticatedRouteRouteChildren {
-  AuthenticatedAdminPopUpsRoute: typeof AuthenticatedAdminPopUpsRoute
+interface AppRouteRouteChildren {
+  AppBlogRoute: typeof AppBlogRoute
+  AppCartRoute: typeof AppCartRoute
+  AppOurStoryRoute: typeof AppOurStoryRoute
+  AppPopUpsRoute: typeof AppPopUpsRoute
+  AppShopRoute: typeof AppShopRoute
+  AppSupportRoute: typeof AppSupportRoute
+  AppIndexRoute: typeof AppIndexRoute
+  AppBlogSlugRoute: typeof AppBlogSlugRoute
+  AppCheckoutReturnRoute: typeof AppCheckoutReturnRoute
+  AppShopSlugRoute: typeof AppShopSlugRoute
+  AppCheckoutIndexRoute: typeof AppCheckoutIndexRoute
 }
 
-const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
-  AuthenticatedAdminPopUpsRoute: AuthenticatedAdminPopUpsRoute,
+const AppRouteRouteChildren: AppRouteRouteChildren = {
+  AppBlogRoute: AppBlogRoute,
+  AppCartRoute: AppCartRoute,
+  AppOurStoryRoute: AppOurStoryRoute,
+  AppPopUpsRoute: AppPopUpsRoute,
+  AppShopRoute: AppShopRoute,
+  AppSupportRoute: AppSupportRoute,
+  AppIndexRoute: AppIndexRoute,
+  AppBlogSlugRoute: AppBlogSlugRoute,
+  AppCheckoutReturnRoute: AppCheckoutReturnRoute,
+  AppShopSlugRoute: AppShopSlugRoute,
+  AppCheckoutIndexRoute: AppCheckoutIndexRoute,
 }
 
-const AuthenticatedRouteRouteWithChildren =
-  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
-
-interface BlogRouteChildren {
-  BlogSlugRoute: typeof BlogSlugRoute
-}
-
-const BlogRouteChildren: BlogRouteChildren = {
-  BlogSlugRoute: BlogSlugRoute,
-}
-
-const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
+const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(
+  AppRouteRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
-  BlogRoute: BlogRouteWithChildren,
-  CartRoute: CartRoute,
-  LoginRoute: LoginRoute,
-  OurStoryRoute: OurStoryRoute,
-  PopUpsRoute: PopUpsRoute,
-  ShopRoute: ShopRoute,
-  SupportRoute: SupportRoute,
+  AppRouteRoute: AppRouteRouteWithChildren,
   UnsubscribeRoute: UnsubscribeRoute,
   ApiPublicHealthzRoute: ApiPublicHealthzRoute,
+  ApiPublicMapsRoute: ApiPublicMapsRoute,
+  ApiPublicSubscribeRoute: ApiPublicSubscribeRoute,
+  ApiPublicUnsubscribeRoute: ApiPublicUnsubscribeRoute,
+  ApiWebhooksPopUpAnnounceRoute: ApiWebhooksPopUpAnnounceRoute,
+  ApiWebhooksStripeRoute: ApiWebhooksStripeRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

@@ -11,7 +11,13 @@ const schema = z.object({
 
 type FieldErrors = Partial<Record<"first_name" | "email", string>>;
 
-export function SubscribeForm({ variant = "inline" }: { variant?: "inline" | "modal" }) {
+type SubscribeFormProps = {
+  variant?: "inline" | "modal";
+  /** Fired once the subscription succeeds — lets a wrapping dialog auto-close. */
+  onSuccess?: () => void;
+};
+
+export function SubscribeForm({ variant = "inline", onSuccess }: SubscribeFormProps) {
   const [firstName, setFirstName] = useState("");
   const [email, setEmail] = useState("");
   const [errors, setErrors] = useState<FieldErrors>({});
@@ -38,6 +44,7 @@ export function SubscribeForm({ variant = "inline" }: { variant?: "inline" | "mo
       const res = await subscribe({ data: parsed.data });
       if (res.ok) {
         setStatus("success");
+        onSuccess?.();
         return;
       }
       setStatus("idle");
@@ -73,7 +80,9 @@ export function SubscribeForm({ variant = "inline" }: { variant?: "inline" | "mo
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-3" noValidate>
       <div>
-        <label className="sr-only" htmlFor="sf-fname">First name</label>
+        <label className="sr-only" htmlFor="sf-fname">
+          First name
+        </label>
         <input
           id="sf-fname"
           name="first_name"
@@ -86,12 +95,14 @@ export function SubscribeForm({ variant = "inline" }: { variant?: "inline" | "mo
           aria-invalid={!!errors.first_name}
           disabled={status === "loading"}
         />
-        {errors.first_name && (
-          <p className="mt-1.5 ml-2 text-sm font-semibold text-poppy">{errors.first_name}</p>
-        )}
+        <p className="mt-1.5 ml-2 text-sm font-semibold text-poppy min-h-[1.25em]">
+          {errors.first_name}
+        </p>
       </div>
       <div>
-        <label className="sr-only" htmlFor="sf-email">Email address</label>
+        <label className="sr-only" htmlFor="sf-email">
+          Email address
+        </label>
         <input
           id="sf-email"
           type="email"
@@ -105,9 +116,9 @@ export function SubscribeForm({ variant = "inline" }: { variant?: "inline" | "mo
           aria-invalid={!!errors.email}
           disabled={status === "loading"}
         />
-        {errors.email && (
-          <p className="mt-1.5 ml-2 text-sm font-semibold text-poppy">{errors.email}</p>
-        )}
+        <p className="mt-1.5 ml-2 text-sm font-semibold text-poppy min-h-[1.25em]">
+          {errors.email}
+        </p>
       </div>
       <button
         type="submit"

@@ -6,7 +6,8 @@ export type CartItem = { productId: string; qty: number };
 export type CartState = { items: CartItem[] };
 
 const listeners = new Set<() => void>();
-let state: CartState = { items: [] };
+const EMPTY_CART_STATE: CartState = { items: [] };
+let state: CartState = EMPTY_CART_STATE;
 let hydrated = false;
 
 function emit() {
@@ -37,13 +38,14 @@ function hydrate() {
   window.addEventListener("storage", (e) => {
     if (e.key === STORAGE_KEY) {
       try {
-        state = e.newValue ? (JSON.parse(e.newValue) as CartState) : { items: [] };
+        state = e.newValue ? (JSON.parse(e.newValue) as CartState) : EMPTY_CART_STATE;
         emit();
       } catch {
         /* ignore */
       }
     }
   });
+  emit();
 }
 
 function subscribe(cb: () => void) {
@@ -57,7 +59,10 @@ function getSnapshot(): CartState {
 }
 
 function getServerSnapshot(): CartState {
-  return { items: [] };
+  // Must return the same reference every call — a fresh object here makes
+  // useSyncExternalStore think the store changed on every check and can
+  // spin into a render loop (React: "getServerSnapshot should be cached").
+  return EMPTY_CART_STATE;
 }
 
 export const cart = {
@@ -66,9 +71,7 @@ export const cart = {
     const existing = state.items.find((i) => i.productId === productId);
     if (existing) {
       state = {
-        items: state.items.map((i) =>
-          i.productId === productId ? { ...i, qty: i.qty + qty } : i,
-        ),
+        items: state.items.map((i) => (i.productId === productId ? { ...i, qty: i.qty + qty } : i)),
       };
     } else {
       state = { items: [...state.items, { productId, qty }] };
@@ -100,6 +103,17 @@ export const cart = {
 
 export function useCart(): CartState {
   return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+}
+
+// True once the client has read localStorage. Anything that only makes
+// sense against the real cart (e.g. redirecting an "empty" cart away from
+// checkout) should wait for this instead of trusting the first render.
+export function useCartHydrated(): boolean {
+  return useSyncExternalStore(
+    subscribe,
+    () => hydrated,
+    () => false,
+  );
 }
 
 export function useCartCount(): number {

@@ -6,33 +6,40 @@
 
 import { createFileRoute } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
-import { SiteLayout } from "@/components/SiteLayout";
 import { JoinClubDialog } from "@/components/JoinClubDialog";
 import { MapPin } from "lucide-react";
 import { listPopUps, type PopUp } from "@/lib/pop-ups.functions";
+import { PopUpsSkeleton } from "@/components/Skeletons";
 
 const popUpsQO = queryOptions({
   queryKey: ["pop-ups", "published"] as const,
   queryFn: () => listPopUps(),
 });
 
-export const Route = createFileRoute("/pop-ups")({
+export const Route = createFileRoute("/_app/pop-ups")({
   head: () => ({
     meta: [
       { title: "Pop-ups — Tulip & Co." },
-      { name: "description", content: "Find Tulip & Co. live at San Diego weekend markets and pop-up festivals." },
+      {
+        name: "description",
+        content: "Find Tulip & Co. live at San Diego weekend markets and pop-up festivals.",
+      },
       { property: "og:title", content: "Pop-ups — Tulip & Co." },
-      { property: "og:description", content: "Find Tulip & Co. live at San Diego weekend markets." },
+      {
+        property: "og:description",
+        content: "Find Tulip & Co. live at San Diego weekend markets.",
+      },
     ],
   }),
   loader: ({ context }) => context.queryClient.ensureQueryData(popUpsQO),
   component: PopUpsPage,
+  pendingComponent: PopUpsSkeleton,
   errorComponent: () => (
-    <SiteLayout>
+    <>
       <section className="px-5 md:px-8 py-24 text-center font-display text-2xl">
         Calendar loading — please refresh.
       </section>
-    </SiteLayout>
+    </>
   ),
 });
 
@@ -43,12 +50,16 @@ const ACCENT: Record<PopUp["accent"], { bg: string; shadow: string; text: string
   denim: { bg: "bg-denim", shadow: "tc-card-sage", text: "text-white" },
 };
 
-const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-const DAYS = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 function splitDate(iso: string) {
   const d = new Date(iso + "T12:00:00");
-  return { day: String(d.getDate()).padStart(2, "0"), month: MONTHS[d.getMonth()], weekday: DAYS[d.getDay()] };
+  return {
+    day: String(d.getDate()).padStart(2, "0"),
+    month: MONTHS[d.getMonth()],
+    weekday: DAYS[d.getDay()],
+  };
 }
 function formatTime(start: string | null, end: string | null) {
   if (!start || !end) return "";
@@ -64,7 +75,7 @@ function formatTime(start: string | null, end: string | null) {
 function PopUpsPage() {
   const { data: events } = useSuspenseQuery(popUpsQO);
   return (
-    <SiteLayout>
+    <>
       <section className="px-5 md:px-8 py-16 md:py-24">
         <div className="max-w-6xl mx-auto grid lg:grid-cols-[1.4fr_1fr] gap-10 items-center">
           <div>
@@ -72,20 +83,18 @@ function PopUpsPage() {
               Live Calendar
             </span>
             <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight leading-[1.02]">
-              Meet us at the <span className="text-poppy">market.</span>
+              Meet us at the <span className="text-poppy">market</span>
             </h1>
             <p className="mt-6 text-lg md:text-xl text-ink/80 max-w-xl">
-              Feel the corduroy. Test the pens. Take home a piece of quiet Dutch design —
-              hand-delivered at weekend pop-ups around San Diego.
+              Take home a piece of quiet Dutch design —
+              hand-delivered at pop-ups around San Diego.
             </p>
           </div>
           <div className="tc-card tc-card-poppy bg-cream p-8 md:p-10">
             <h2 className="text-2xl md:text-3xl font-extrabold leading-tight">
-              Never miss a Saturday.
+              Never miss a date
             </h2>
-            <p className="mt-2 text-ink/80">
-              Locals: get pop-up dates and early access to drops.
-            </p>
+            <p className="mt-2 text-ink/80">Get pop-up dates and inventory updates. </p>
             <JoinClubDialog className="tc-btn tc-btn-sun mt-5 inline-flex">
               Join the Club!
             </JoinClubDialog>
@@ -111,7 +120,9 @@ function PopUpsPage() {
         <div className="max-w-5xl mx-auto">
           <h2 className="text-4xl md:text-5xl font-extrabold mb-10">Upcoming Pop-ups</h2>
           {events.length === 0 ? (
-            <p className="text-ink/80 text-lg">New dates coming soon — join the Club for first notice.</p>
+            <p className="text-ink/80 text-lg">
+              New dates coming soon — join the Club for first notice.
+            </p>
           ) : (
             <ol className="flex flex-col gap-6">
               {events.map((e) => {
@@ -122,10 +133,16 @@ function PopUpsPage() {
                     key={e.id}
                     className="tc-card tc-card-denim bg-white p-5 md:p-7 grid md:grid-cols-[auto_1fr_auto] gap-6 items-center"
                   >
-                    <div className={`${a.bg} ${a.text} border-4 border-ink rounded-2xl w-24 h-24 flex flex-col items-center justify-center shrink-0`}>
+                    <div
+                      className={`${a.bg} ${a.text} border-4 border-ink rounded-2xl w-24 h-24 flex flex-col items-center justify-center shrink-0`}
+                    >
                       <span className="text-xs font-bold uppercase tracking-widest">{d.month}</span>
-                      <span className="font-display text-4xl font-extrabold leading-none">{d.day}</span>
-                      <span className="text-xs font-bold uppercase tracking-widest mt-1">{d.weekday}</span>
+                      <span className="font-display text-4xl font-extrabold leading-none">
+                        {d.day}
+                      </span>
+                      <span className="text-xs font-bold uppercase tracking-widest mt-1">
+                        {d.weekday}
+                      </span>
                     </div>
                     <div className="min-w-0">
                       <span className="inline-block px-2.5 py-0.5 rounded-full bg-cream border-2 border-ink text-xs font-bold mb-2">
@@ -133,7 +150,9 @@ function PopUpsPage() {
                       </span>
                       <h3 className="text-2xl font-extrabold leading-tight">{e.name}</h3>
                       <p className="mt-1 text-ink/80">{e.location}</p>
-                      <p className="text-ink/60 text-sm font-semibold mt-0.5">{formatTime(e.start_time, e.end_time)}</p>
+                      <p className="text-ink/60 text-sm font-semibold mt-0.5">
+                        {formatTime(e.start_time, e.end_time)}
+                      </p>
                     </div>
                     <div className="flex flex-col gap-2 shrink-0">
                       <a
@@ -156,6 +175,6 @@ function PopUpsPage() {
           )}
         </div>
       </section>
-    </SiteLayout>
+    </>
   );
 }

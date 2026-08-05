@@ -1,12 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { SiteLayout } from "@/components/SiteLayout";
 import { cart } from "@/lib/cart-store";
 import { getStripe } from "@/lib/stripe-elements";
 
 type Status = "loading" | "succeeded" | "processing" | "failed";
 
-export const Route = createFileRoute("/checkout/return")({
+export const Route = createFileRoute("/_app/checkout/return")({
   validateSearch: (search: Record<string, unknown>) => ({
     payment_intent_client_secret:
       typeof search.payment_intent_client_secret === "string"
@@ -21,15 +20,15 @@ export const Route = createFileRoute("/checkout/return")({
 
 const COPY: Record<Exclude<Status, "loading">, { title: string; body: string }> = {
   succeeded: {
-    title: "Thank you.",
+    title: "Thank you",
     body: "Your order is confirmed. A receipt is on its way to your inbox.",
   },
   processing: {
-    title: "Payment processing.",
+    title: "Payment processing",
     body: "Your payment is still clearing. We'll email you the moment it settles.",
   },
   failed: {
-    title: "Payment not completed.",
+    title: "Payment not completed",
     body: "Your card was not charged. Your cart is still here if you'd like to try again.",
   },
 };
@@ -73,7 +72,7 @@ function CheckoutReturnPage() {
   }, [clientSecret]);
 
   return (
-    <SiteLayout>
+    <>
       <section className="px-5 md:px-8 py-20 md:py-28">
         <div className="max-w-2xl mx-auto">
           {status === "loading" ? (
@@ -107,6 +106,6 @@ function CheckoutReturnPage() {
           )}
         </div>
       </section>
-    </SiteLayout>
+    </>
   );
 }

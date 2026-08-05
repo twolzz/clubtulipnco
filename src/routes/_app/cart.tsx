@@ -5,12 +5,11 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Trash2, Plus, Minus } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { SiteLayout } from "@/components/SiteLayout";
 import { cart, useCart } from "@/lib/cart-store";
 import { listProducts, type Product } from "@/lib/products.functions";
 import { ProductMedia, formatPrice } from "@/components/ProductCard";
 
-export const Route = createFileRoute("/cart")({
+export const Route = createFileRoute("/_app/cart")({
   head: () => ({
     meta: [
       { title: "Cart — Tulip & Co." },
@@ -38,23 +37,21 @@ function CartPage() {
   const subtotal = lines.reduce((s, l) => s + l.product.price_cents * l.item.qty, 0);
 
   return (
-    <SiteLayout>
+    <>
       <section className="px-5 md:px-8 py-14 md:py-20">
         <div className="max-w-4xl mx-auto">
           <nav className="text-sm font-semibold text-ink/70 mb-6">
-            <Link to="/" className="hover:text-denim">Home</Link>
+            <Link to="/" className="hover:text-denim">
+              Home
+            </Link>
             <span className="mx-2 text-ink/40">/</span>
             <span className="text-ink">Cart</span>
           </nav>
-          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-10">
-            Your Cart.
-          </h1>
+          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-10">Your Cart</h1>
 
           {lines.length === 0 ? (
             <div className="tc-card tc-card-sun p-10 md:p-16 text-center bg-cream">
-              <p className="font-display text-3xl font-extrabold mb-3">
-                Nothing here yet.
-              </p>
+              <p className="font-display text-3xl font-extrabold mb-3">Nothing here yet.</p>
               <p className="text-ink/70 mb-6">Quiet things await.</p>
               <Link to="/shop" className="tc-btn tc-btn-poppy inline-flex">
                 Browse the Shop
@@ -105,9 +102,7 @@ function CartPage() {
                         >
                           <Minus size={14} strokeWidth={3} />
                         </button>
-                        <span className="font-bold w-6 text-center tabular-nums">
-                          {item.qty}
-                        </span>
+                        <span className="font-bold w-6 text-center tabular-nums">{item.qty}</span>
                         <button
                           type="button"
                           aria-label="increase"
@@ -136,7 +131,9 @@ function CartPage() {
                   <span className="font-extrabold text-3xl">{formatPrice(subtotal)}</span>
                 </div>
                 <div className="flex flex-wrap gap-3 justify-end">
-                  <Link to="/shop" className="tc-btn tc-btn-cream">Continue Shopping</Link>
+                  <Link to="/shop" className="tc-btn tc-btn-cream">
+                    Continue Shopping
+                  </Link>
                   <Link to="/checkout" className="tc-btn tc-btn-poppy">
                     Checkout
                   </Link>
@@ -146,6 +143,6 @@ function CartPage() {
           )}
         </div>
       </section>
-    </SiteLayout>
+    </>
   );
 }

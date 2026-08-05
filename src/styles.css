@@ -2,6 +2,123 @@
 @source "../src";
 @import "tw-animate-css";
 @custom-variant dark (&:is(.dark *));
+
+/* ------------------------------------------------------------------ */
+/* Motion tokens                                                       */
+/* A plain (non-inline) @theme block: this emits real :root custom     */
+/* properties, which .tc-btn/.tc-press/.tc-input reference via var().  */
+/* Curves are damped-spring easing expressed as linear(); Baseline     */
+/* support is Chrome/Edge 113+, Firefox 112+, Safari 17.2+ — no        */
+/* fallback needed at this point in time.                              */
+/* ------------------------------------------------------------------ */
+@theme {
+  /* Critically damped, zero overshoot. Presses, hovers, color swaps. */
+  --ease-snap: linear(
+    0,
+    0.0044 1.7%,
+    0.0166 3.3%,
+    0.0665 7.2%,
+    0.1558 12%,
+    0.4249 24.8%,
+    0.5426 31.2%,
+    0.6679 39.3%,
+    0.7673 47.8%,
+    0.8456 57.2%,
+    0.9045 67.7%,
+    0.9307 74.5%,
+    0.9516 82%,
+    0.9798 99.8%,
+    1
+  );
+  /* Overdamped, longer settle. Panels, overlays, drawers, menus. */
+  --ease-glide: linear(
+    0,
+    0.0153 2%,
+    0.064 4.5%,
+    0.3818 16%,
+    0.5451 23.2%,
+    0.6752 30.8%,
+    0.7756 39.2%,
+    0.8203 44.2%,
+    0.8582 49.5%,
+    0.8898 55.2%,
+    0.9169 61.5%,
+    0.9409 69.2%,
+    0.9601 78%,
+    0.9849 99.8%,
+    1
+  );
+  /* Slight (~5%) overshoot. Emphasis only — badge pop-ins, dialog
+     scale-in. Never on anything that must land flush (e.g. a drawer's
+     translateX), since the overshoot briefly opens a gap. */
+  --ease-spring: linear(
+    0,
+    0.0068 2%,
+    0.0279 4.2%,
+    0.117 9.2%,
+    0.5822 26.7%,
+    0.7611 34.5%,
+    0.8745 41%,
+    0.9593 47.8%,
+    0.9978 52.3%,
+    1.0253 57%,
+    1.0438 62.2%,
+    1.053 67.8%,
+    1.0502 78.5%,
+    1.0202 99.8%,
+    1
+  );
+
+  /* Press-in is always faster than press-out — that contrast is what makes
+     taps feel instant. Panels (drawer/dialog/menu) are the opposite: they're
+     meant to read as an unhurried glide, not a snap, so --dur-base/--dur-exit
+     are deliberately slow. Exit still stays shorter than enter throughout. */
+  --dur-instant: 60ms;
+  --dur-press: 110ms;
+  --dur-fast: 150ms;
+  --dur-base: 380ms;
+  --dur-exit: 280ms;
+  --dur-slow: 320ms;
+
+  /* Fixes every bare transition/transition-all call site site-wide. */
+  --default-transition-duration: 140ms;
+  --default-transition-timing-function: linear(
+    0,
+    0.0044 1.7%,
+    0.0166 3.3%,
+    0.0665 7.2%,
+    0.1558 12%,
+    0.4249 24.8%,
+    0.5426 31.2%,
+    0.6679 39.3%,
+    0.7673 47.8%,
+    0.8456 57.2%,
+    0.9045 67.7%,
+    0.9307 74.5%,
+    0.9516 82%,
+    0.9798 99.8%,
+    1
+  );
+}
+
+/* Named duration utilities — Tailwind 4 has no --duration-* namespace,
+   so custom durations don't automatically become duration-* utilities. */
+@utility duration-instant {
+  transition-duration: var(--dur-instant);
+}
+@utility duration-press {
+  transition-duration: var(--dur-press);
+}
+@utility duration-fast {
+  transition-duration: var(--dur-fast);
+}
+@utility duration-base {
+  transition-duration: var(--dur-base);
+}
+@utility duration-exit {
+  transition-duration: var(--dur-exit);
+}
+
 @theme inline {
   --font-display: "Quicksand", "Inter", "Helvetica Neue", sans-serif;
   --font-sans: "Inter", "Helvetica Neue", sans-serif;
@@ -37,40 +154,92 @@
   --color-popover-foreground: var(--ink);
 }
 :root {
-  --background: #F6F2E7;
+  --background: #f6f2e7;
   --foreground: #000000;
-  --cream: #F6F2E7;
+  --cream: #f6f2e7;
   --ink: #000000;
-  --poppy: #E05A36;
-  --sun: #F2B73F;
-  --sage: #5D7A51;
-  --denim: #3D6E97;
+  --poppy: #e05a36;
+  --sun: #f2b73f;
+  --sage: #5d7a51;
+  --denim: #3d6e97;
   --card: #ffffff;
   --radius: 16px;
+  /* Actual sticky-header height, not a guess — drives scroll-padding
+     and any element that needs to size itself against the header. */
+  --header-h: 72px;
+}
+@media (min-width: 768px) {
+  :root {
+    --header-h: 80px;
+  }
 }
 @layer base {
   * {
     border-color: var(--color-border);
   }
-  html, body {
+  html,
+  body {
     background-color: var(--cream);
     color: var(--ink);
     font-family: var(--font-sans);
   }
   /* Keep anchor targets clear of the sticky header */
   html {
-    scroll-padding-top: 100px;
+    scroll-padding-top: calc(var(--header-h) + 12px);
+    -webkit-text-size-adjust: 100%;
+    /* Reserve the scrollbar's width permanently. Without this, locking
+       scroll while a dialog/drawer is open (Radix's modal behavior) hides
+       the scrollbar and the page reflows wider; unlocking on close reflows
+       it back — a visible page-width twitch right as the dialog fades out. */
+    scrollbar-gutter: stable;
   }
-  /* Belt-and-braces guard against sideways scrolling on phones.
-     Remove this once the real overflow culprit is confirmed fixed —
-     it hides the symptom, it doesn't cure it. */
+  /* A live probe across every route at 360px found no horizontal overflow,
+     so this no longer needs to be a scroll container (which was disabling
+     scroll-anchoring and made `position: sticky` unreliable on iOS Safari).
+     `clip` still guards against any residual overflow with none of that. */
   body {
-    overflow-x: hidden;
+    overflow-x: clip;
   }
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: var(--font-display);
     font-weight: 700;
     letter-spacing: -0.01em;
+  }
+
+  /* Radix's scroll lock adds `margin-right: <scrollbar>px !important` to body
+     to compensate for the scrollbar it hides while a dialog is open. The
+     scrollbar-gutter above already reserves that space permanently, so the
+     compensation double-counts and visibly shrinks the page the moment a
+     drawer or dialog opens. Desktop-only in practice: overlay scrollbars
+     (iOS, iPadOS) measure 0, so nothing is ever added there.
+     `html body` outranks their `body` selector regardless of source order. */
+  html body[data-scroll-locked] {
+    margin-right: 0 !important;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      transition-duration: 1ms !important;
+      transition-delay: 0ms !important;
+      animation-duration: 1ms !important;
+      animation-delay: 0ms !important;
+    }
+    /* Loading indicators must keep moving — they encode "still working". */
+    .animate-spin,
+    [data-motion="loop"] {
+      animation-duration: 1s !important;
+      animation-iteration-count: infinite !important;
+    }
+    html {
+      scroll-behavior: auto !important;
+    }
   }
 }
 @layer components {
@@ -80,10 +249,18 @@
     border-radius: var(--radius-xl);
     box-shadow: 8px 8px 0 var(--ink);
   }
-  .tc-card-poppy { box-shadow: 8px 8px 0 var(--poppy); }
-  .tc-card-sun { box-shadow: 8px 8px 0 var(--sun); }
-  .tc-card-sage { box-shadow: 8px 8px 0 var(--sage); }
-  .tc-card-denim { box-shadow: 8px 8px 0 var(--denim); }
+  .tc-card-poppy {
+    box-shadow: 8px 8px 0 var(--poppy);
+  }
+  .tc-card-sun {
+    box-shadow: 8px 8px 0 var(--sun);
+  }
+  .tc-card-sage {
+    box-shadow: 8px 8px 0 var(--sage);
+  }
+  .tc-card-denim {
+    box-shadow: 8px 8px 0 var(--denim);
+  }
 
   /* Scale the brutalist chrome down on phones */
   @media (max-width: 639px) {
@@ -92,10 +269,79 @@
       border-radius: var(--radius-lg);
       box-shadow: 5px 5px 0 var(--ink);
     }
-    .tc-card-poppy { box-shadow: 5px 5px 0 var(--poppy); }
-    .tc-card-sun { box-shadow: 5px 5px 0 var(--sun); }
-    .tc-card-sage { box-shadow: 5px 5px 0 var(--sage); }
-    .tc-card-denim { box-shadow: 5px 5px 0 var(--denim); }
+    .tc-card-poppy {
+      box-shadow: 5px 5px 0 var(--poppy);
+    }
+    .tc-card-sun {
+      box-shadow: 5px 5px 0 var(--sun);
+    }
+    .tc-card-sage {
+      box-shadow: 5px 5px 0 var(--sage);
+    }
+    .tc-card-denim {
+      box-shadow: 5px 5px 0 var(--denim);
+    }
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* Shared press physics                                                */
+  /* One rule serves every shadow size (2/3/4/6/8px) in the app via the  */
+  /* --press-* custom properties, overridable per element with Tailwind  */
+  /* arbitrary-property syntax, e.g.:                                    */
+  /*   tc-press [--press-rest:3px] [--press-hover:5px] [--press-active:1px] */
+  /* .tc-btn carries these rules directly (not just the geometry) so the */
+  /* ~30 existing .tc-btn call sites upgrade with zero markup changes.   */
+  /* ------------------------------------------------------------------ */
+  .tc-btn,
+  .tc-press {
+    --press-travel: 2px;
+    --press-rest: 4px;
+    --press-hover: 6px;
+    --press-active: 2px;
+    --press-color: var(--ink);
+
+    box-shadow: var(--press-rest) var(--press-rest) 0 var(--press-color);
+    transition-property: transform, box-shadow;
+    transition-duration: var(--dur-press);
+    transition-timing-function: var(--ease-snap);
+
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  /* Hover gated to real pointers only — on touch devices, unguarded
+     :hover sticks after a tap until the user taps elsewhere, which is
+     why every hand-rolled button in the app used to look "stuck lifted"
+     on mobile after the first tap. */
+  @media (hover: hover) and (pointer: fine) {
+    .tc-btn:hover:not(:disabled):not([aria-disabled="true"]),
+    .tc-press:hover:not(:disabled):not([aria-disabled="true"]) {
+      transform: translate(calc(var(--press-travel) * -1), calc(var(--press-travel) * -1));
+      box-shadow: var(--press-hover) var(--press-hover) 0 var(--press-color);
+    }
+  }
+
+  .tc-btn:active:not(:disabled):not([aria-disabled="true"]),
+  .tc-press:active:not(:disabled):not([aria-disabled="true"]) {
+    transform: translate(var(--press-travel), var(--press-travel));
+    box-shadow: var(--press-active) var(--press-active) 0 var(--press-color);
+    transition-duration: var(--dur-instant);
+  }
+
+  .tc-btn:focus-visible,
+  .tc-press:focus-visible {
+    outline: 3px solid var(--denim);
+    outline-offset: 3px;
+  }
+
+  .tc-btn:disabled,
+  .tc-btn[aria-disabled="true"],
+  .tc-press:disabled,
+  .tc-press[aria-disabled="true"] {
+    cursor: not-allowed;
   }
 
   .tc-btn {
@@ -106,15 +352,20 @@
     border: 3px solid var(--ink);
     border-radius: 999px;
     padding: 0.85rem 1.75rem;
-    transition: transform 120ms ease, box-shadow 120ms ease;
-    box-shadow: 4px 4px 0 var(--ink);
-    cursor: pointer;
   }
-  .tc-btn:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--ink); }
-  .tc-btn:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--ink); }
-  .tc-btn-sun { background: var(--sun); color: var(--ink); }
-  .tc-btn-poppy { background: var(--poppy); color: #fff; }
-  .tc-btn-cream { background: var(--cream); color: var(--ink); }
+  .tc-btn-sun {
+    background: var(--sun);
+    color: var(--ink);
+  }
+  .tc-btn-poppy {
+    background: var(--poppy);
+    color: #fff;
+  }
+  .tc-btn-cream {
+    background: var(--cream);
+    color: var(--ink);
+  }
+
   .tc-input {
     background: #fff;
     border: 3px solid var(--ink);
@@ -123,6 +374,116 @@
     font-weight: 500;
     color: var(--ink);
     width: 100%;
+    transition-property: box-shadow, border-color;
+    transition-duration: var(--dur-fast);
+    transition-timing-function: var(--ease-snap);
+    -webkit-tap-highlight-color: transparent;
   }
-  .tc-input:focus { outline: none; box-shadow: 4px 4px 0 var(--ink); }
+  .tc-input:focus {
+    outline: none;
+  }
+  .tc-input:focus-visible {
+    box-shadow: 4px 4px 0 var(--ink);
+  }
+  .tc-input[aria-invalid="true"] {
+    border-color: var(--poppy);
+    box-shadow: 4px 4px 0 var(--poppy);
+  }
+
+  /* Card hover-lift — shared by index/blog/blog article "next post" cards
+     and ProductCard, replacing four separate ad hoc hover:-translate
+     declarations with no duration. Direction is overridable per element,
+     e.g. tc-lift [--lift-transform:translate(-2px,-2px)] for a diagonal
+     nudge instead of the default vertical lift. */
+  .tc-lift {
+    --lift-transform: translateY(-4px);
+    transition-property: transform;
+    transition-duration: var(--dur-press);
+    transition-timing-function: var(--ease-snap);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .tc-lift:hover {
+      transform: var(--lift-transform);
+    }
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* View transitions                                                    */
+/* Only the persistent <main> content crossfades — the header/footer/  */
+/* drawer never do, since they're the same DOM node before and after   */
+/* (see the isolation/animation-none quartet below, which suppresses   */
+/* the root capture's default crossfade so it doesn't touch them).     */
+/* Vertical settle only, never horizontal — a slide reads as an iOS    */
+/* nav stack, which is explicitly not the target here.                 */
+/* ------------------------------------------------------------------ */
+main.tc-page {
+  view-transition-name: tc-page;
+}
+
+::view-transition-image-pair(root) {
+  isolation: auto;
+}
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+  display: block;
+}
+
+@keyframes tc-page-out {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes tc-page-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+::view-transition-old(tc-page) {
+  animation: tc-page-out var(--dur-instant) var(--ease-snap) both;
+}
+::view-transition-new(tc-page) {
+  /* A literal value, not var(--dur-base) — navigation should stay brisk even
+     if panel motion (drawer/dialog) is tuned slower for a calmer feel. */
+  animation: tc-page-in 220ms var(--ease-glide) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
+@layer utilities {
+  /* Cart badge pop-in — the one place --ease-spring's overshoot earns
+     its keep, since a badge appearing has room to overshoot. */
+  @keyframes tc-badge-pop {
+    from {
+      transform: scale(0.6);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+  .tc-badge-pop {
+    animation: tc-badge-pop var(--dur-slow) var(--ease-spring) both;
+  }
+
+  /* Skeleton loading pulse. A flat opacity fade, not a gradient sweep —
+     a shimmer would need a soft blur, which this design system never uses. */
+  @keyframes tc-shimmer {
+    50% {
+      opacity: 0.45;
+    }
+  }
+  .tc-shimmer {
+    animation: tc-shimmer 1.4s var(--ease-glide) infinite;
+  }
 }
