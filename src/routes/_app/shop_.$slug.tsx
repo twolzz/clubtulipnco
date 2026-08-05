@@ -10,15 +10,10 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { queryOptions, useSuspenseQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { ChevronRight, Minus, Plus, RotateCcw, ShieldCheck, Truck } from "lucide-react";
-import { SiteLayout } from "@/components/SiteLayout";
 import { getProductBySlug, listProducts, type Product } from "@/lib/products.functions";
-import {
-  ProductCard,
-  ProductMedia,
-  collectionSlug,
-  formatPrice,
-} from "@/components/ProductCard";
+import { ProductCard, ProductMedia, collectionSlug, formatPrice } from "@/components/ProductCard";
 import { cart, cartDrawer } from "@/lib/cart-store";
+import { ProductDetailSkeleton } from "@/components/Skeletons";
 
 const productsQO = queryOptions({
   queryKey: ["products", "all"] as const,
@@ -31,13 +26,12 @@ const productQO = (slug: string) =>
     queryFn: () => getProductBySlug({ data: { slug } }),
   });
 
-export const Route = createFileRoute("/shop_/$slug")({
+export const Route = createFileRoute("/_app/shop_/$slug")({
   head: (ctx: any) => {
     const p = ctx?.loaderData as Product | null | undefined;
     const title = p ? `${p.name} — Tulip & Co.` : "Product — Tulip & Co.";
     const description =
-      p?.description ??
-      "Curated Dutch design, shipped from San Diego by Tulip & Co.";
+      p?.description ?? "Curated Dutch design, shipped from San Diego by Tulip & Co.";
     return {
       meta: [
         { title },
@@ -57,8 +51,9 @@ export const Route = createFileRoute("/shop_/$slug")({
     return product;
   },
   component: ProductRoute,
+  pendingComponent: ProductDetailSkeleton,
   errorComponent: () => (
-    <SiteLayout>
+    <>
       <section className="px-5 md:px-8 py-24 text-center">
         <p className="font-display text-3xl font-extrabold">
           Something went wrong loading this product.
@@ -67,7 +62,7 @@ export const Route = createFileRoute("/shop_/$slug")({
           Back to the shop
         </Link>
       </section>
-    </SiteLayout>
+    </>
   ),
 });
 
@@ -78,10 +73,10 @@ function ProductRoute() {
 
   if (!product) {
     return (
-      <SiteLayout>
+      <>
         <section className="px-5 md:px-8 py-24 text-center max-w-2xl mx-auto">
           <h1 className="font-display text-4xl md:text-5xl font-extrabold">
-            We couldn&apos;t find that one.
+            We couldn&apos;t find that one
           </h1>
           <p className="mt-4 text-lg text-ink/70">
             It may have sold out or been retired from the collection.
@@ -90,28 +85,18 @@ function ProductRoute() {
             Browse the shop
           </Link>
         </section>
-      </SiteLayout>
+      </>
     );
   }
 
-  const sameCategory = all.filter(
-    (p) => p.id !== product.id && p.category === product.category,
-  );
-  const others = all.filter(
-    (p) => p.id !== product.id && p.category !== product.category,
-  );
+  const sameCategory = all.filter((p) => p.id !== product.id && p.category === product.category);
+  const others = all.filter((p) => p.id !== product.id && p.category !== product.category);
   const related = [...sameCategory, ...others].slice(0, 3);
 
   return <ProductDetail product={product} related={related} />;
 }
 
-function ProductDetail({
-  product,
-  related,
-}: {
-  product: Product;
-  related: Product[];
-}) {
+function ProductDetail({ product, related }: { product: Product; related: Product[] }) {
   const [activeImage, setActiveImage] = useState(0);
   const [qty, setQty] = useState(1);
 
@@ -143,14 +128,12 @@ function ProductDetail({
       "@type": "Offer",
       price: (product.price_cents / 100).toFixed(2),
       priceCurrency: "USD",
-      availability: soldOut
-        ? "https://schema.org/OutOfStock"
-        : "https://schema.org/InStock",
+      availability: soldOut ? "https://schema.org/OutOfStock" : "https://schema.org/InStock",
     },
   };
 
   return (
-    <SiteLayout>
+    <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -182,11 +165,7 @@ function ProductDetail({
             {/* ---------- Gallery ---------- */}
             <div>
               <div className={`tc-card ${product.shadow} overflow-hidden`}>
-                <ProductMedia
-                  product={product}
-                  src={product.images[activeImage]}
-                  priority
-                />
+                <ProductMedia product={product} src={product.images[activeImage]} priority />
               </div>
 
               {hasGallery && (
@@ -198,9 +177,9 @@ function ProductDetail({
                       onClick={() => setActiveImage(i)}
                       aria-label={`View image ${i + 1} of ${product.images.length}`}
                       aria-current={i === activeImage}
-                      className={`rounded-lg overflow-hidden border-[3px] bg-white transition-all ${
+                      className={`rounded-lg overflow-hidden border-[3px] bg-white transition-[filter,opacity,border-color] duration-fast ease-snap ${
                         i === activeImage
-                          ? "border-poppy shadow-[3px_3px_0_var(--ink)]"
+                          ? "border-poppy [filter:drop-shadow(3px_3px_0_var(--ink))]"
                           : "border-ink opacity-70 hover:opacity-100"
                       }`}
                     >
@@ -332,6 +311,6 @@ function ProductDetail({
           )}
         </div>
       </section>
-    </SiteLayout>
+    </>
   );
 }

@@ -5,7 +5,6 @@
 // claiming the same URL will fight.
 
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { SiteLayout } from "@/components/SiteLayout";
 
 type Article = {
   slug: string;
@@ -49,7 +48,7 @@ const ARTICLES: Record<string, Article> = {
 
 const ORDER = ["magic-of-minimalism", "origin-of-nijntje"];
 
-export const Route = createFileRoute("/blog_/$slug")({
+export const Route = createFileRoute("/_app/blog_/$slug")({
   loader: ({ params }) => {
     const article = ARTICLES[params.slug];
     if (!article) throw notFound();
@@ -72,24 +71,24 @@ export const Route = createFileRoute("/blog_/$slug")({
     };
   },
   notFoundComponent: () => (
-    <SiteLayout>
+    <>
       <section className="px-5 md:px-8 py-24 max-w-2xl mx-auto text-center">
         <h1 className="text-4xl font-extrabold">Article not found</h1>
         <Link to="/blog" className="tc-btn tc-btn-sun mt-6 inline-flex">
           Back to the Journal
         </Link>
       </section>
-    </SiteLayout>
+    </>
   ),
   errorComponent: () => (
-    <SiteLayout>
+    <>
       <section className="px-5 md:px-8 py-24 max-w-2xl mx-auto text-center">
         <h1 className="text-4xl font-extrabold">Something went wrong</h1>
         <Link to="/blog" className="tc-btn tc-btn-sun mt-6 inline-flex">
           Back to the Journal
         </Link>
       </section>
-    </SiteLayout>
+    </>
   ),
   component: ArticlePage,
 });
@@ -98,7 +97,7 @@ function ArticlePage() {
   const { article, next } = Route.useLoaderData();
 
   return (
-    <SiteLayout>
+    <>
       {/* Header */}
       <section className="px-5 md:px-8 pt-10 md:pt-16">
         <div className="max-w-3xl mx-auto">
@@ -136,10 +135,7 @@ function ArticlePage() {
       <section className="px-5 md:px-8 py-12 md:py-16">
         <article className="max-w-2xl mx-auto space-y-6">
           {article.body.map((p, i) => (
-            <p
-              key={i}
-              className="text-lg md:text-xl leading-relaxed text-ink font-medium"
-            >
+            <p key={i} className="text-lg md:text-xl leading-relaxed text-ink font-medium">
               {p}
             </p>
           ))}
@@ -156,7 +152,7 @@ function ArticlePage() {
             <Link
               to="/blog/$slug"
               params={{ slug: next.slug }}
-              className={`tc-card ${next.shadow} bg-white flex items-center gap-5 p-4 md:p-5 hover:-translate-y-1 transition-transform`}
+              className={`tc-card ${next.shadow} bg-white flex items-center gap-5 p-4 md:p-5 tc-lift`}
             >
               <img
                 src={next.image}
@@ -179,6 +175,6 @@ function ArticlePage() {
           </div>
         </section>
       )}
-    </SiteLayout>
+    </>
   );
 }

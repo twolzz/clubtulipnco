@@ -104,20 +104,27 @@ function KlarnaMark() {
 /* Mobile menu                                                         */
 /* ------------------------------------------------------------------ */
 
-function MobileMenuPanel({ onClose }: { onClose: () => void }) {
+function MobileMenuPanel({ open, onClose }: { open: boolean; onClose: () => void }) {
+  // Always mounted (never conditionally rendered) so closing can animate —
+  // visibility is driven entirely by data-state, and `inert` keeps the
+  // closed panel out of tab order and off-limits to assistive tech.
   return (
     <>
       {/* Backdrop — starts below the header so the close button stays reachable */}
       <button
         type="button"
         aria-label="Close menu"
+        tabIndex={open ? 0 : -1}
         onClick={onClose}
-        className="md:hidden absolute top-full left-0 right-0 h-screen bg-ink/40 cursor-default"
+        data-state={open ? "open" : "closed"}
+        className="md:hidden absolute top-full left-0 right-0 h-[calc(100dvh-var(--header-h))] bg-ink/40 cursor-default [will-change:opacity] transition-opacity duration-base ease-glide data-[state=closed]:opacity-0 data-[state=closed]:pointer-events-none data-[state=closed]:duration-exit"
       />
 
       <div
         id="mobile-menu"
-        className="md:hidden absolute top-full left-0 right-0 bg-cream border-b-4 border-ink shadow-[0_8px_0_rgba(0,0,0,0.15)] animate-in fade-in slide-in-from-top-2 duration-150"
+        inert={!open || undefined}
+        data-state={open ? "open" : "closed"}
+        className="md:hidden absolute top-full left-0 right-0 bg-cream border-b-4 border-ink shadow-[0_8px_0_rgba(0,0,0,0.15)] [will-change:opacity,translate] transition-[opacity,translate] duration-base ease-glide data-[state=closed]:opacity-0 data-[state=closed]:-translate-y-2 data-[state=closed]:pointer-events-none data-[state=closed]:duration-exit"
       >
         <nav className="flex flex-col px-5 py-3">
           {NAV.map((n) => (
@@ -137,14 +144,14 @@ function MobileMenuPanel({ onClose }: { onClose: () => void }) {
           <a
             href="https://instagram.com"
             aria-label="Instagram"
-            className="w-11 h-11 inline-flex items-center justify-center rounded-full border-[3px] border-ink bg-white text-ink shadow-[3px_3px_0_var(--ink)]"
+            className="w-11 h-11 inline-flex items-center justify-center rounded-full border-[3px] border-ink bg-white text-ink tc-press [--press-rest:3px] [--press-hover:5px] [--press-active:1px]"
           >
             <Instagram size={18} strokeWidth={2.5} />
           </a>
           <a
             href="https://tiktok.com"
             aria-label="TikTok"
-            className="w-11 h-11 inline-flex items-center justify-center rounded-full border-[3px] border-ink bg-white text-ink shadow-[3px_3px_0_var(--ink)]"
+            className="w-11 h-11 inline-flex items-center justify-center rounded-full border-[3px] border-ink bg-white text-ink tc-press [--press-rest:3px] [--press-hover:5px] [--press-active:1px]"
           >
             <TikTokIcon className="w-[18px] h-[18px]" />
           </a>
@@ -175,10 +182,13 @@ export function SiteLayout({ children }: { children: ReactNode }) {
   }, [menuOpen]);
 
   return (
-    <div className="min-h-screen flex flex-col bg-cream text-ink">
+    <div className="min-h-[100dvh] flex flex-col bg-cream text-ink">
       {/* Sticky shell: primary nav */}
       <div className="sticky top-0 z-50">
-        <header className="bg-cream border-b-4 border-ink">
+        <header
+          className="bg-cream border-b-4 border-ink"
+          style={{ paddingTop: "env(safe-area-inset-top)" }}
+        >
           <div className="max-w-7xl mx-auto flex items-center justify-between gap-3 md:gap-4 px-4 md:px-8 py-3 md:py-4">
             {/* Left: logo */}
             <Link to="/" onClick={() => setMenuOpen(false)} className="flex items-center shrink-0">
@@ -212,18 +222,22 @@ export function SiteLayout({ children }: { children: ReactNode }) {
                 aria-label={menuOpen ? "Close menu" : "Open menu"}
                 aria-expanded={menuOpen}
                 aria-controls="mobile-menu"
-                className="md:hidden w-11 h-11 inline-flex items-center justify-center rounded-full border-[3px] border-ink bg-cream shadow-[3px_3px_0_var(--ink)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[1px_1px_0_var(--ink)] transition-all"
+                className="md:hidden w-11 h-11 inline-flex items-center justify-center rounded-full border-[3px] border-ink bg-cream tc-press [--press-rest:3px] [--press-hover:5px] [--press-active:1px]"
               >
-                {menuOpen ? <X size={20} strokeWidth={2.5} /> : <Menu size={20} strokeWidth={2.5} />}
+                {menuOpen ? (
+                  <X size={20} strokeWidth={2.5} />
+                ) : (
+                  <Menu size={20} strokeWidth={2.5} />
+                )}
               </button>
             </div>
           </div>
         </header>
 
-        {menuOpen && <MobileMenuPanel onClose={() => setMenuOpen(false)} />}
+        <MobileMenuPanel open={menuOpen} onClose={() => setMenuOpen(false)} />
       </div>
 
-      <main className="flex-1">{children}</main>
+      <main className="flex-1 tc-page">{children}</main>
 
       {/* Trust & compliance footer */}
       <footer className="bg-cream border-t-4 border-ink mt-16">
@@ -246,14 +260,14 @@ export function SiteLayout({ children }: { children: ReactNode }) {
               <a
                 href="https://instagram.com"
                 aria-label="Instagram"
-                className="w-10 h-10 inline-flex items-center justify-center rounded-full border-[3px] border-ink bg-cream text-ink shadow-[3px_3px_0_var(--ink)] hover:text-denim hover:shadow-[5px_5px_0_var(--ink)] hover:-translate-x-[2px] hover:-translate-y-[2px] transition-all"
+                className="w-10 h-10 inline-flex items-center justify-center rounded-full border-[3px] border-ink bg-cream text-ink hover:text-denim tc-press [--press-rest:3px] [--press-hover:5px] [--press-active:1px]"
               >
                 <Instagram size={18} strokeWidth={2.5} />
               </a>
               <a
                 href="https://tiktok.com"
                 aria-label="TikTok"
-                className="w-10 h-10 inline-flex items-center justify-center rounded-full border-[3px] border-ink bg-cream text-ink shadow-[3px_3px_0_var(--ink)] hover:text-denim hover:shadow-[5px_5px_0_var(--ink)] hover:-translate-x-[2px] hover:-translate-y-[2px] transition-all"
+                className="w-10 h-10 inline-flex items-center justify-center rounded-full border-[3px] border-ink bg-cream text-ink hover:text-denim tc-press [--press-rest:3px] [--press-hover:5px] [--press-active:1px]"
               >
                 <TikTokIcon className="w-[18px] h-[18px]" />
               </a>

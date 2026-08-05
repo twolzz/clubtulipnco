@@ -101,7 +101,7 @@ export function HeaderSearch() {
                       <Link
                         to="/shop"
                         onClick={() => setOpen(false)}
-                        className="flex items-center gap-4 rounded-2xl border-[3px] border-ink bg-white px-4 py-3 shadow-[4px_4px_0_var(--ink)] hover:shadow-[6px_6px_0_var(--ink)] hover:-translate-x-[1px] hover:-translate-y-[1px] transition-all"
+                        className="flex items-center gap-4 rounded-2xl border-[3px] border-ink bg-white px-4 py-3 tc-press"
                       >
                         <div
                           className="w-10 h-10 rounded-full border-2 border-ink shrink-0"

@@ -8,9 +8,8 @@ import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { Elements } from "@stripe/react-stripe-js";
-import { SiteLayout } from "@/components/SiteLayout";
 import { CheckoutForm } from "@/components/CheckoutForm";
-import { useCart } from "@/lib/cart-store";
+import { useCart, useCartHydrated } from "@/lib/cart-store";
 import { listProducts, type Product } from "@/lib/products.functions";
 import { getStripe, buildAppearance } from "@/lib/stripe-elements";
 import { ProductMedia, formatPrice } from "@/components/ProductCard";
@@ -28,7 +27,7 @@ const STRIPE_FONTS = [
   },
 ];
 
-export const Route = createFileRoute("/checkout/")({
+export const Route = createFileRoute("/_app/checkout/")({
   head: () => ({
     meta: [
       { title: "Checkout — Tulip & Co." },
@@ -41,6 +40,7 @@ export const Route = createFileRoute("/checkout/")({
 function CheckoutPage() {
   const navigate = useNavigate();
   const { items } = useCart();
+  const cartHydrated = useCartHydrated();
 
   const listFn = useServerFn(listProducts);
 
@@ -66,30 +66,35 @@ function CheckoutPage() {
   // minimum charge.
   const ready = lines.length > 0 && total >= 50;
 
-  // An empty cart has nothing to pay for.
+  // An empty cart has nothing to pay for. Wait for localStorage to hydrate
+  // first — on a cold load (direct URL, refresh, or the Stripe return trip)
+  // the very first render always reads an empty cart, and redirecting on
+  // that stale read would bounce a customer with real items in their cart.
   useEffect(() => {
-    if (items.length === 0) {
-      navigate({ to: "/cart" });
+    if (cartHydrated && items.length === 0) {
+      navigate({ to: "/cart", replace: true });
     }
-  }, [items.length, navigate]);
+  }, [cartHydrated, items.length, navigate]);
 
   const appearance = buildAppearance();
 
   return (
-    <SiteLayout>
+    <>
       <section className="px-5 md:px-8 py-14 md:py-20">
         <div className="max-w-5xl mx-auto">
           <nav className="text-sm font-semibold text-ink/70 mb-6">
-            <Link to="/" className="hover:text-denim">Home</Link>
+            <Link to="/" className="hover:text-denim">
+              Home
+            </Link>
             <span className="mx-2 text-ink/40">/</span>
-            <Link to="/cart" className="hover:text-denim">Cart</Link>
+            <Link to="/cart" className="hover:text-denim">
+              Cart
+            </Link>
             <span className="mx-2 text-ink/40">/</span>
             <span className="text-ink">Checkout</span>
           </nav>
 
-          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-10">
-            Checkout.
-          </h1>
+          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-10">Checkout</h1>
 
           <div className="grid lg:grid-cols-[1fr_380px] gap-8 items-start">
             {/* Payment */}
@@ -153,9 +158,7 @@ function CheckoutPage() {
                 </div>
                 <div className="flex justify-between items-center pt-2 border-t-2 border-ink/15">
                   <span className="font-semibold">Total</span>
-                  <span className="font-extrabold text-2xl">
-                    {formatPrice(total)}
-                  </span>
+                  <span className="font-extrabold text-2xl">{formatPrice(total)}</span>
                 </div>
               </div>
               <Link
@@ -168,6 +171,6 @@ function CheckoutPage() {
           </div>
         </div>
       </section>
-    </SiteLayout>
+    </>
   );
 }

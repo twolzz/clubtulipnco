@@ -1,13 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { SiteLayout } from "@/components/SiteLayout";
 
-export const Route = createFileRoute("/blog")({
+export const Route = createFileRoute("/_app/blog")({
   head: () => ({
     meta: [
       { title: "The Journal — Tulip & Co." },
       { name: "description", content: "Stories about Dutch design, Miffy, and quiet living." },
       { property: "og:title", content: "The Journal — Tulip & Co." },
-      { property: "og:description", content: "Stories about Dutch design, Miffy, and quiet living." },
+      {
+        property: "og:description",
+        content: "Stories about Dutch design, Miffy, and quiet living.",
+      },
     ],
   }),
   component: BlogPage,
@@ -45,7 +47,7 @@ const ARTICLES: Article[] = [
 
 function BlogPage() {
   return (
-    <SiteLayout>
+    <>
       {/* Hero */}
       <section className="px-5 md:px-8 py-16 md:py-24">
         <div className="max-w-3xl mx-auto">
@@ -53,7 +55,7 @@ function BlogPage() {
             The Journal
           </span>
           <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight leading-[1.02]">
-            Quiet stories from the <span className="text-denim">studio.</span>
+            Quiet stories from the <span className="text-denim">studio</span>
           </h1>
           <p className="mt-6 text-lg md:text-xl text-ink/80 max-w-2xl">
             Essays on De Stijl, Dick Bruna, and the small joys of minimal design.
@@ -69,7 +71,7 @@ function BlogPage() {
               key={a.slug}
               to="/blog/$slug"
               params={{ slug: a.slug }}
-              className={`tc-card ${a.shadow} bg-white flex flex-col overflow-hidden hover:-translate-y-1 transition-transform`}
+              className={`tc-card ${a.shadow} bg-white flex flex-col overflow-hidden tc-lift`}
             >
               <div className="border-b-4 border-ink bg-cream">
                 <img
@@ -93,6 +95,6 @@ function BlogPage() {
           ))}
         </div>
       </section>
-    </SiteLayout>
+    </>
   );
 }

@@ -4,22 +4,21 @@
 
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
-import { SiteLayout } from "@/components/SiteLayout";
 import { JoinClubDialog } from "@/components/JoinClubDialog";
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/_app/")({
   head: () => ({
     meta: [
-      { title: "Tulip & Co. — Authentic Dutch Design in Southern California" },
+      { title: "Tulip & Co. — Your Online Boutique for Dutch Design & Miffy Collectibles" },
       {
         name: "description",
         content:
-          "Curated Dutch design, stationery, and Miffy collectibles. Premium, minimalist, and proudly based in San Diego.",
+          "Curated Dutch design and everyday Miffy magic—shipped nationwide straight to your door",
       },
-      { property: "og:title", content: "Tulip & Co. — Authentic Dutch Design" },
+      { property: "og:title", content: "Tulip & Co. — Authentic Dutch Design & Miffy Goods" },
       {
         property: "og:description",
-        content: "Premium Dutch stationery and Miffy collectibles, curated in San Diego.",
+        content: "Curated Dutch design and Miffy stationery & collectibles, shipped across the US",
       },
     ],
   }),
@@ -56,36 +55,37 @@ const COLLECTIONS = [
 
 function Home() {
   return (
-    <SiteLayout>
+    <>
       {/* Hero */}
       <section className="px-5 md:px-8 py-10 md:py-14">
         <div className="max-w-7xl mx-auto grid lg:grid-cols-[1.55fr_1fr] gap-10 lg:gap-14 items-center">
           <div>
             <h1 className="text-5xl md:text-7xl font-extrabold leading-[1.02] tracking-tight">
-              Dutch design is coming to <span className="text-poppy">San Diego.</span>
+              Dutch design is coming to <span className="text-poppy">San Diego</span>
             </h1>
             <p className="mt-6 text-lg md:text-xl text-ink/80 max-w-2xl">
-              Tulip &amp; Co. is your curated home for premium Dutch stationery, minimalist
-              plushies, and quiet design objects — sourced directly from the Netherlands.
+              Tulip &amp; Co. is your curated online home for authentic Dutch design, Miffy plushies &amp; stationery — shipped nationwide straight to your door.
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
               <JoinClubDialog className="tc-btn tc-btn-sun inline-flex">
                 Join the Club!
               </JoinClubDialog>
-              <Link to="/shop" className="tc-btn tc-btn-cream">Browse the Shop →</Link>
+              <Link to="/shop" className="tc-btn tc-btn-cream">
+                Browse the Shop
+              </Link>
             </div>
           </div>
 
           {/* Hero card cluster */}
           <div className="grid grid-cols-2 gap-5">
             <div className="tc-card tc-card-poppy aspect-[3/4] flex items-end p-5 bg-sun">
-              <span className="font-display text-2xl">Holland.</span>
+              <span className="font-display text-2xl">Holland</span>
             </div>
             <div className="tc-card tc-card-denim aspect-[3/4] flex items-end p-5 mt-8 bg-poppy text-white">
               <span className="font-display text-2xl">Tulip & Co.</span>
             </div>
             <div className="tc-card tc-card-sage aspect-[3/2] flex items-end p-5 bg-denim text-white col-span-2">
-              <span className="font-display text-xl">De Stijl, brought home.</span>
+              <span className="font-display text-xl">De Stijl, brought home</span>
             </div>
           </div>
         </div>
@@ -96,7 +96,9 @@ function Home() {
         <div className="max-w-6xl mx-auto">
           <div className="flex items-end justify-between flex-wrap gap-4 mb-8 md:mb-10">
             <h2 className="text-4xl md:text-5xl font-extrabold">Curated Collections</h2>
-            <Link to="/shop" className="tc-btn tc-btn-cream">Shop All</Link>
+            <Link to="/shop" className="tc-btn tc-btn-cream">
+              Shop All
+            </Link>
           </div>
 
           <div className="grid sm:grid-cols-3 gap-5 md:gap-8">
@@ -105,12 +107,10 @@ function Home() {
                 key={c.slug}
                 to="/shop"
                 search={{ collection: c.slug }}
-                className={`tc-card ${c.shadow} ${c.color} text-white p-6 md:p-8 flex flex-col justify-between gap-8 min-h-[180px] md:min-h-[210px] hover:-translate-y-1 transition-transform`}
+                className={`tc-card ${c.shadow} ${c.color} text-white p-6 md:p-8 flex flex-col justify-between gap-8 min-h-[180px] md:min-h-[210px] tc-lift`}
               >
                 <div>
-                  <h3 className="text-2xl md:text-3xl font-extrabold leading-tight">
-                    {c.title}
-                  </h3>
+                  <h3 className="text-2xl md:text-3xl font-extrabold leading-tight">{c.title}</h3>
                   <p className="mt-2 text-white/85 leading-snug">{c.blurb}</p>
                 </div>
                 <span className="inline-flex items-center gap-2 text-sm font-bold">
@@ -131,17 +131,9 @@ function Home() {
               <span className="inline-block px-3 py-1 mb-4 rounded-full bg-sun border-[3px] border-ink text-ink text-sm font-bold">
                 Live Calendar
               </span>
-              <div className="w-24 h-2.5 rounded-full overflow-hidden border-2 border-ink flex mb-5" aria-hidden="true">
-                <span className="flex-1 bg-poppy" />
-                <span className="flex-1 bg-sun" />
-                <span className="flex-1 bg-denim" />
-              </div>
-              <h2 className="text-4xl md:text-5xl font-extrabold">
-                Find Us Live in San Diego.
-              </h2>
+              <h2 className="text-4xl md:text-5xl font-extrabold">Find Us Live in San Diego.</h2>
               <p className="mt-4 text-white/90 max-w-xl text-lg">
-                New dates all year, all around San Diego. Come feel the
-                corduroy, browse fresh drops, and meet Miffy in person.
+                New dates all year, all around San Diego. Come hang out with us!
               </p>
             </div>
             <Link to="/pop-ups" className="tc-btn tc-btn-sun whitespace-nowrap">
@@ -150,6 +142,6 @@ function Home() {
           </div>
         </div>
       </section>
-    </SiteLayout>
+    </>
   );
 }

@@ -39,7 +39,11 @@ function UnsubscribePage() {
       if (res.ok) setStatus("done");
       else {
         setStatus("error");
-        setErrorMsg(res.error === "invalid" ? "Please enter a valid email address." : "Something went wrong. Please try again.");
+        setErrorMsg(
+          res.error === "invalid"
+            ? "Please enter a valid email address."
+            : "Something went wrong. Please try again.",
+        );
       }
     } catch {
       setStatus("error");
@@ -48,9 +52,18 @@ function UnsubscribePage() {
   };
 
   return (
-    <main style={{ backgroundColor: "#F9F6F0", minHeight: "100vh", color: "#000000", fontFamily: "Inter, Arial, Helvetica, sans-serif" }}>
+    <main
+      style={{
+        backgroundColor: "#F9F6F0",
+        minHeight: "100dvh",
+        color: "#000000",
+        fontFamily: "Inter, Arial, Helvetica, sans-serif",
+      }}
+    >
       <div style={{ maxWidth: 480, margin: "0 auto", padding: "80px 24px" }}>
-        <p style={{ fontSize: 20, fontWeight: 900, letterSpacing: "-0.5px", margin: 0 }}>Tulip &amp; Co.</p>
+        <p style={{ fontSize: 20, fontWeight: 900, letterSpacing: "-0.5px", margin: 0 }}>
+          Tulip &amp; Co.
+        </p>
 
         <div style={{ display: "flex", marginTop: 32, marginBottom: 48 }}>
           <div style={{ flex: 1, height: 3, backgroundColor: "#E05A36" }} />
@@ -60,16 +73,27 @@ function UnsubscribePage() {
 
         {status === "done" ? (
           <>
-            <h1 style={{ fontSize: 32, fontWeight: 700, letterSpacing: "-0.5px", margin: "0 0 20px" }}>All done.</h1>
-            <p style={{ fontSize: 16, lineHeight: 1.7, margin: 0 }}>You have been safely unsubscribed.</p>
+            <h1
+              style={{ fontSize: 32, fontWeight: 700, letterSpacing: "-0.5px", margin: "0 0 20px" }}
+            >
+              All done
+            </h1>
+            <p style={{ fontSize: 16, lineHeight: 1.7, margin: 0 }}>
+              You have been safely unsubscribed.
+            </p>
           </>
         ) : (
           <>
-            <h1 style={{ fontSize: 32, fontWeight: 700, letterSpacing: "-0.5px", margin: "0 0 20px" }}>Taking a break?</h1>
+            <h1
+              style={{ fontSize: 32, fontWeight: 700, letterSpacing: "-0.5px", margin: "0 0 20px" }}
+            >
+              Taking a break?
+            </h1>
 
             {emailFromUrl ? (
               <p style={{ fontSize: 16, lineHeight: 1.7, margin: "0 0 32px" }}>
-                Click below to stop receiving updates for <strong>{emailFromUrl}</strong>. No hard feelings.
+                Click below to stop receiving updates for <strong>{emailFromUrl}</strong>. No hard
+                feelings.
               </p>
             ) : (
               <p style={{ fontSize: 16, lineHeight: 1.7, margin: "0 0 32px" }}>
@@ -77,7 +101,10 @@ function UnsubscribePage() {
               </p>
             )}
 
-            <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+            <form
+              onSubmit={handleSubmit}
+              style={{ display: "flex", flexDirection: "column", gap: 20 }}
+            >
               {!emailFromUrl && (
                 <input
                   type="email"
@@ -119,9 +146,7 @@ function UnsubscribePage() {
                 {status === "loading" ? "Working…" : "Confirm Unsubscribe"}
               </button>
 
-              {errorMsg && (
-                <p style={{ color: "#E05A36", fontSize: 14, margin: 0 }}>{errorMsg}</p>
-              )}
+              {errorMsg && <p style={{ color: "#E05A36", fontSize: 14, margin: 0 }}>{errorMsg}</p>}
             </form>
           </>
         )}
