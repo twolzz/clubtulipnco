@@ -78,7 +78,7 @@ function OurStoryPage() {
             <p>
               Tulip &amp; Co. is a boutique curator dedicated to design integrity and authentic
               sourcing. We bypass the cold, clinical feel of big-box retail by working with
-              authorized suppliers to bring you a hand-picked portfolio of licensed stationery,
+              authorized suppliers to bring you a hand-picked portfolio of genuine stationery,
               collectibles, and plushies.
             </p>
             <p>
