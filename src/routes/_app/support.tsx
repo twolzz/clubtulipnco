@@ -370,11 +370,11 @@ function TermsPanel() {
           use the site.
         </li>
         <li>
-          <span className="font-bold text-ink">2. Products:</span> We carry genuine, authentic
-          Dutch design goods and collectibles, purchased through authorized wholesale channels.
-          Tulip &amp; Co. is not an official partner, licensee, or affiliate of the manufacturer.
-          Product availability, descriptions, and pricing may change without notice, and we reserve
-          the right to limit quantities on any item.
+          <span className="font-bold text-ink">2. Products:</span> We carry genuine, authentic Dutch
+          design goods and collectibles, purchased through authorized wholesale channels. Tulip
+          &amp; Co. is not an official partner, licensee, or affiliate of the manufacturer. Product
+          availability, descriptions, and pricing may change without notice, and we reserve the
+          right to limit quantities on any item.
         </li>
         <li>
           <span className="font-bold text-ink">3. Pricing &amp; payment:</span> All prices are

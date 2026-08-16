@@ -23,10 +23,7 @@ export type WelcomeResult = {
 
 function esc(str: string) {
   return str.replace(/[&<>"']/g, (c) =>
-    c === "&" ? "&amp;" :
-    c === "<" ? "&lt;" :
-    c === ">" ? "&gt;" :
-    c === '"' ? "&quot;" : "&#39;",
+    c === "&" ? "&amp;" : c === "<" ? "&lt;" : c === ">" ? "&gt;" : c === '"' ? "&quot;" : "&#39;",
   );
 }
 
@@ -108,7 +105,6 @@ function renderHtml(firstName: string, email: string) {
 </html>`;
 }
 
- 
 function renderText(firstName: string, email: string) {
   const unsubUrl = `${siteUrl()}/unsubscribe?email=${encodeURIComponent(email)}`;
   const name = firstName || "friend";
@@ -130,10 +126,7 @@ function renderText(firstName: string, email: string) {
   ].join("\n");
 }
 
-export async function sendWelcomeEmail(
-  firstName: string,
-  email: string,
-): Promise<WelcomeResult> {
+export async function sendWelcomeEmail(firstName: string, email: string): Promise<WelcomeResult> {
   try {
     const resendKey = process.env.RESEND_API_KEY;
     if (!resendKey) {
