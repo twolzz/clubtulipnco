@@ -102,9 +102,14 @@ export const SubscribeForm = forwardRef<HTMLInputElement, SubscribeFormProps>(
             aria-invalid={!!errors.first_name}
             disabled={status === "loading"}
           />
-          <p className="mt-1.5 ml-2 text-sm font-semibold text-poppy min-h-[1.25em]">
-            {errors.first_name}
-          </p>
+          {/* Only rendered when there's an error — matches the coming-soon
+              page's <p hidden> pattern, so fields sit close together by
+              default instead of always reserving space for an error line.
+              The form nudges down slightly if an error appears; that's an
+              accepted tradeoff for the tighter, calmer default spacing. */}
+          {errors.first_name && (
+            <p className="mt-1.5 ml-2 text-sm font-semibold text-poppy">{errors.first_name}</p>
+          )}
         </div>
         <div>
           <label className="sr-only" htmlFor="sf-email">
@@ -123,9 +128,9 @@ export const SubscribeForm = forwardRef<HTMLInputElement, SubscribeFormProps>(
             aria-invalid={!!errors.email}
             disabled={status === "loading"}
           />
-          <p className="mt-1.5 ml-2 text-sm font-semibold text-poppy min-h-[1.25em]">
-            {errors.email}
-          </p>
+          {errors.email && (
+            <p className="mt-1.5 ml-2 text-sm font-semibold text-poppy">{errors.email}</p>
+          )}
         </div>
         <button
           type="submit"
