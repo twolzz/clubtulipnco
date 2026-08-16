@@ -108,8 +108,8 @@ export function JoinClubDialog({ children, className }: Props) {
               Join the Club!
             </DialogPrimitive.Title>
             <DialogPrimitive.Description className="mt-2 text-ink/80">
-              Join our community to stay in the loop on upcoming pop-ups, new Miffy arrivals, and
-              special surprises!
+              Sign up for exclusive San Diego pop-up updates, new Miffy arrivals, and authentic
+              Dutch design drops.
             </DialogPrimitive.Description>
             <div className="mt-6">
               <SubscribeForm variant="modal" onSuccess={handleSuccess} />

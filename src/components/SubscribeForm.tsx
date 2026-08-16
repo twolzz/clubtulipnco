@@ -77,7 +77,7 @@ export const SubscribeForm = forwardRef<HTMLInputElement, SubscribeFormProps>(
             Welcome to the club!
           </p>
           <p className="mt-3 text-ink/80">
-            Keep an eye on your inbox for our next San Diego pop-up date.
+            Keep an eye on your inbox — we'll let you know the moment we open.
           </p>
         </div>
       );
