@@ -285,7 +285,7 @@ function PrivacyPanel() {
       <p className="text-base md:text-lg leading-relaxed text-ink/85 mb-2 font-semibold">
         Authentic Dutch design, with fiercely protected privacy.
       </p>
-      <p className="text-sm text-ink/60 mb-6 md:mb-8">Last updated: July 2026</p>
+      <p className="text-sm text-ink/60 mb-6 md:mb-8">Last updated: August 2026</p>
       <ol className="space-y-6 text-base md:text-lg leading-relaxed text-ink/85 list-none">
         <li>
           <span className="font-bold text-ink">1. Information we collect:</span> When you join our
@@ -309,8 +309,9 @@ function PrivacyPanel() {
           only with the services that let us run Tulip &amp; Co., and only as much as each one needs
           to do its job: Stripe (payment processing — they receive your payment details directly; we
           never see your full card number), Supabase (our secure database host), Resend (delivering
-          our emails), and Cloudflare (our website hosting). We do not sell, rent, or trade your
-          personal information to third parties for marketing purposes.
+          our emails), PirateShip (generating shipping labels — they receive your shipping address),
+          and Cloudflare (our website hosting). We do not sell, rent, or trade your personal
+          information to third parties for marketing purposes.
         </li>
         <li>
           <span className="font-bold text-ink">4. Email preferences:</span> Joining the club is
@@ -361,7 +362,7 @@ function TermsPanel() {
   return (
     <div className="max-w-2xl">
       <PanelHeading>Terms of Service.</PanelHeading>
-      <p className="text-sm text-ink/60 mb-6 md:mb-8">Last updated: July 2026</p>
+      <p className="text-sm text-ink/60 mb-6 md:mb-8">Last updated: August 2026</p>
       <ol className="space-y-6 text-base md:text-lg leading-relaxed text-ink/85 list-none">
         <li>
           <span className="font-bold text-ink">1. Acceptance of terms:</span> By using this website
@@ -369,10 +370,11 @@ function TermsPanel() {
           use the site.
         </li>
         <li>
-          <span className="font-bold text-ink">2. Products:</span> We carry authentic, officially
-          licensed Dutch design goods and collectibles. Product availability, descriptions, and
-          pricing may change without notice, and we reserve the right to limit quantities on any
-          item.
+          <span className="font-bold text-ink">2. Products:</span> We carry genuine, authentic Dutch
+          design goods and collectibles, purchased through authorized wholesale channels. Tulip
+          &amp; Co. is not an official partner, licensee, or affiliate of the manufacturer. Product
+          availability, descriptions, and pricing may change without notice, and we reserve the
+          right to limit quantities on any item.
         </li>
         <li>
           <span className="font-bold text-ink">3. Pricing &amp; payment:</span> All prices are
