@@ -19,8 +19,10 @@ const CLOSE_VELOCITY = 0.5; // px/ms
 
 // Slightly longer than --dur-exit (280ms) so the slide-out finishes first.
 const EXIT_MS = 320;
-// Matches --dur-base (380ms) — see the focus useEffect below.
-const ENTER_MS = 380;
+// Fallback only — see the transitionend-based focus effect below. Kept as a
+// safety net in case the transitionend listener is ever missed (e.g. the
+// element gets swapped out from under it), so focus still lands eventually.
+const ENTER_FALLBACK_MS = 500;
 
 export function CartDrawer() {
   const open = useCartDrawer();
@@ -37,14 +39,39 @@ export function CartDrawer() {
 
   // Calling .focus() on the panel while its slide-in transform is still
   // interpolating is what was causing the drawer to animate smoothly partway,
-  // then jump straight to its final position — focusing an element forces the
-  // browser to resolve its layout/visibility synchronously, which can conflict
-  // with an in-flight transform/translate transition on that same element.
-  // Waiting until the transition has actually finished avoids it entirely.
+  // then jump straight to its final position right at the very end — focusing
+  // an element forces the browser to resolve its layout/visibility
+  // synchronously, which conflicts with an in-flight transform transition on
+  // that same element.
+  //
+  // A fixed setTimeout(ENTER_MS) tuned to match --dur-base looked like a fix,
+  // but --ease-glide is a custom linear() curve whose visual settle doesn't
+  // line up exactly with the nominal CSS duration — under real-world timing
+  // (frame drops, main-thread load) the timer can still fire a few ms before
+  // the browser has actually finished painting the transition, reproducing
+  // the exact same snap it was meant to prevent. Listening for the real
+  // `transitionend` event on the panel's own transform property removes the
+  // guesswork: focus only moves once the browser itself confirms the
+  // transition is done. The ENTER_FALLBACK_MS timeout is just a safety net.
   useEffect(() => {
     if (!visible) return;
-    const t = window.setTimeout(() => panelRef.current?.focus(), ENTER_MS);
-    return () => window.clearTimeout(t);
+    const panel = panelRef.current;
+    if (!panel) return;
+    let done = false;
+    function focusPanel() {
+      if (done) return;
+      done = true;
+      panel?.focus();
+    }
+    function onTransitionEnd(e: TransitionEvent) {
+      if (e.target === panel && e.propertyName === "transform") focusPanel();
+    }
+    panel.addEventListener("transitionend", onTransitionEnd);
+    const fallback = window.setTimeout(focusPanel, ENTER_FALLBACK_MS);
+    return () => {
+      panel.removeEventListener("transitionend", onTransitionEnd);
+      window.clearTimeout(fallback);
+    };
   }, [visible]);
 
   const { items } = useCart();
