@@ -1,4 +1,4 @@
-import { forwardRef, useState, type FormEvent } from "react";
+import { forwardRef, useEffect, useState, type FormEvent } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
 import { useServerFn } from "@tanstack/react-start";
@@ -28,7 +28,24 @@ export const SubscribeForm = forwardRef<HTMLInputElement, SubscribeFormProps>(
     const [email, setEmail] = useState("");
     const [errors, setErrors] = useState<FieldErrors>({});
     const [status, setStatus] = useState<"idle" | "loading" | "success">("idle");
+    // Starts false so the success card mounts at its pre-animation state
+    // (opacity 0, translateY(10px) scale(0.98)), then flips true one frame
+    // later so the browser actually transitions instead of snapping straight
+    // to the end state — same pattern as the coming-soon page's .animate-in
+    // class, and the same reason JoinClubDialog's own open/close does a
+    // double-rAF: CSS can't transition a property that changes in the same
+    // paint as the element's first render.
+    const [successVisible, setSuccessVisible] = useState(false);
     const subscribe = useServerFn(subscribeToClub);
+
+    useEffect(() => {
+      if (status !== "success") return;
+      const raf1 = requestAnimationFrame(() => {
+        const raf2 = requestAnimationFrame(() => setSuccessVisible(true));
+        return () => cancelAnimationFrame(raf2);
+      });
+      return () => cancelAnimationFrame(raf1);
+    }, [status]);
 
     async function handleSubmit(e: FormEvent<HTMLFormElement>) {
       e.preventDefault();
@@ -72,6 +89,16 @@ export const SubscribeForm = forwardRef<HTMLInputElement, SubscribeFormProps>(
             variant === "inline" ? "" : "tc-card-sun"
           }`}
           role="status"
+          // Exact match to the coming-soon splash page's success-card fade
+          // (#join-success-view.animate-in): translateY(10px) scale(0.98) ->
+          // translateY(0) scale(1), opacity 0->1, cubic-bezier(.2,.8,.2,1), 0.4s.
+          style={{
+            opacity: successVisible ? 1 : 0,
+            transform: successVisible
+              ? "translateY(0) scale(1)"
+              : "translateY(10px) scale(0.98)",
+            transition: "opacity 0.4s cubic-bezier(.2,.8,.2,1), transform 0.4s cubic-bezier(.2,.8,.2,1)",
+          }}
         >
           <p className="font-display text-2xl md:text-3xl font-extrabold leading-tight">
             Welcome to the club!
@@ -143,7 +170,7 @@ export const SubscribeForm = forwardRef<HTMLInputElement, SubscribeFormProps>(
               Sending…
             </>
           ) : (
-            "Subscribe"
+            "Join the Club!"
           )}
         </button>
       </form>

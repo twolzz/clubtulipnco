@@ -83,7 +83,15 @@ export function JoinClubDialog({ children, className }: Props) {
           <DialogPrimitive.Overlay
             forceMount
             data-state={visible ? "open" : "closed"}
-            className="fixed inset-0 z-50 bg-ink/60 [will-change:opacity] transition-opacity duration-base ease-glide data-[state=closed]:opacity-0 data-[state=closed]:duration-exit data-[state=closed]:pointer-events-none"
+            className="fixed inset-0 z-50 bg-ink/60 [will-change:opacity]"
+            // Exact match to the coming-soon splash page's modal backdrop fade
+            // (index.html .modal-backdrop) — same duration/easing on both sites
+            // per an explicit "make them identical" request, rather than this
+            // app's usual --ease-glide/--dur-base tokens.
+            style={{
+              opacity: visible ? 1 : 0,
+              transition: "opacity 0.25s ease-out",
+            }}
           />
           <DialogPrimitive.Content
             ref={contentRef}
@@ -95,8 +103,18 @@ export function JoinClubDialog({ children, className }: Props) {
               // the transitionend-based focus effect above.
               e.preventDefault();
             }}
-            className="fixed left-1/2 top-1/2 z-50 w-[calc(100%-2rem)] max-w-lg -translate-x-1/2 -translate-y-1/2 bg-cream border-4 border-ink rounded-2xl p-7 md:p-9 outline-none scale-100 opacity-100 [will-change:opacity,scale] transition-[opacity,scale] duration-base ease-spring data-[state=closed]:opacity-0 data-[state=closed]:scale-95 data-[state=closed]:duration-exit data-[state=closed]:ease-snap"
-            style={{ boxShadow: "8px 8px 0 var(--poppy)" }}
+            className="fixed left-1/2 top-1/2 z-50 w-[calc(100%-2rem)] max-w-lg bg-cream border-4 border-ink rounded-2xl p-7 md:p-9 outline-none [will-change:opacity,transform]"
+            // Exact match to the coming-soon splash page's .modal (translateY
+            // 16px->0, scale 0.96->1, opacity 0->1, cubic-bezier(.2,.8,.2,1),
+            // 0.3s) layered on top of Radix's -50%/-50% centering transform.
+            style={{
+              boxShadow: "8px 8px 0 var(--poppy)",
+              opacity: visible ? 1 : 0,
+              transform: visible
+                ? "translate(-50%, -50%) translateY(0) scale(1)"
+                : "translate(-50%, -50%) translateY(16px) scale(0.96)",
+              transition: "opacity 0.3s cubic-bezier(.2,.8,.2,1), transform 0.3s cubic-bezier(.2,.8,.2,1)",
+            }}
           >
             <DialogPrimitive.Close
               aria-label="Close"
@@ -108,8 +126,7 @@ export function JoinClubDialog({ children, className }: Props) {
               Join the Club!
             </DialogPrimitive.Title>
             <DialogPrimitive.Description className="mt-2 text-ink/80">
-              Sign up for exclusive San Diego pop-up updates, new Miffy arrivals, and authentic
-              Dutch design drops.
+              Sign up for exclusive San Diego pop-up updates and new Miffy arrivals.
             </DialogPrimitive.Description>
             <div className="mt-6">
               <SubscribeForm variant="modal" onSuccess={handleSuccess} />
