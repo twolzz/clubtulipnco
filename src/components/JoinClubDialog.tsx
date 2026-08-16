@@ -118,7 +118,7 @@ export function JoinClubDialog({ children, className }: Props) {
           >
             <DialogPrimitive.Close
               aria-label="Close"
-              className="absolute right-4 top-4 w-9 h-9 inline-flex items-center justify-center rounded-full border-2 border-ink bg-white hover:bg-sun transition-colors touch-manipulation"
+              className="absolute right-4 top-4 w-9 h-9 inline-flex items-center justify-center rounded-full border-2 border-ink bg-white hover:bg-sun transition-colors touch-manipulation cursor-pointer"
             >
               <X className="w-4 h-4" />
             </DialogPrimitive.Close>
