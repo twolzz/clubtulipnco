@@ -172,7 +172,7 @@ function CollectionCard({
       style={reveal.style}
       to="/shop"
       search={{ collection: c.slug }}
-      className={`tc-card ${c.shadow} ${c.color} text-white p-6 md:p-8 flex flex-col justify-between gap-8 min-h-[180px] md:min-h-[210px] tc-lift tc-reveal ${reveal.visible ? "tc-reveal-visible" : ""}`}
+      className={`tc-card ${c.shadow} ${c.color} text-white p-6 md:p-8 flex flex-col justify-between gap-8 min-h-[180px] md:min-h-[210px] tc-card-lift tc-reveal ${reveal.visible ? "tc-reveal-visible" : ""}`}
     >
       <div>
         <h3 className="text-2xl md:text-3xl font-extrabold leading-tight">{c.title}</h3>

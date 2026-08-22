@@ -153,7 +153,7 @@ function EventCard({ event: e, index }: { event: PopUp; index: number }) {
     <li
       ref={reveal.ref}
       style={reveal.style}
-      className={`tc-card tc-card-denim bg-white p-5 md:p-7 grid md:grid-cols-[auto_1fr_auto] gap-6 items-center tc-card-lift tc-reveal ${reveal.visible ? "tc-reveal-visible" : ""}`}
+      className={`tc-card tc-card-denim bg-white p-5 md:p-7 grid md:grid-cols-[auto_1fr_auto] gap-6 items-center tc-reveal ${reveal.visible ? "tc-reveal-visible" : ""}`}
     >
       <div
         className={`${a.bg} ${a.text} border-4 border-ink rounded-2xl w-24 h-24 flex flex-col items-center justify-center shrink-0`}

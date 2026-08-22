@@ -161,7 +161,7 @@ function ArticlePage() {
               style={nextCard.style}
               to="/blog/$slug"
               params={{ slug: next.slug }}
-              className={`tc-card ${next.shadow} bg-white flex items-center gap-5 p-4 md:p-5 tc-lift tc-reveal ${nextCard.visible ? "tc-reveal-visible" : ""}`}
+              className={`tc-card ${next.shadow} bg-white flex items-center gap-5 p-4 md:p-5 tc-card-lift tc-reveal ${nextCard.visible ? "tc-reveal-visible" : ""}`}
             >
               <img
                 src={next.image}

@@ -1,4 +1,4 @@
-import { useEffect, type RefObject } from "react";
+import { useEffect } from "react";
 
 /**
  * Wraps every word of the visible prose under the given roots in
@@ -9,26 +9,37 @@ import { useEffect, type RefObject } from "react";
  * needing to opt in.
  *
  * Entry points are deliberately narrow — h1–h6, p, li, label, dt/dd,
- * blockquote, figcaption — rather than every element in the tree, for two
- * reasons: (1) that's exactly "headings, paragraphs, labels" from the brief,
- * and (2) it's what keeps this safe. A handful of spots render a bare
- * <span> whose text value changes after mount (cart quantity, line totals,
- * the "N items" count) sitting directly in a flex row, not inside any of
- * these containers — replacing a live text node with wrapper spans detaches
- * the exact Text node React's fiber holds a reference to, so a later
- * state-driven update silently writes to a node no longer in the document
- * instead of the one on screen. Starting only from prose containers means
- * those bare dynamic spans are never reached. The few dynamic spots that DO
- * sit inside a <p> (Shop's item count, checkout status copy, form field
- * errors) are opted out explicitly via `data-no-word-hover` at the call
- * site — same escape hatch as icon buttons/badges, just for correctness
- * instead of taste.
+ * blockquote, figcaption, a — rather than every element in the tree, for
+ * two reasons: (1) that's "headings, paragraphs, labels" from the brief
+ * plus content links (product/article titles, footer links, "next article"
+ * teasers — anything that reads as a piece of text you can click, not a
+ * button), and (2) it's what keeps this safe. A handful of spots render a
+ * bare <span> whose text value changes after mount (cart quantity, line
+ * totals, the "N items" count) sitting directly in a flex row, not inside
+ * any of these containers — replacing a live text node with wrapper spans
+ * detaches the exact Text node React's fiber holds a reference to, so a
+ * later state-driven update silently writes to a node no longer in the
+ * document instead of the one on screen. Starting only from prose/link
+ * containers means those bare dynamic spans are never reached. The few
+ * dynamic spots that DO sit inside a <p> (Shop's item count, checkout
+ * status copy, form field errors) are opted out explicitly via
+ * `data-no-word-hover` at the call site — same escape hatch as icon
+ * buttons/badges, just for correctness instead of taste.
  *
- * Skipped entirely (subtree included): <a>, <button>, <input>, <textarea>,
- * <select>, <svg>, <script>, <style>, and anything under
- * `data-no-word-hover` — interactive elements already carry their own hover
- * motion (tc-btn/tc-press/tc-lift, nav color-transitions), so layering
- * per-word lift on top would compound into two competing animations.
+ * Skipped entirely (subtree included): <button>, <input>, <textarea>,
+ * <select>, <svg>, <script>, <style>, anything carrying the `.tc-btn` or
+ * `.tc-press` class (a link styled and behaving as a button — "Shop
+ * Miffy", filter/tab pills, "Join the Club!"), and anything under
+ * `data-no-word-hover`. Those already carry their own hover motion (press
+ * physics, lift), so layering per-word lift on top would compound into two
+ * competing animations. Plain content links (no button styling) DO get
+ * word-hover — its lift/tint composes fine with a simple `hover:text-*`
+ * color transition, since that's a `color` change on the *link* while
+ * word-hover's tint/lift lands on each `.word` span one level down; the
+ * two aren't animating the same property on the same element. The site's
+ * primary header/mobile nav is out of scope entirely (word-hover is only
+ * ever pointed at `<main>` and `<footer>`), which is what actually keeps
+ * that one truly nav-bar-only exclusion — no selector trickery needed.
  *
  * Idempotent and self-healing: a MutationObserver re-runs the pass whenever
  * the DOM changes (route change, tab switch, async data landing, a fresh
@@ -37,10 +48,11 @@ import { useEffect, type RefObject } from "react";
  */
 
 const ENTRY_SELECTOR =
-  "h1, h2, h3, h4, h5, h6, p, li, label, dt, dd, blockquote, figcaption";
+  "h1, h2, h3, h4, h5, h6, p, li, label, dt, dd, blockquote, figcaption, a";
+
+const BUTTON_LIKE_SELECTOR = ".tc-btn, .tc-press";
 
 const SKIP_TAGS = new Set([
-  "A",
   "BUTTON",
   "INPUT",
   "TEXTAREA",
@@ -84,11 +96,19 @@ function walk(node: Node, kind: "heading" | "body") {
   if (SKIP_TAGS.has(el.tagName)) return;
   if (el.dataset.noWordHover !== undefined) return;
   if (el.classList.contains("word")) return; // already-wrapped leaf
+  if (el.matches(BUTTON_LIKE_SELECTOR)) return; // button-styled link
+
+  // Re-derive kind at every level rather than just inheriting it: now that
+  // <a> is an entry point too, a heading can sit *inside* a link entry
+  // (a card's whole-card <Link> wrapping its <h2> title) and would
+  // otherwise inherit that link's "body" kind and tint poppy instead of
+  // the denim a heading should get.
+  const nextKind = HEADING_TAGS.has(el.tagName) ? "heading" : kind;
 
   // Snapshot children first — wrapping a text node replaces it with a
   // fragment, which would otherwise shift the live childNodes list mid-walk.
   const children = Array.from(el.childNodes);
-  for (const child of children) walk(child, kind);
+  for (const child of children) walk(child, nextKind);
 }
 
 function runPass(roots: (Element | null)[]) {
@@ -98,22 +118,32 @@ function runPass(roots: (Element | null)[]) {
     for (const entry of entries) {
       if (entry.dataset.noWordHover !== undefined) continue;
       if (entry.closest("[data-no-word-hover]")) continue;
-      // An entry point can itself sit inside a link/button (a card's title,
-      // a "next article" teaser) — that whole region already has its own
-      // hover treatment, so skip it here too, not just when a link/button
-      // shows up *inside* a heading/paragraph.
-      if (entry.closest("a, button")) continue;
+      // An entry point can itself sit inside a button, or be one (a filter
+      // pill, a "Join the Club!" link) — that already has its own press
+      // physics, so skip it here too, not just when a button shows up
+      // *inside* a heading/paragraph.
+      if (entry.closest("button")) continue;
+      if (entry.closest(BUTTON_LIKE_SELECTOR)) continue;
       const kind = HEADING_TAGS.has(entry.tagName) ? "heading" : "body";
       walk(entry, kind);
     }
   }
 }
 
-export function useWordHoverScope(refs: RefObject<HTMLElement | null>[]) {
+export function useWordHoverScope() {
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    const roots = refs.map((r) => r.current);
+    // document.body, not just <main>/<footer>: Radix portals (CartDrawer,
+    // JoinClubDialog) mount their content as siblings appended to <body>,
+    // not inside the app's own DOM subtree, so a scope narrower than body
+    // would silently never reach them. Safety here comes from the entry
+    // selector and per-element checks above, not from which root is
+    // scanned, so widening the root doesn't reopen the risks those guard
+    // against. The header/mobile-nav is excluded via its own
+    // `data-no-word-hover` (see SiteLayout) now that scope alone can't do
+    // that job.
+    const roots = [document.body];
     runPass(roots);
 
     let scheduled = false;
@@ -132,6 +162,5 @@ export function useWordHoverScope(refs: RefObject<HTMLElement | null>[]) {
     }
 
     return () => observer.disconnect();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 }

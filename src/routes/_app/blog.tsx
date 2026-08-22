@@ -91,7 +91,7 @@ function ArticleCard({ article: a, index }: { article: Article; index: number })
       style={reveal.style}
       to="/blog/$slug"
       params={{ slug: a.slug }}
-      className={`tc-card ${a.shadow} bg-white flex flex-col overflow-hidden tc-lift tc-reveal ${reveal.visible ? "tc-reveal-visible" : ""}`}
+      className={`tc-card ${a.shadow} bg-white flex flex-col overflow-hidden tc-card-lift tc-reveal ${reveal.visible ? "tc-reveal-visible" : ""}`}
     >
       <div className="border-b-4 border-ink bg-cream">
         <img src={a.image} alt={a.title} loading="lazy" className="w-full aspect-[21/9] object-cover" />

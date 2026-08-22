@@ -400,23 +400,6 @@
     filter: drop-shadow(4px 4px 0 var(--poppy));
   }
 
-  /* Card hover-lift — shared by index/blog/blog article "next post" cards
-     and ProductCard, replacing four separate ad hoc hover:-translate
-     declarations with no duration. Direction is overridable per element,
-     e.g. tc-lift [--lift-transform:translate(-2px,-2px)] for a diagonal
-     nudge instead of the default vertical lift. */
-  .tc-lift {
-    --lift-transform: translateY(-4px);
-    transition-property: transform;
-    transition-duration: var(--dur-press);
-    transition-timing-function: var(--ease-snap);
-  }
-  @media (hover: hover) and (pointer: fine) {
-    .tc-lift:hover {
-      transform: var(--lift-transform);
-    }
-  }
-
   /* Scroll-triggered fade + rise (Step 2), driven by useScrollReveal.
      Transform/opacity only — never a layout-triggering property. Lives in
      @layer components (not utilities) specifically so its `transform` can
@@ -435,11 +418,13 @@
     transform: translateY(0);
   }
 
-  /* Card lift (Effect 1C) — product cards and pop-up event cards. Deepens
-     the card's own flat offset shadow a few px on hover (still zero-blur,
-     just a longer throw) alongside a vertical lift. Distinct from .tc-lift
-     above: that one only moves, this one also grows the shadow, so it's a
-     separate class rather than an addition to every existing .tc-lift use. */
+  /* Card lift (Effect 1C) — the one hover treatment for every .tc-card
+     instance, regardless of page: deepens the card's own flat offset
+     shadow a few px on hover (still zero-blur, just a longer throw)
+     alongside a vertical lift. Only applied to cards that are themselves
+     the clickable target (a whole-card <Link>) — a card that merely
+     contains buttons (pop-up event list items) keeps its shadow static so
+     the lift doesn't imply the card is clickable when it isn't. */
   .tc-card-lift {
     transition-property: transform, box-shadow;
     transition-duration: var(--dur-press);

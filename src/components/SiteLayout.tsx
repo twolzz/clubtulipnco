@@ -169,14 +169,12 @@ export function SiteLayout({ children }: { children: ReactNode }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const mainRef = useRef<HTMLElement>(null);
 
-  // Effects 1A (per-word hover) and 1B (page-load fade+rise) — both scoped
-  // to <main> only. The header/footer chrome never unmounts between routes,
-  // and neither has any h1-h6/p/li/label content of its own to reach anyway
-  // (nav links and icon buttons are excluded from 1A structurally; the
-  // footer's copyright/payment-mark text lives in bare <span>s outside 1A's
-  // entry-point tags, and isn't the kind of "page content" 1B's reload
-  // should replay on).
-  useWordHoverScope([mainRef]);
+  // Effect 1A (per-word hover) scans the whole document — see
+  // use-word-hover.tsx for why — so the primary nav below is excluded via
+  // its own data-no-word-hover rather than by scope. Effect 1B (page-load
+  // fade+rise) stays scoped to <main>: the header/footer never unmount
+  // between routes, so there's no "page load" for it to react to there.
+  useWordHoverScope();
   usePageLoadReveal(mainRef);
 
   // Lock body scroll and wire up Escape while the menu is open.
@@ -196,8 +194,10 @@ export function SiteLayout({ children }: { children: ReactNode }) {
 
   return (
     <div className="min-h-[100dvh] flex flex-col bg-cream text-ink">
-      {/* Sticky shell: primary nav */}
-      <div className="sticky top-0 z-50">
+      {/* Sticky shell: primary nav. data-no-word-hover: the literal nav bar
+          (desktop + its mobile-menu duplicate) is the one thing word-hover
+          should never reach, per the brief. */}
+      <div className="sticky top-0 z-50" data-no-word-hover>
         <header
           className="bg-cream border-b-4 border-ink"
           style={{ paddingTop: "env(safe-area-inset-top)" }}
