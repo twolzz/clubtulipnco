@@ -4,6 +4,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 import { z } from "zod";
 import { sendSupportMessage } from "@/lib/support.functions";
+import { useScrollReveal } from "@/hooks/use-scroll-reveal";
 
 const tabSchema = z.object({
   tab: z.enum(["contact", "shipping", "privacy", "terms"]).optional(),
@@ -57,6 +58,7 @@ function SupportPage() {
   // Derived straight from the URL — no local state, so tabs work without JS,
   // are shareable, and respond to the back button.
   const active: TabKey = search.tab ?? "contact";
+  const card = useScrollReveal<HTMLDivElement>();
 
   return (
     <>
@@ -113,7 +115,11 @@ function SupportPage() {
                 whatever vertical space is available instead of leaving a
                 bare gap above the footer on short tabs. */}
             <div className="md:col-span-8 lg:col-span-9 min-w-0 flex flex-col">
-              <div className="flex-1 bg-[#F6F2E7] border-[3px] sm:border-4 border-ink rounded-2xl p-4 sm:p-5 md:p-6 shadow-[5px_5px_0_var(--ink)] sm:shadow-[8px_8px_0_var(--ink)]">
+              <div
+                ref={card.ref}
+                style={card.style}
+                className={`flex-1 bg-[#F6F2E7] border-[3px] sm:border-4 border-ink rounded-2xl p-4 sm:p-5 md:p-6 shadow-[5px_5px_0_var(--ink)] sm:shadow-[8px_8px_0_var(--ink)] tc-reveal ${card.visible ? "tc-reveal-visible" : ""}`}
+              >
                 {active === "contact" && <ContactPanel />}
                 {active === "shipping" && <ShippingPanel />}
                 {active === "privacy" && <PrivacyPanel />}

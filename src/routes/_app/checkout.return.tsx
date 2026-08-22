@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { cart } from "@/lib/cart-store";
 import { getStripe } from "@/lib/stripe-elements";
+import { useScrollReveal } from "@/hooks/use-scroll-reveal";
 
 type Status = "loading" | "succeeded" | "processing" | "failed";
 
@@ -36,6 +37,7 @@ const COPY: Record<Exclude<Status, "loading">, { title: string; body: string }> 
 function CheckoutReturnPage() {
   const { payment_intent_client_secret: clientSecret } = Route.useSearch();
   const [status, setStatus] = useState<Status>("loading");
+  const card = useScrollReveal<HTMLDivElement>();
 
   useEffect(() => {
     if (!clientSecret) {
@@ -76,16 +78,26 @@ function CheckoutReturnPage() {
       <section className="px-5 md:px-8 py-20 md:py-28">
         <div className="max-w-2xl mx-auto">
           {status === "loading" ? (
-            <div className="tc-card p-10 md:p-16 text-center bg-cream">
+            <div
+              ref={card.ref}
+              style={card.style}
+              className={`tc-card p-10 md:p-16 text-center bg-cream tc-reveal ${card.visible ? "tc-reveal-visible" : ""}`}
+            >
               <p className="font-display text-2xl font-extrabold text-ink/60">
                 Confirming your payment…
               </p>
             </div>
           ) : (
             <div
-              className={`tc-card p-10 md:p-16 text-center bg-cream ${
+              ref={card.ref}
+              style={card.style}
+              className={`tc-card p-10 md:p-16 text-center bg-cream tc-reveal tc-reveal-visible ${
                 status === "succeeded" ? "tc-card-sun" : "tc-card-poppy"
               }`}
+              // This copy swaps in place once the async status check resolves —
+              // excluded so word-hover's DOM wrapping can't detach the text
+              // node React needs to update.
+              data-no-word-hover
             >
               <h1 className="font-display text-4xl md:text-6xl font-extrabold tracking-tight mb-4">
                 {COPY[status].title}

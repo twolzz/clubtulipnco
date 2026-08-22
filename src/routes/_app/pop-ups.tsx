@@ -10,6 +10,9 @@ import { JoinClubDialog } from "@/components/JoinClubDialog";
 import { MapPin } from "lucide-react";
 import { listPopUps, type PopUp } from "@/lib/pop-ups.functions";
 import { PopUpsSkeleton } from "@/components/Skeletons";
+import { useScrollReveal } from "@/hooks/use-scroll-reveal";
+
+const STAGGER_MS = 60;
 
 const popUpsQO = queryOptions({
   queryKey: ["pop-ups", "published"] as const,
@@ -74,6 +77,8 @@ function formatTime(start: string | null, end: string | null) {
 
 function PopUpsPage() {
   const { data: events } = useSuspenseQuery(popUpsQO);
+  const dateCard = useScrollReveal<HTMLDivElement>();
+
   return (
     <>
       <section className="px-5 md:px-8 pt-10 md:pt-16 pb-10 md:pb-16">
@@ -89,7 +94,11 @@ function PopUpsPage() {
               Meet us in person, and take a piece of Miffy home with you.
             </p>
           </div>
-          <div className="tc-card tc-card-poppy bg-cream p-8 md:p-10">
+          <div
+            ref={dateCard.ref}
+            style={dateCard.style}
+            className={`tc-card tc-card-poppy bg-cream p-8 md:p-10 tc-reveal ${dateCard.visible ? "tc-reveal-visible" : ""}`}
+          >
             <h2 className="text-2xl md:text-3xl font-extrabold leading-tight">
               Never miss a date
             </h2>
@@ -124,56 +133,59 @@ function PopUpsPage() {
             </p>
           ) : (
             <ol className="flex flex-col gap-6">
-              {events.map((e) => {
-                const a = ACCENT[e.accent] ?? ACCENT.poppy;
-                const d = splitDate(e.event_date);
-                return (
-                  <li
-                    key={e.id}
-                    className="tc-card tc-card-denim bg-white p-5 md:p-7 grid md:grid-cols-[auto_1fr_auto] gap-6 items-center"
-                  >
-                    <div
-                      className={`${a.bg} ${a.text} border-4 border-ink rounded-2xl w-24 h-24 flex flex-col items-center justify-center shrink-0`}
-                    >
-                      <span className="text-xs font-bold uppercase tracking-widest">{d.month}</span>
-                      <span className="font-display text-4xl font-extrabold leading-none">
-                        {d.day}
-                      </span>
-                      <span className="text-xs font-bold uppercase tracking-widest mt-1">
-                        {d.weekday}
-                      </span>
-                    </div>
-                    <div className="min-w-0">
-                      <span className="inline-block px-2.5 py-0.5 rounded-full bg-cream border-2 border-ink text-xs font-bold mb-2">
-                        {e.tag}
-                      </span>
-                      <h3 className="text-2xl font-extrabold leading-tight">{e.name}</h3>
-                      <p className="mt-1 text-ink/80">{e.location}</p>
-                      <p className="text-ink/60 text-sm font-semibold mt-0.5">
-                        {formatTime(e.start_time, e.end_time)}
-                      </p>
-                    </div>
-                    <div className="flex flex-col gap-2 shrink-0">
-                      <a
-                        href={`/api/public/maps?address=${encodeURIComponent(e.location)}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="tc-btn tc-btn-poppy whitespace-nowrap inline-flex items-center gap-2"
-                      >
-                        <MapPin className="w-4 h-4" aria-hidden="true" />
-                        Get Directions
-                      </a>
-                      <JoinClubDialog className="tc-btn tc-btn-cream whitespace-nowrap inline-flex justify-center">
-                        Notify Me
-                      </JoinClubDialog>
-                    </div>
-                  </li>
-                );
-              })}
+              {events.map((e, i) => (
+                <EventCard key={e.id} event={e} index={i} />
+              ))}
             </ol>
           )}
         </div>
       </section>
     </>
+  );
+}
+
+function EventCard({ event: e, index }: { event: PopUp; index: number }) {
+  const a = ACCENT[e.accent] ?? ACCENT.poppy;
+  const d = splitDate(e.event_date);
+  const reveal = useScrollReveal<HTMLLIElement>(Math.min(index, 4) * STAGGER_MS);
+
+  return (
+    <li
+      ref={reveal.ref}
+      style={reveal.style}
+      className={`tc-card tc-card-denim bg-white p-5 md:p-7 grid md:grid-cols-[auto_1fr_auto] gap-6 items-center tc-card-lift tc-reveal ${reveal.visible ? "tc-reveal-visible" : ""}`}
+    >
+      <div
+        className={`${a.bg} ${a.text} border-4 border-ink rounded-2xl w-24 h-24 flex flex-col items-center justify-center shrink-0`}
+      >
+        <span className="text-xs font-bold uppercase tracking-widest">{d.month}</span>
+        <span className="font-display text-4xl font-extrabold leading-none">{d.day}</span>
+        <span className="text-xs font-bold uppercase tracking-widest mt-1">{d.weekday}</span>
+      </div>
+      <div className="min-w-0">
+        <span className="inline-block px-2.5 py-0.5 rounded-full bg-cream border-2 border-ink text-xs font-bold mb-2">
+          {e.tag}
+        </span>
+        <h3 className="text-2xl font-extrabold leading-tight">{e.name}</h3>
+        <p className="mt-1 text-ink/80">{e.location}</p>
+        <p className="text-ink/60 text-sm font-semibold mt-0.5">
+          {formatTime(e.start_time, e.end_time)}
+        </p>
+      </div>
+      <div className="flex flex-col gap-2 shrink-0">
+        <a
+          href={`/api/public/maps?address=${encodeURIComponent(e.location)}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="tc-btn tc-btn-poppy whitespace-nowrap inline-flex items-center gap-2"
+        >
+          <MapPin className="w-4 h-4" aria-hidden="true" />
+          Get Directions
+        </a>
+        <JoinClubDialog className="tc-btn tc-btn-cream whitespace-nowrap inline-flex justify-center">
+          Notify Me
+        </JoinClubDialog>
+      </div>
+    </li>
   );
 }

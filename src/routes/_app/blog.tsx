@@ -1,4 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useScrollReveal } from "@/hooks/use-scroll-reveal";
+
+const STAGGER_MS = 60;
 
 export const Route = createFileRoute("/_app/blog")({
   head: () => ({
@@ -71,35 +74,36 @@ function BlogPage() {
           excerpt, and tighter internal spacing. */}
       <section className="px-5 md:px-8 pb-10 md:pb-16 flex-1 flex flex-col justify-center">
         <div className="max-w-5xl mx-auto w-full grid md:grid-cols-2 gap-6 md:gap-8">
-          {ARTICLES.map((a) => (
-            <Link
-              key={a.slug}
-              to="/blog/$slug"
-              params={{ slug: a.slug }}
-              className={`tc-card ${a.shadow} bg-white flex flex-col overflow-hidden tc-lift`}
-            >
-              <div className="border-b-4 border-ink bg-cream">
-                <img
-                  src={a.image}
-                  alt={a.title}
-                  loading="lazy"
-                  className="w-full aspect-[21/9] object-cover"
-                />
-              </div>
-              <div className="p-4 sm:p-4 md:p-5 flex flex-col gap-1.5">
-                <span className="inline-block self-start px-2.5 py-0.5 rounded-full bg-sun border-2 border-ink text-xs font-bold">
-                  {a.tag}
-                </span>
-                <h2 className="font-display text-xl font-extrabold leading-tight">
-                  {a.title}
-                </h2>
-                <p className="text-ink/80 line-clamp-2">{a.excerpt}</p>
-                <span className="mt-1 font-bold text-denim">Read the story →</span>
-              </div>
-            </Link>
+          {ARTICLES.map((a, i) => (
+            <ArticleCard key={a.slug} article={a} index={i} />
           ))}
         </div>
       </section>
     </>
+  );
+}
+
+function ArticleCard({ article: a, index }: { article: Article; index: number }) {
+  const reveal = useScrollReveal<HTMLAnchorElement>(index * STAGGER_MS);
+  return (
+    <Link
+      ref={reveal.ref}
+      style={reveal.style}
+      to="/blog/$slug"
+      params={{ slug: a.slug }}
+      className={`tc-card ${a.shadow} bg-white flex flex-col overflow-hidden tc-lift tc-reveal ${reveal.visible ? "tc-reveal-visible" : ""}`}
+    >
+      <div className="border-b-4 border-ink bg-cream">
+        <img src={a.image} alt={a.title} loading="lazy" className="w-full aspect-[21/9] object-cover" />
+      </div>
+      <div className="p-4 sm:p-4 md:p-5 flex flex-col gap-1.5">
+        <span className="inline-block self-start px-2.5 py-0.5 rounded-full bg-sun border-2 border-ink text-xs font-bold">
+          {a.tag}
+        </span>
+        <h2 className="font-display text-xl font-extrabold leading-tight">{a.title}</h2>
+        <p className="text-ink/80 line-clamp-2">{a.excerpt}</p>
+        <span className="mt-1 font-bold text-denim">Read the story →</span>
+      </div>
+    </Link>
   );
 }

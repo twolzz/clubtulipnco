@@ -5,6 +5,7 @@
 // claiming the same URL will fight.
 
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { useScrollReveal } from "@/hooks/use-scroll-reveal";
 
 type Article = {
   slug: string;
@@ -95,6 +96,8 @@ export const Route = createFileRoute("/_app/blog_/$slug")({
 
 function ArticlePage() {
   const { article, next } = Route.useLoaderData();
+  const cover = useScrollReveal<HTMLDivElement>();
+  const nextCard = useScrollReveal<HTMLAnchorElement>();
 
   return (
     <>
@@ -118,7 +121,11 @@ function ArticlePage() {
 
       {/* Cover */}
       <section className="px-5 md:px-8 pt-8 md:pt-10">
-        <div className={`max-w-4xl mx-auto tc-card ${article.shadow} bg-white overflow-hidden`}>
+        <div
+          ref={cover.ref}
+          style={cover.style}
+          className={`max-w-4xl mx-auto tc-card ${article.shadow} bg-white overflow-hidden tc-reveal ${cover.visible ? "tc-reveal-visible" : ""}`}
+        >
           <img
             src={article.image}
             alt={article.title}
@@ -150,9 +157,11 @@ function ArticlePage() {
               Next in the Journal
             </p>
             <Link
+              ref={nextCard.ref}
+              style={nextCard.style}
               to="/blog/$slug"
               params={{ slug: next.slug }}
-              className={`tc-card ${next.shadow} bg-white flex items-center gap-5 p-4 md:p-5 tc-lift`}
+              className={`tc-card ${next.shadow} bg-white flex items-center gap-5 p-4 md:p-5 tc-lift tc-reveal ${nextCard.visible ? "tc-reveal-visible" : ""}`}
             >
               <img
                 src={next.image}

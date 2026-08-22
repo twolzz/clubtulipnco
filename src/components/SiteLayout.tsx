@@ -5,9 +5,11 @@
 // in the header cluster are both gone.
 
 import { Link } from "@tanstack/react-router";
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Lock, Instagram, Menu, X } from "lucide-react";
 import { CartButton } from "./CartButton";
+import { useWordHoverScope } from "@/hooks/use-word-hover";
+import { usePageLoadReveal } from "@/hooks/use-page-load-reveal";
 
 const NAV = [
   { to: "/shop", label: "Shop" },
@@ -165,6 +167,17 @@ function MobileMenuPanel({ open, onClose }: { open: boolean; onClose: () => void
 
 export function SiteLayout({ children }: { children: ReactNode }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const mainRef = useRef<HTMLElement>(null);
+
+  // Effects 1A (per-word hover) and 1B (page-load fade+rise) — both scoped
+  // to <main> only. The header/footer chrome never unmounts between routes,
+  // and neither has any h1-h6/p/li/label content of its own to reach anyway
+  // (nav links and icon buttons are excluded from 1A structurally; the
+  // footer's copyright/payment-mark text lives in bare <span>s outside 1A's
+  // entry-point tags, and isn't the kind of "page content" 1B's reload
+  // should replay on).
+  useWordHoverScope([mainRef]);
+  usePageLoadReveal(mainRef);
 
   // Lock body scroll and wire up Escape while the menu is open.
   useEffect(() => {
@@ -240,7 +253,9 @@ export function SiteLayout({ children }: { children: ReactNode }) {
       {/* flex flex-col: lets a page's own last section opt into flex-1 and
           absorb any leftover height, instead of it collecting as dead space
           between short content and the footer (see /support, /blog). */}
-      <main className="flex-1 tc-page flex flex-col">{children}</main>
+      <main ref={mainRef} className="flex-1 tc-page flex flex-col">
+        {children}
+      </main>
 
       {/* Trust & compliance footer */}
       <footer className="bg-cream border-t-4 border-ink mt-16">
