@@ -261,7 +261,10 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
             className="border-b-[3px] sm:border-b-4 border-ink"
           />
           {soldOut && (
-            <span className="absolute top-2 left-2 px-2 py-1 rounded-full bg-ink text-white text-[10px] font-bold uppercase tracking-widest">
+            <span
+              className="absolute top-2 left-2 px-2 py-1 rounded-full bg-ink text-white text-[10px] font-bold uppercase tracking-widest"
+              data-no-word-hover
+            >
               Sold Out
             </span>
           )}

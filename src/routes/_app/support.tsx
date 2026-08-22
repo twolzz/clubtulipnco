@@ -83,7 +83,7 @@ function SupportPage() {
             {/* Tab menu — wraps on mobile (no horizontal scroll), stacks on desktop */}
             <aside className="md:col-span-4 lg:col-span-3 min-w-0">
               <div className="md:sticky md:top-32">
-                <ul className="flex flex-wrap md:flex-col gap-2 md:gap-3">
+                <ul className="flex flex-wrap md:flex-col gap-2 md:gap-3" data-no-word-hover>
                   {TABS.map((t) => {
                     const isActive = active === t.key;
                     return (

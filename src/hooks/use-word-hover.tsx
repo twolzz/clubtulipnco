@@ -3,28 +3,33 @@ import { useEffect } from "react";
 /**
  * Wraps every word of the visible prose under the given roots in
  * `<span class="word word-heading">` / `<span class="word word-body">`, so
- * CSS alone can lift + tint individual words on hover (see .word rules in
- * styles.css). Runs directly on the DOM after mount rather than as a JSX
+ * CSS alone can lift each word a few px on hover (see .word rules in
+ * styles.css — lift only, no color: every brand color is also in use as
+ * some card's background somewhere on the site, so a color tint would go
+ * invisible against a same-colored surface — orange-on-orange, blue-on-
+ * blue). Runs directly on the DOM after mount rather than as a JSX
  * transform, so it works automatically on any page without every component
  * needing to opt in.
  *
  * Entry points are deliberately narrow — h1–h6, p, li, label, dt/dd,
  * blockquote, figcaption, a — rather than every element in the tree, for
  * two reasons: (1) that's "headings, paragraphs, labels" from the brief
- * plus content links (product/article titles, footer links, "next article"
- * teasers — anything that reads as a piece of text you can click, not a
- * button), and (2) it's what keeps this safe. A handful of spots render a
- * bare <span> whose text value changes after mount (cart quantity, line
- * totals, the "N items" count) sitting directly in a flex row, not inside
- * any of these containers — replacing a live text node with wrapper spans
- * detaches the exact Text node React's fiber holds a reference to, so a
- * later state-driven update silently writes to a node no longer in the
- * document instead of the one on screen. Starting only from prose/link
- * containers means those bare dynamic spans are never reached. The few
- * dynamic spots that DO sit inside a <p> (Shop's item count, checkout
- * status copy, form field errors) are opted out explicitly via
- * `data-no-word-hover` at the call site — same escape hatch as icon
- * buttons/badges, just for correctness instead of taste.
+ * plus content links (product/article titles, footer links, nav links,
+ * "next article" teasers — anything that reads as a piece of text you can
+ * click, not a button), and (2) it's what keeps this safe. A handful of
+ * spots render a bare <span> whose text value changes after mount (cart
+ * quantity, line totals, the "N items" count) sitting directly in a flex
+ * row, not inside any of these containers — replacing a live text node
+ * with wrapper spans detaches the exact Text node React's fiber holds a
+ * reference to, so a later state-driven update silently writes to a node
+ * no longer in the document instead of the one on screen. Starting only
+ * from prose/link containers means those bare dynamic spans are never
+ * reached. The few dynamic spots that DO sit inside a <p> (Shop's item
+ * count, checkout status copy, form field errors) are opted out
+ * explicitly via `data-no-word-hover` at the call site — same escape
+ * hatch used for mini tags/pills (a category tag, a stock-status pill, a
+ * date tile) and the logo (its own distinct hover instead — see
+ * SiteLayout/`.tc-logo`), just for different reasons each time.
  *
  * Skipped entirely (subtree included): <button>, <input>, <textarea>,
  * <select>, <svg>, <script>, <style>, anything carrying the `.tc-btn` or
@@ -32,14 +37,11 @@ import { useEffect } from "react";
  * Miffy", filter/tab pills, "Join the Club!"), and anything under
  * `data-no-word-hover`. Those already carry their own hover motion (press
  * physics, lift), so layering per-word lift on top would compound into two
- * competing animations. Plain content links (no button styling) DO get
- * word-hover — its lift/tint composes fine with a simple `hover:text-*`
- * color transition, since that's a `color` change on the *link* while
- * word-hover's tint/lift lands on each `.word` span one level down; the
- * two aren't animating the same property on the same element. The site's
- * primary header/mobile nav is out of scope entirely (word-hover is only
- * ever pointed at `<main>` and `<footer>`), which is what actually keeps
- * that one truly nav-bar-only exclusion — no selector trickery needed.
+ * competing animations. Plain content links (no button styling) — including
+ * the primary nav now — DO get word-hover; it composes fine with a simple
+ * `hover:text-*` color transition on the link itself, since that's a
+ * `color` change on the *link* while word-hover's lift lands on each
+ * `.word` span one level down — not the same property on the same element.
  *
  * Idempotent and self-healing: a MutationObserver re-runs the pass whenever
  * the DOM changes (route change, tab switch, async data landing, a fresh
@@ -101,8 +103,8 @@ function walk(node: Node, kind: "heading" | "body") {
   // Re-derive kind at every level rather than just inheriting it: now that
   // <a> is an entry point too, a heading can sit *inside* a link entry
   // (a card's whole-card <Link> wrapping its <h2> title) and would
-  // otherwise inherit that link's "body" kind and tint poppy instead of
-  // the denim a heading should get.
+  // otherwise inherit that link's "body" kind and lift 2px instead of the
+  // 3px a heading word should get.
   const nextKind = HEADING_TAGS.has(el.tagName) ? "heading" : kind;
 
   // Snapshot children first — wrapping a text node replaces it with a

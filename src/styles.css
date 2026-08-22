@@ -400,6 +400,22 @@
     filter: drop-shadow(4px 4px 0 var(--poppy));
   }
 
+  /* Logo hover — deliberately not word-hover (see the Link's
+     data-no-word-hover in SiteLayout): the wordmark is one piece of
+     identity, not a run of prose, so it gets its own small, distinct
+     treatment — a gentle scale-up plus a color shift to Poppy — instead of
+     the generic per-word lift. */
+  .tc-logo {
+    display: inline-block;
+    transition: transform var(--dur-press) var(--ease-snap), color var(--dur-press) var(--ease-snap);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .tc-logo:hover {
+      transform: scale(1.05);
+      color: var(--poppy);
+    }
+  }
+
   /* Scroll-triggered fade + rise (Step 2), driven by useScrollReveal.
      Transform/opacity only — never a layout-triggering property. Lives in
      @layer components (not utilities) specifically so its `transform` can
@@ -448,29 +464,34 @@
   /* Populated by useWordHoverScope, which wraps each word of the site's */
   /* prose in one of these two spans. inline-block is required for the   */
   /* translateY to have any effect on an inline run of text.             */
+  /*                                                                     */
+  /* Lift only, no color tint: this used to also tint toward Denim/      */
+  /* Poppy, but with every brand color also in use as *some* card's      */
+  /* background somewhere on the site, a hovered word tinting the same   */
+  /* color as the surface under it would go invisible — orange-on-orange */
+  /* on a Poppy card, blue-on-blue on a Denim one. No replacement color   */
+  /* sidesteps this for every surface at once, so the tint is dropped     */
+  /* entirely; the lift alone still reads clearly as a hover effect.      */
   /* ------------------------------------------------------------------ */
   .word {
     display: inline-block;
-    transition: transform 200ms ease, color 200ms ease;
+    transition: transform 200ms ease;
   }
   @media (hover: hover) and (pointer: fine) {
     .word-heading:hover {
       transform: translateY(-3px);
-      color: var(--denim);
     }
     .word-body:hover {
       transform: translateY(-2px);
-      color: var(--poppy);
     }
   }
   @media (prefers-reduced-motion: reduce) {
     /* The site-wide transition-duration:1ms rule above still leaves a
-       visible (if near-instant) tint/lift on hover — this effect needs to
-       not happen at all under reduced motion, not just happen fast. */
+       visible (if near-instant) lift on hover — this effect needs to not
+       happen at all under reduced motion, not just happen fast. */
     .word-heading:hover,
     .word-body:hover {
       transform: none !important;
-      color: inherit !important;
     }
   }
 

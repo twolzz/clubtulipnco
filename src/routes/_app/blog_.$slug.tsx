@@ -110,7 +110,10 @@ function ArticlePage() {
           >
             ← The Journal
           </Link>
-          <span className="block w-fit mt-6 px-2.5 py-0.5 rounded-full bg-sun border-2 border-ink text-xs font-bold">
+          <span
+            className="block w-fit mt-6 px-2.5 py-0.5 rounded-full bg-sun border-2 border-ink text-xs font-bold"
+            data-no-word-hover
+          >
             {article.tag}
           </span>
           <h1 className="mt-4 text-4xl md:text-6xl font-extrabold tracking-tight leading-[1.05]">
@@ -170,7 +173,10 @@ function ArticlePage() {
                 className="w-20 h-20 md:w-24 md:h-24 rounded-xl border-[3px] border-ink object-cover shrink-0"
               />
               <div className="min-w-0">
-                <span className="inline-block px-2 py-0.5 rounded-full bg-sun border-2 border-ink text-[10px] font-bold">
+                <span
+                  className="inline-block px-2 py-0.5 rounded-full bg-sun border-2 border-ink text-[10px] font-bold"
+                  data-no-word-hover
+                >
                   {next.tag}
                 </span>
                 <h3 className="mt-1.5 font-display text-lg md:text-xl font-extrabold leading-tight">

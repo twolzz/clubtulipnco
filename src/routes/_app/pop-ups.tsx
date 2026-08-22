@@ -157,13 +157,17 @@ function EventCard({ event: e, index }: { event: PopUp; index: number }) {
     >
       <div
         className={`${a.bg} ${a.text} border-4 border-ink rounded-2xl w-24 h-24 flex flex-col items-center justify-center shrink-0`}
+        data-no-word-hover
       >
         <span className="text-xs font-bold uppercase tracking-widest">{d.month}</span>
         <span className="font-display text-4xl font-extrabold leading-none">{d.day}</span>
         <span className="text-xs font-bold uppercase tracking-widest mt-1">{d.weekday}</span>
       </div>
       <div className="min-w-0">
-        <span className="inline-block px-2.5 py-0.5 rounded-full bg-cream border-2 border-ink text-xs font-bold mb-2">
+        <span
+          className="inline-block px-2.5 py-0.5 rounded-full bg-cream border-2 border-ink text-xs font-bold mb-2"
+          data-no-word-hover
+        >
           {e.tag}
         </span>
         <h3 className="text-2xl font-extrabold leading-tight">{e.name}</h3>

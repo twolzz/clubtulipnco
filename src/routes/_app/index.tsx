@@ -91,23 +91,23 @@ function Home() {
             <div
               ref={tile1.ref}
               style={tile1.style}
-              className={`tc-card tc-card-poppy aspect-[3/4] flex items-end p-5 bg-sun tc-reveal ${tile1.visible ? "tc-reveal-visible" : ""}`}
+              className={`tc-card tc-card-poppy aspect-[3/4] flex items-end p-5 bg-sun tc-card-lift tc-reveal ${tile1.visible ? "tc-reveal-visible" : ""}`}
             >
-              <span className="font-display text-2xl">Holland</span>
+              <p className="font-display text-2xl">Holland</p>
             </div>
             <div
               ref={tile2.ref}
               style={tile2.style}
-              className={`tc-card tc-card-denim aspect-[3/4] flex items-end p-5 mt-8 bg-poppy text-white tc-reveal ${tile2.visible ? "tc-reveal-visible" : ""}`}
+              className={`tc-card tc-card-denim aspect-[3/4] flex items-end p-5 mt-8 bg-poppy text-white tc-card-lift tc-reveal ${tile2.visible ? "tc-reveal-visible" : ""}`}
             >
-              <span className="font-display text-2xl">Tulip & Co.</span>
+              <p className="font-display text-2xl">Tulip & Co.</p>
             </div>
             <div
               ref={tile3.ref}
               style={tile3.style}
-              className={`tc-card tc-card-sage aspect-[3/2] flex items-end p-5 bg-denim text-white col-span-2 tc-reveal ${tile3.visible ? "tc-reveal-visible" : ""}`}
+              className={`tc-card tc-card-sage aspect-[3/2] flex items-end p-5 bg-denim text-white col-span-2 tc-card-lift tc-reveal ${tile3.visible ? "tc-reveal-visible" : ""}`}
             >
-              <span className="font-display text-xl">De Stijl, brought home</span>
+              <p className="font-display text-xl">De Stijl, brought home</p>
             </div>
           </div>
         </div>

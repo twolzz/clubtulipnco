@@ -218,6 +218,7 @@ function ProductDetail({ product, related }: { product: Product; related: Produc
                   className={`px-3 py-1 rounded-full border-[3px] border-ink text-xs font-bold ${
                     soldOut ? "bg-cream text-ink/60" : lowStock ? "bg-sun" : "bg-sage text-white"
                   }`}
+                  data-no-word-hover
                 >
                   {soldOut
                     ? "Sold out"

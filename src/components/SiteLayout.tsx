@@ -194,18 +194,23 @@ export function SiteLayout({ children }: { children: ReactNode }) {
 
   return (
     <div className="min-h-[100dvh] flex flex-col bg-cream text-ink">
-      {/* Sticky shell: primary nav. data-no-word-hover: the literal nav bar
-          (desktop + its mobile-menu duplicate) is the one thing word-hover
-          should never reach, per the brief. */}
-      <div className="sticky top-0 z-50" data-no-word-hover>
+      {/* Sticky shell: primary nav. */}
+      <div className="sticky top-0 z-50">
         <header
           className="bg-cream border-b-4 border-ink"
           style={{ paddingTop: "env(safe-area-inset-top)" }}
         >
           <div className="max-w-7xl mx-auto flex items-center justify-between gap-3 md:gap-4 px-4 md:px-8 py-3 md:py-4">
-            {/* Left: logo */}
-            <Link to="/" onClick={() => setMenuOpen(false)} className="flex items-center shrink-0">
-              <span className="font-display text-xl md:text-2xl font-extrabold tracking-tight text-ink">
+            {/* Left: logo — its own distinct hover (scale + color), not
+                word-hover, so it reads as the one "special" element in the
+                header rather than just more prose. */}
+            <Link
+              to="/"
+              onClick={() => setMenuOpen(false)}
+              className="flex items-center shrink-0"
+              data-no-word-hover
+            >
+              <span className="tc-logo font-display text-xl md:text-2xl font-extrabold tracking-tight text-ink">
                 Tulip &amp; Co.
               </span>
             </Link>

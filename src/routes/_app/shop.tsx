@@ -92,6 +92,7 @@ function ShopPage() {
           <nav
             aria-label="Filter by collection"
             className="mt-5 sm:mt-6 flex flex-wrap items-center gap-2 sm:gap-3"
+            data-no-word-hover
           >
             {filters.map((f) => {
               const isActive = f.slug === active;

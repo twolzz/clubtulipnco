@@ -97,7 +97,10 @@ function ArticleCard({ article: a, index }: { article: Article; index: number })
         <img src={a.image} alt={a.title} loading="lazy" className="w-full aspect-[21/9] object-cover" />
       </div>
       <div className="p-4 sm:p-4 md:p-5 flex flex-col gap-1.5">
-        <span className="inline-block self-start px-2.5 py-0.5 rounded-full bg-sun border-2 border-ink text-xs font-bold">
+        <span
+          className="inline-block self-start px-2.5 py-0.5 rounded-full bg-sun border-2 border-ink text-xs font-bold"
+          data-no-word-hover
+        >
           {a.tag}
         </span>
         <h2 className="font-display text-xl font-extrabold leading-tight">{a.title}</h2>
