@@ -14,6 +14,7 @@ import { getProductBySlug, listProducts, type Product } from "@/lib/products.fun
 import { ProductCard, ProductMedia, collectionSlug, formatPrice } from "@/components/ProductCard";
 import { cart, cartDrawer } from "@/lib/cart-store";
 import { ProductDetailSkeleton } from "@/components/Skeletons";
+import { useScrollReveal } from "@/hooks/use-scroll-reveal";
 
 const productsQO = queryOptions({
   queryKey: ["products", "all"] as const,
@@ -104,6 +105,7 @@ function ProductDetail({ product, related }: { product: Product; related: Produc
   const lowStock = !soldOut && product.stock_quantity <= 5;
   const maxQty = soldOut ? 1 : Math.min(product.stock_quantity, 10);
   const hasGallery = product.images.length > 1;
+  const gallery = useScrollReveal<HTMLDivElement>();
 
   function changeQty(delta: number) {
     setQty((q) => Math.min(maxQty, Math.max(1, q + delta)));
@@ -164,7 +166,11 @@ function ProductDetail({ product, related }: { product: Product; related: Produc
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-14">
             {/* ---------- Gallery ---------- */}
             <div>
-              <div className={`tc-card ${product.shadow} overflow-hidden`}>
+              <div
+                ref={gallery.ref}
+                style={gallery.style}
+                className={`tc-card ${product.shadow} overflow-hidden tc-reveal ${gallery.visible ? "tc-reveal-visible" : ""}`}
+              >
                 <ProductMedia product={product} src={product.images[activeImage]} priority />
               </div>
 
@@ -212,6 +218,7 @@ function ProductDetail({ product, related }: { product: Product; related: Produc
                   className={`px-3 py-1 rounded-full border-[3px] border-ink text-xs font-bold ${
                     soldOut ? "bg-cream text-ink/60" : lowStock ? "bg-sun" : "bg-sage text-white"
                   }`}
+                  data-no-word-hover
                 >
                   {soldOut
                     ? "Sold out"
@@ -303,8 +310,8 @@ function ProductDetail({ product, related }: { product: Product; related: Produc
                 You may also like
               </h2>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mt-6 sm:mt-10">
-                {related.map((p) => (
-                  <ProductCard key={p.id} product={p} />
+                {related.map((p, i) => (
+                  <ProductCard key={p.id} product={p} index={i} />
                 ))}
               </div>
             </div>

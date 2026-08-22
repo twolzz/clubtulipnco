@@ -92,6 +92,7 @@ function ShopPage() {
           <nav
             aria-label="Filter by collection"
             className="mt-5 sm:mt-6 flex flex-wrap items-center gap-2 sm:gap-3"
+            data-no-word-hover
           >
             {filters.map((f) => {
               const isActive = f.slug === active;
@@ -114,7 +115,10 @@ function ShopPage() {
             })}
           </nav>
 
-          <p className="mt-4 text-sm font-semibold text-ink/55">
+          {/* data-no-word-hover: this count re-renders in place when the filter
+              changes, and word-hover's DOM wrapping would detach the exact text
+              node React expects to update, silently freezing the count. */}
+          <p className="mt-4 text-sm font-semibold text-ink/55" data-no-word-hover>
             {visible.length} {visible.length === 1 ? "item" : "items"}
             {activeLabel ? ` in ${activeLabel}` : ""}
           </p>
@@ -136,8 +140,8 @@ function ShopPage() {
             </div>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 content-start gap-4 sm:gap-6 lg:gap-8 mt-6 sm:mt-8 flex-1">
-              {visible.map((p) => (
-                <ProductCard key={p.id} product={p} />
+              {visible.map((p, i) => (
+                <ProductCard key={p.id} product={p} index={i} />
               ))}
             </div>
           )}

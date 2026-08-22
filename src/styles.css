@@ -253,23 +253,28 @@
   }
 }
 @layer components {
+  /* --card-shadow-color/--card-shadow-offset parameterize the flat offset
+     shadow so .tc-card-lift (below) can deepen just the offset on hover
+     without needing a hover rule per color variant. */
   .tc-card {
     background: #ffffff;
     border: 4px solid var(--ink);
     border-radius: var(--radius-xl);
-    box-shadow: 8px 8px 0 var(--ink);
+    --card-shadow-color: var(--ink);
+    --card-shadow-offset: 8px;
+    box-shadow: var(--card-shadow-offset) var(--card-shadow-offset) 0 var(--card-shadow-color);
   }
   .tc-card-poppy {
-    box-shadow: 8px 8px 0 var(--poppy);
+    --card-shadow-color: var(--poppy);
   }
   .tc-card-sun {
-    box-shadow: 8px 8px 0 var(--sun);
+    --card-shadow-color: var(--sun);
   }
   .tc-card-sage {
-    box-shadow: 8px 8px 0 var(--sage);
+    --card-shadow-color: var(--sage);
   }
   .tc-card-denim {
-    box-shadow: 8px 8px 0 var(--denim);
+    --card-shadow-color: var(--denim);
   }
 
   /* Scale the brutalist chrome down on phones */
@@ -277,19 +282,7 @@
     .tc-card {
       border-width: 3px;
       border-radius: var(--radius-lg);
-      box-shadow: 5px 5px 0 var(--ink);
-    }
-    .tc-card-poppy {
-      box-shadow: 5px 5px 0 var(--poppy);
-    }
-    .tc-card-sun {
-      box-shadow: 5px 5px 0 var(--sun);
-    }
-    .tc-card-sage {
-      box-shadow: 5px 5px 0 var(--sage);
-    }
-    .tc-card-denim {
-      box-shadow: 5px 5px 0 var(--denim);
+      --card-shadow-offset: 5px;
     }
   }
 
@@ -407,21 +400,121 @@
     filter: drop-shadow(4px 4px 0 var(--poppy));
   }
 
-  /* Card hover-lift — shared by index/blog/blog article "next post" cards
-     and ProductCard, replacing four separate ad hoc hover:-translate
-     declarations with no duration. Direction is overridable per element,
-     e.g. tc-lift [--lift-transform:translate(-2px,-2px)] for a diagonal
-     nudge instead of the default vertical lift. */
-  .tc-lift {
-    --lift-transform: translateY(-4px);
-    transition-property: transform;
+  /* Logo hover — deliberately not word-hover (see the Link's
+     data-no-word-hover in SiteLayout): the wordmark is one piece of
+     identity, not a run of prose, so it gets its own small, distinct
+     treatment — a gentle scale-up plus a color shift to Poppy — instead of
+     the generic per-word lift. */
+  .tc-logo {
+    display: inline-block;
+    transition: transform var(--dur-press) var(--ease-snap), color var(--dur-press) var(--ease-snap);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .tc-logo:hover {
+      transform: scale(1.05);
+      color: var(--poppy);
+    }
+  }
+
+  /* Scroll-triggered fade + rise (Step 2), driven by useScrollReveal.
+     Transform/opacity only — never a layout-triggering property. Lives in
+     @layer components (not utilities) specifically so its `transform` can
+     lose a specificity contest to .tc-card-lift:hover below — Tailwind's
+     utilities layer always wins over components regardless of selector
+     specificity, which was silently cancelling the hover lift on any card
+     that also had a pending (not-yet-visible) reveal. */
+  .tc-reveal {
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 450ms ease-out, transform 450ms ease-out;
+    will-change: opacity, transform;
+  }
+  .tc-reveal-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Card lift (Effect 1C) — the one hover treatment for every .tc-card
+     instance, regardless of page: deepens the card's own flat offset
+     shadow a few px on hover (still zero-blur, just a longer throw)
+     alongside a vertical lift. Only applied to cards that are themselves
+     the clickable target (a whole-card <Link>) — a card that merely
+     contains buttons (pop-up event list items) keeps its shadow static so
+     the lift doesn't imply the card is clickable when it isn't. */
+  .tc-card-lift {
+    transition-property: transform, box-shadow;
     transition-duration: var(--dur-press);
     transition-timing-function: var(--ease-snap);
   }
   @media (hover: hover) and (pointer: fine) {
-    .tc-lift:hover {
-      transform: var(--lift-transform);
+    .tc-card-lift:hover {
+      transform: translateY(-4px);
+      --card-shadow-offset: 11px;
     }
+  }
+  @media (hover: hover) and (pointer: fine) and (max-width: 639px) {
+    .tc-card-lift:hover {
+      transform: translateY(-3px);
+      --card-shadow-offset: 8px;
+    }
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* Word-hover (Effect 1A)                                              */
+  /* Populated by useWordHoverScope, which wraps each word of the site's */
+  /* prose in one of these two spans. inline-block is required for the   */
+  /* translateY to have any effect on an inline run of text.             */
+  /*                                                                     */
+  /* Lift only, no color tint: this used to also tint toward Denim/      */
+  /* Poppy, but with every brand color also in use as *some* card's      */
+  /* background somewhere on the site, a hovered word tinting the same   */
+  /* color as the surface under it would go invisible — orange-on-orange */
+  /* on a Poppy card, blue-on-blue on a Denim one. No replacement color   */
+  /* sidesteps this for every surface at once, so the tint is dropped     */
+  /* entirely; the lift alone still reads clearly as a hover effect.      */
+  /* ------------------------------------------------------------------ */
+  .word {
+    display: inline-block;
+    transition: transform 200ms ease;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .word-heading:hover {
+      transform: translateY(-3px);
+    }
+    .word-body:hover {
+      transform: translateY(-2px);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    /* The site-wide transition-duration:1ms rule above still leaves a
+       visible (if near-instant) lift on hover — this effect needs to not
+       happen at all under reduced motion, not just happen fast. */
+    .word-heading:hover,
+    .word-body:hover {
+      transform: none !important;
+    }
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* Page-load reveal (Effect 1B)                                        */
+  /* Applied by usePageLoadReveal to each heading/paragraph on every page */
+  /* navigation. `both` fill-mode holds the "from" state during the       */
+  /* per-element delay, so no manual show/hide toggling is needed.        */
+  /* ------------------------------------------------------------------ */
+  @keyframes tc-load-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .tc-load-in {
+    /* Literal ease-out, matching .tc-reveal's curve below — both are the
+       same fade+rise recipe, just load- vs scroll-triggered. */
+    animation: tc-load-in 450ms ease-out both;
   }
 }
 
@@ -502,18 +595,5 @@ main.tc-page {
   }
   .tc-shimmer {
     animation: tc-shimmer 1.4s var(--ease-glide) infinite;
-  }
-
-  /* Scroll-triggered fade + rise, driven by useScrollReveal. Transform/
-     opacity only — never a layout-triggering property. */
-  .tc-reveal {
-    opacity: 0;
-    transform: translateY(14px);
-    transition: opacity 450ms ease-out, transform 450ms ease-out;
-    will-change: opacity, transform;
-  }
-  .tc-reveal-visible {
-    opacity: 1;
-    transform: translateY(0);
   }
 }

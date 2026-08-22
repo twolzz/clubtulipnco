@@ -1,5 +1,6 @@
 import { createFileRoute, Link, Outlet } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/SiteLayout";
+import { useScrollReveal } from "@/hooks/use-scroll-reveal";
 
 /**
  * Pathless layout route ("_app" adds no URL segment).
@@ -26,10 +27,15 @@ function AppLayout() {
 }
 
 function AppErrorPanel({ error }: { error: Error }) {
+  const card = useScrollReveal<HTMLDivElement>();
   return (
     <SiteLayout>
       <section className="px-5 md:px-8 py-20 md:py-28">
-        <div className="max-w-xl mx-auto tc-card p-8 md:p-10 text-center">
+        <div
+          ref={card.ref}
+          style={card.style}
+          className={`max-w-xl mx-auto tc-card p-8 md:p-10 text-center tc-reveal ${card.visible ? "tc-reveal-visible" : ""}`}
+        >
           <h1 className="font-display text-3xl md:text-4xl font-extrabold mb-3">
             Something went wrong
           </h1>

@@ -80,7 +80,11 @@ function CheckoutPage() {
 
   return (
     <>
-      <section className="px-5 md:px-8 py-14 md:py-20">
+      {/* data-no-word-hover: the payment form stays free of playful hover
+          motion on the whole page, not just inside CheckoutForm itself —
+          nothing here should feel like it's inviting a distracted click
+          mid-payment. */}
+      <section className="px-5 md:px-8 py-14 md:py-20" data-no-word-hover>
         <div className="max-w-5xl mx-auto">
           <nav className="text-sm font-semibold text-ink/70 mb-6">
             <Link to="/" className="hover:text-denim">

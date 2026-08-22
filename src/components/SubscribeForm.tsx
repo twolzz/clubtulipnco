@@ -135,7 +135,11 @@ export const SubscribeForm = forwardRef<HTMLInputElement, SubscribeFormProps>(
               The form nudges down slightly if an error appears; that's an
               accepted tradeoff for the tighter, calmer default spacing. */}
           {errors.first_name && (
-            <p className="mt-1.5 ml-2 text-sm font-semibold text-poppy">{errors.first_name}</p>
+            // data-no-word-hover: the message text can change between one
+            // validation error and another while this <p> stays mounted.
+            <p className="mt-1.5 ml-2 text-sm font-semibold text-poppy" data-no-word-hover>
+              {errors.first_name}
+            </p>
           )}
         </div>
         <div>
@@ -156,7 +160,9 @@ export const SubscribeForm = forwardRef<HTMLInputElement, SubscribeFormProps>(
             disabled={status === "loading"}
           />
           {errors.email && (
-            <p className="mt-1.5 ml-2 text-sm font-semibold text-poppy">{errors.email}</p>
+            <p className="mt-1.5 ml-2 text-sm font-semibold text-poppy" data-no-word-hover>
+              {errors.email}
+            </p>
           )}
         </div>
         <button

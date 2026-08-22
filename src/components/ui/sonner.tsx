@@ -6,6 +6,10 @@ const Toaster = ({ ...props }: ToasterProps) => {
   return (
     <Sonner
       className="toaster group"
+      // Transient notifications, not page prose — word-hover shouldn't
+      // reach in here.
+      data-no-word-hover
+
       toastOptions={{
         classNames: {
           toast:

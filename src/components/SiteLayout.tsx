@@ -5,9 +5,11 @@
 // in the header cluster are both gone.
 
 import { Link } from "@tanstack/react-router";
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Lock, Instagram, Menu, X } from "lucide-react";
 import { CartButton } from "./CartButton";
+import { useWordHoverScope } from "@/hooks/use-word-hover";
+import { usePageLoadReveal } from "@/hooks/use-page-load-reveal";
 
 const NAV = [
   { to: "/shop", label: "Shop" },
@@ -165,6 +167,15 @@ function MobileMenuPanel({ open, onClose }: { open: boolean; onClose: () => void
 
 export function SiteLayout({ children }: { children: ReactNode }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const mainRef = useRef<HTMLElement>(null);
+
+  // Effect 1A (per-word hover) scans the whole document — see
+  // use-word-hover.tsx for why — so the primary nav below is excluded via
+  // its own data-no-word-hover rather than by scope. Effect 1B (page-load
+  // fade+rise) stays scoped to <main>: the header/footer never unmount
+  // between routes, so there's no "page load" for it to react to there.
+  useWordHoverScope();
+  usePageLoadReveal(mainRef);
 
   // Lock body scroll and wire up Escape while the menu is open.
   useEffect(() => {
@@ -183,16 +194,23 @@ export function SiteLayout({ children }: { children: ReactNode }) {
 
   return (
     <div className="min-h-[100dvh] flex flex-col bg-cream text-ink">
-      {/* Sticky shell: primary nav */}
+      {/* Sticky shell: primary nav. */}
       <div className="sticky top-0 z-50">
         <header
           className="bg-cream border-b-4 border-ink"
           style={{ paddingTop: "env(safe-area-inset-top)" }}
         >
           <div className="max-w-7xl mx-auto flex items-center justify-between gap-3 md:gap-4 px-4 md:px-8 py-3 md:py-4">
-            {/* Left: logo */}
-            <Link to="/" onClick={() => setMenuOpen(false)} className="flex items-center shrink-0">
-              <span className="font-display text-xl md:text-2xl font-extrabold tracking-tight text-ink">
+            {/* Left: logo — its own distinct hover (scale + color), not
+                word-hover, so it reads as the one "special" element in the
+                header rather than just more prose. */}
+            <Link
+              to="/"
+              onClick={() => setMenuOpen(false)}
+              className="flex items-center shrink-0"
+              data-no-word-hover
+            >
+              <span className="tc-logo font-display text-xl md:text-2xl font-extrabold tracking-tight text-ink">
                 Tulip &amp; Co.
               </span>
             </Link>
@@ -240,7 +258,9 @@ export function SiteLayout({ children }: { children: ReactNode }) {
       {/* flex flex-col: lets a page's own last section opt into flex-1 and
           absorb any leftover height, instead of it collecting as dead space
           between short content and the footer (see /support, /blog). */}
-      <main className="flex-1 tc-page flex flex-col">{children}</main>
+      <main ref={mainRef} className="flex-1 tc-page flex flex-col">
+        {children}
+      </main>
 
       {/* Trust & compliance footer */}
       <footer className="bg-cream border-t-4 border-ink mt-16">

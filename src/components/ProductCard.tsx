@@ -5,6 +5,13 @@ import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import type { Product } from "@/lib/products.functions";
 import { cart, cartDrawer } from "@/lib/cart-store";
+import { useScrollReveal } from "@/hooks/use-scroll-reveal";
+
+const REVEAL_STAGGER_MS = 60;
+// Stagger resets every 4 cards (the widest grid is lg:grid-cols-4) so a big
+// catalog doesn't accumulate an ever-growing delay on later rows — each row
+// staggers in fresh as it scrolls into view instead.
+const REVEAL_STAGGER_CYCLE = 4;
 
 export function formatPrice(cents: number) {
   return `$${(cents / 100).toFixed(cents % 100 === 0 ? 0 : 2)}`;
@@ -227,8 +234,9 @@ export function ProductMedia({
   );
 }
 
-export function ProductCard({ product }: { product: Product }) {
+export function ProductCard({ product, index = 0 }: { product: Product; index?: number }) {
   const soldOut = product.stock_quantity <= 0;
+  const reveal = useScrollReveal<HTMLElement>((index % REVEAL_STAGGER_CYCLE) * REVEAL_STAGGER_MS);
 
   function addToCart() {
     cart.add(product.id);
@@ -238,7 +246,9 @@ export function ProductCard({ product }: { product: Product }) {
 
   return (
     <article
-      className={`tc-card ${product.shadow} bg-white overflow-hidden flex flex-col tc-lift [--lift-transform:translate(-2px,-2px)]`}
+      ref={reveal.ref}
+      style={reveal.style}
+      className={`tc-card ${product.shadow} bg-white overflow-hidden flex flex-col tc-card-lift tc-reveal ${reveal.visible ? "tc-reveal-visible" : ""}`}
     >
       <Link
         to="/shop/$slug"
@@ -251,7 +261,10 @@ export function ProductCard({ product }: { product: Product }) {
             className="border-b-[3px] sm:border-b-4 border-ink"
           />
           {soldOut && (
-            <span className="absolute top-2 left-2 px-2 py-1 rounded-full bg-ink text-white text-[10px] font-bold uppercase tracking-widest">
+            <span
+              className="absolute top-2 left-2 px-2 py-1 rounded-full bg-ink text-white text-[10px] font-bold uppercase tracking-widest"
+              data-no-word-hover
+            >
               Sold Out
             </span>
           )}

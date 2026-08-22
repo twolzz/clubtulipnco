@@ -5,6 +5,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 import { JoinClubDialog } from "@/components/JoinClubDialog";
+import { useScrollReveal } from "@/hooks/use-scroll-reveal";
+
+const STAGGER_MS = 60;
 
 export const Route = createFileRoute("/_app/")({
   head: () => ({
@@ -54,6 +57,13 @@ const COLLECTIONS = [
 ] as const;
 
 function Home() {
+  // Fixed count (3), not a .map() — calling the hook directly here is fine,
+  // the same three calls happen on every render.
+  const tile1 = useScrollReveal<HTMLDivElement>(0 * STAGGER_MS);
+  const tile2 = useScrollReveal<HTMLDivElement>(1 * STAGGER_MS);
+  const tile3 = useScrollReveal<HTMLDivElement>(2 * STAGGER_MS);
+  const popUpBox = useScrollReveal<HTMLDivElement>();
+
   return (
     <>
       {/* Hero */}
@@ -78,14 +88,26 @@ function Home() {
 
           {/* Hero card cluster */}
           <div className="grid grid-cols-2 gap-5">
-            <div className="tc-card tc-card-poppy aspect-[3/4] flex items-end p-5 bg-sun">
-              <span className="font-display text-2xl">Holland</span>
+            <div
+              ref={tile1.ref}
+              style={tile1.style}
+              className={`tc-card tc-card-poppy aspect-[3/4] flex items-end p-5 bg-sun tc-card-lift tc-reveal ${tile1.visible ? "tc-reveal-visible" : ""}`}
+            >
+              <p className="font-display text-2xl">Holland</p>
             </div>
-            <div className="tc-card tc-card-denim aspect-[3/4] flex items-end p-5 mt-8 bg-poppy text-white">
-              <span className="font-display text-2xl">Tulip & Co.</span>
+            <div
+              ref={tile2.ref}
+              style={tile2.style}
+              className={`tc-card tc-card-denim aspect-[3/4] flex items-end p-5 mt-8 bg-poppy text-white tc-card-lift tc-reveal ${tile2.visible ? "tc-reveal-visible" : ""}`}
+            >
+              <p className="font-display text-2xl">Tulip & Co.</p>
             </div>
-            <div className="tc-card tc-card-sage aspect-[3/2] flex items-end p-5 bg-denim text-white col-span-2">
-              <span className="font-display text-xl">De Stijl, brought home</span>
+            <div
+              ref={tile3.ref}
+              style={tile3.style}
+              className={`tc-card tc-card-sage aspect-[3/2] flex items-end p-5 bg-denim text-white col-span-2 tc-card-lift tc-reveal ${tile3.visible ? "tc-reveal-visible" : ""}`}
+            >
+              <p className="font-display text-xl">De Stijl, brought home</p>
             </div>
           </div>
         </div>
@@ -102,22 +124,8 @@ function Home() {
           </div>
 
           <div className="grid sm:grid-cols-3 gap-5 md:gap-8">
-            {COLLECTIONS.map((c) => (
-              <Link
-                key={c.slug}
-                to="/shop"
-                search={{ collection: c.slug }}
-                className={`tc-card ${c.shadow} ${c.color} text-white p-6 md:p-8 flex flex-col justify-between gap-8 min-h-[180px] md:min-h-[210px] tc-lift`}
-              >
-                <div>
-                  <h3 className="text-2xl md:text-3xl font-extrabold leading-tight">{c.title}</h3>
-                  <p className="mt-2 text-white/85 leading-snug">{c.blurb}</p>
-                </div>
-                <span className="inline-flex items-center gap-2 text-sm font-bold">
-                  Shop {c.title}
-                  <ArrowRight size={16} strokeWidth={3} />
-                </span>
-              </Link>
+            {COLLECTIONS.map((c, i) => (
+              <CollectionCard key={c.slug} collection={c} index={i} />
             ))}
           </div>
         </div>
@@ -125,7 +133,11 @@ function Home() {
 
       {/* Pop-up sneak peek */}
       <section className="px-5 md:px-8 py-16 md:py-24">
-        <div className="max-w-5xl mx-auto tc-card tc-card-denim p-8 md:p-12 bg-sage text-white">
+        <div
+          ref={popUpBox.ref}
+          style={popUpBox.style}
+          className={`max-w-5xl mx-auto tc-card tc-card-denim p-8 md:p-12 bg-sage text-white tc-reveal ${popUpBox.visible ? "tc-reveal-visible" : ""}`}
+        >
           <div className="grid md:grid-cols-[1fr_auto] gap-8 items-center">
             <div>
               <span className="inline-block px-3 py-1 mb-4 rounded-full bg-sun border-[3px] border-ink text-ink text-sm font-bold">
@@ -143,5 +155,33 @@ function Home() {
         </div>
       </section>
     </>
+  );
+}
+
+function CollectionCard({
+  collection: c,
+  index,
+}: {
+  collection: (typeof COLLECTIONS)[number];
+  index: number;
+}) {
+  const reveal = useScrollReveal<HTMLAnchorElement>(index * STAGGER_MS);
+  return (
+    <Link
+      ref={reveal.ref}
+      style={reveal.style}
+      to="/shop"
+      search={{ collection: c.slug }}
+      className={`tc-card ${c.shadow} ${c.color} text-white p-6 md:p-8 flex flex-col justify-between gap-8 min-h-[180px] md:min-h-[210px] tc-card-lift tc-reveal ${reveal.visible ? "tc-reveal-visible" : ""}`}
+    >
+      <div>
+        <h3 className="text-2xl md:text-3xl font-extrabold leading-tight">{c.title}</h3>
+        <p className="mt-2 text-white/85 leading-snug">{c.blurb}</p>
+      </div>
+      <span className="inline-flex items-center gap-2 text-sm font-bold">
+        Shop {c.title}
+        <ArrowRight size={16} strokeWidth={3} />
+      </span>
+    </Link>
   );
 }
