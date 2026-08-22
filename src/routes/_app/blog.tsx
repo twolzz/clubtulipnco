@@ -49,15 +49,15 @@ function BlogPage() {
   return (
     <>
       {/* Hero */}
-      <section className="px-5 md:px-8 pt-10 md:pt-16 pb-6 md:pb-10">
+      <section className="px-5 md:px-8 pt-3 md:pt-4 pb-2 md:pb-3">
         <div className="max-w-3xl mx-auto">
-          <span className="inline-block px-3 py-1 mb-4 sm:mb-6 rounded-full bg-sage border-[3px] border-ink text-sm font-bold text-white">
+          <span className="inline-block px-3 py-1 mb-2 sm:mb-3 rounded-full bg-sage border-[3px] border-ink text-sm font-bold text-white">
             The Journal
           </span>
           <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold tracking-tight leading-[1.05] md:leading-[1.02]">
             Quiet stories from the <span className="text-denim">studio</span>
           </h1>
-          <p className="mt-4 sm:mt-6 text-lg md:text-xl text-ink/80 max-w-2xl">
+          <p className="mt-2 sm:mt-3 text-lg md:text-xl text-ink/80 max-w-2xl">
             Essays on De Stijl, Dick Bruna, and the small joys of minimal design.
           </p>
         </div>
@@ -66,9 +66,11 @@ function BlogPage() {
       {/* Articles grid — flex-1 + justify-center so a short list (today: two
           articles) sits centered in the available height instead of leaving
           a bare gap above the footer; a no-op once enough posts fill the
-          viewport on their own. */}
-      <section className="px-5 md:px-8 pb-16 md:pb-24 flex-1 flex flex-col justify-center">
-        <div className="max-w-5xl mx-auto w-full grid md:grid-cols-2 gap-8 md:gap-10">
+          viewport on their own. Cards are sized to land fully within one
+          screen alongside the hero: a shorter thumbnail ratio, a clamped
+          excerpt, and tighter internal spacing. */}
+      <section className="px-5 md:px-8 pb-10 md:pb-16 flex-1 flex flex-col justify-center">
+        <div className="max-w-5xl mx-auto w-full grid md:grid-cols-2 gap-6 md:gap-8">
           {ARTICLES.map((a) => (
             <Link
               key={a.slug}
@@ -81,18 +83,18 @@ function BlogPage() {
                   src={a.image}
                   alt={a.title}
                   loading="lazy"
-                  className="w-full aspect-[4/3] object-cover"
+                  className="w-full aspect-[21/9] object-cover"
                 />
               </div>
-              <div className="p-6 md:p-7 flex flex-col gap-3">
+              <div className="p-4 sm:p-4 md:p-5 flex flex-col gap-1.5">
                 <span className="inline-block self-start px-2.5 py-0.5 rounded-full bg-sun border-2 border-ink text-xs font-bold">
                   {a.tag}
                 </span>
-                <h2 className="font-display text-2xl md:text-3xl font-extrabold leading-tight">
+                <h2 className="font-display text-xl font-extrabold leading-tight">
                   {a.title}
                 </h2>
-                <p className="text-ink/80">{a.excerpt}</p>
-                <span className="mt-2 font-bold text-denim">Read the story →</span>
+                <p className="text-ink/80 line-clamp-2">{a.excerpt}</p>
+                <span className="mt-1 font-bold text-denim">Read the story →</span>
               </div>
             </Link>
           ))}
