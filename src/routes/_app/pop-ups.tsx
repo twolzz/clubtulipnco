@@ -79,10 +79,10 @@ function PopUpsPage() {
       <section className="px-5 md:px-8 pt-10 md:pt-16 pb-10 md:pb-16">
         <div className="max-w-6xl mx-auto grid lg:grid-cols-[1.4fr_1fr] gap-10 items-center">
           <div>
-            <span className="inline-block px-3 py-1 mb-6 rounded-full bg-sun border-[3px] border-ink text-sm font-bold">
+            <span className="inline-block px-3 py-1 mb-3 sm:mb-4 rounded-full bg-sun border-[3px] border-ink text-sm font-bold">
               Find Us Soon
             </span>
-            <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight leading-[1.02]">
+            <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold tracking-tight leading-[1.05] md:leading-[1.02]">
               Come find us <span className="text-poppy">in person</span>
             </h1>
             <p className="mt-6 text-lg md:text-xl text-ink/80 max-w-xl">
