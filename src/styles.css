@@ -209,6 +209,16 @@
     font-family: var(--font-display);
     font-weight: 700;
     letter-spacing: -0.01em;
+    /* Balances line lengths so a heading never strands a single word alone
+       on its last line. Browsers without support just wrap normally. */
+    text-wrap: balance;
+  }
+
+  /* Same orphan problem, body-copy version: avoids a short dangling last
+     line in paragraphs. Narrower browser support than balance, but the
+     fallback is identical — plain wrapping, never broken. */
+  p {
+    text-wrap: pretty;
   }
 
   /* Radix's scroll lock adds `margin-right: <scrollbar>px !important` to body
