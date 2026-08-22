@@ -209,6 +209,16 @@
     font-family: var(--font-display);
     font-weight: 700;
     letter-spacing: -0.01em;
+    /* Balances line lengths so a heading never strands a single word alone
+       on its last line. Browsers without support just wrap normally. */
+    text-wrap: balance;
+  }
+
+  /* Same orphan problem, body-copy version: avoids a short dangling last
+     line in paragraphs. Narrower browser support than balance, but the
+     fallback is identical — plain wrapping, never broken. */
+  p {
+    text-wrap: pretty;
   }
 
   /* Radix's scroll lock adds `margin-right: <scrollbar>px !important` to body
@@ -492,5 +502,18 @@ main.tc-page {
   }
   .tc-shimmer {
     animation: tc-shimmer 1.4s var(--ease-glide) infinite;
+  }
+
+  /* Scroll-triggered fade + rise, driven by useScrollReveal. Transform/
+     opacity only — never a layout-triggering property. */
+  .tc-reveal {
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 450ms ease-out, transform 450ms ease-out;
+    will-change: opacity, transform;
+  }
+  .tc-reveal-visible {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

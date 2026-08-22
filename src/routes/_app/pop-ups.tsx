@@ -76,13 +76,13 @@ function PopUpsPage() {
   const { data: events } = useSuspenseQuery(popUpsQO);
   return (
     <>
-      <section className="px-5 md:px-8 py-16 md:py-24">
+      <section className="px-5 md:px-8 pt-10 md:pt-16 pb-10 md:pb-16">
         <div className="max-w-6xl mx-auto grid lg:grid-cols-[1.4fr_1fr] gap-10 items-center">
           <div>
-            <span className="inline-block px-3 py-1 mb-6 rounded-full bg-sun border-[3px] border-ink text-sm font-bold">
+            <span className="inline-block px-3 py-1 mb-3 sm:mb-4 rounded-full bg-sun border-[3px] border-ink text-sm font-bold">
               Find Us Soon
             </span>
-            <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight leading-[1.02]">
+            <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold tracking-tight leading-[1.05] md:leading-[1.02]">
               Come find us <span className="text-poppy">in person</span>
             </h1>
             <p className="mt-6 text-lg md:text-xl text-ink/80 max-w-xl">
@@ -115,8 +115,8 @@ function PopUpsPage() {
 
         If you ever add another section below this one, drop the -mb-16.
       */}
-      <section className="bg-sun border-t-4 border-ink py-16 md:py-24 px-5 md:px-8 -mb-16">
-        <div className="max-w-5xl mx-auto">
+      <section className="bg-sun border-t-4 border-ink py-16 md:py-24 px-5 md:px-8 -mb-16 flex-1 flex flex-col justify-center">
+        <div className="max-w-5xl mx-auto w-full">
           <h2 className="text-4xl md:text-5xl font-extrabold mb-10">Upcoming Pop-ups</h2>
           {events.length === 0 ? (
             <p className="text-ink/80 text-lg">

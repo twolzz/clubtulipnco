@@ -60,10 +60,12 @@ function SupportPage() {
 
   return (
     <>
-      <section className="px-4 sm:px-5 md:px-8 pt-8 md:pt-14 pb-16 md:pb-28">
-        <div className="max-w-6xl mx-auto">
-          {/* Breadcrumb */}
-          <nav aria-label="Breadcrumb" className="text-sm font-semibold text-ink/70 mb-5 md:mb-6">
+      <section className="px-4 sm:px-5 md:px-8 pt-8 sm:pt-10 md:pt-14 pb-10 md:pb-16 flex-1 flex flex-col">
+        <div className="max-w-6xl mx-auto w-full flex flex-col flex-1">
+          {/* Breadcrumb — plays the badge/tag role in this page's hero block,
+              so it takes the same mb-3 sm:mb-4 rhythm as the badge pill on
+              Shop/Blog/Pop-ups. */}
+          <nav aria-label="Breadcrumb" className="text-sm font-semibold text-ink/70 mb-3 sm:mb-4">
             <Link to="/" className="hover:text-denim transition-colors">
               Home
             </Link>
@@ -71,11 +73,11 @@ function SupportPage() {
             <span className="text-ink">Support</span>
           </nav>
 
-          <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold tracking-tight leading-[1.05] md:leading-[1.02] mb-8 md:mb-14">
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold tracking-tight leading-[1.05] md:leading-[1.02] mb-5 sm:mb-6">
             Support
           </h1>
 
-          <div className="grid md:grid-cols-12 gap-6 md:gap-10">
+          <div className="grid md:grid-cols-12 gap-6 md:gap-10 flex-1">
             {/* Tab menu — wraps on mobile (no horizontal scroll), stacks on desktop */}
             <aside className="md:col-span-4 lg:col-span-3 min-w-0">
               <div className="md:sticky md:top-32">
@@ -106,9 +108,12 @@ function SupportPage() {
               </div>
             </aside>
 
-            {/* Content container */}
-            <div className="md:col-span-8 lg:col-span-9 min-w-0">
-              <div className="bg-[#F6F2E7] border-[3px] sm:border-4 border-ink rounded-2xl p-5 sm:p-8 md:p-12 shadow-[5px_5px_0_var(--ink)] sm:shadow-[8px_8px_0_var(--ink)]">
+            {/* Content container — stretches to match the sidebar's row height
+                (CSS Grid's default align-items: stretch) so the card fills
+                whatever vertical space is available instead of leaving a
+                bare gap above the footer on short tabs. */}
+            <div className="md:col-span-8 lg:col-span-9 min-w-0 flex flex-col">
+              <div className="flex-1 bg-[#F6F2E7] border-[3px] sm:border-4 border-ink rounded-2xl p-4 sm:p-5 md:p-6 shadow-[5px_5px_0_var(--ink)] sm:shadow-[8px_8px_0_var(--ink)]">
                 {active === "contact" && <ContactPanel />}
                 {active === "shipping" && <ShippingPanel />}
                 {active === "privacy" && <PrivacyPanel />}
@@ -124,7 +129,7 @@ function SupportPage() {
 
 function PanelHeading({ children }: { children: React.ReactNode }) {
   return (
-    <h2 className="font-display text-2xl sm:text-3xl md:text-5xl font-extrabold text-ink mb-6 md:mb-8">
+    <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-extrabold text-ink mb-2 md:mb-3">
       {children}
     </h2>
   );
@@ -164,20 +169,20 @@ function ContactPanel() {
   }
 
   const fieldBase =
-    "w-full bg-cream border-[3px] border-ink text-ink placeholder:text-ink/50 px-5 py-3 font-medium [filter:drop-shadow(4px_4px_0_var(--ink))] transition-[translate,filter] duration-fast ease-snap focus:outline-none focus:[filter:drop-shadow(6px_6px_0_var(--ink))] focus:-translate-x-[1px] focus:-translate-y-[1px]";
+    "w-full bg-cream border-[3px] border-ink text-ink placeholder:text-ink/50 px-5 py-2 font-medium [filter:drop-shadow(4px_4px_0_var(--ink))] transition-[translate,filter] duration-fast ease-snap focus:outline-none focus:[filter:drop-shadow(6px_6px_0_var(--ink))] focus:-translate-x-[1px] focus:-translate-y-[1px]";
 
   return (
     <div>
       <PanelHeading>We're here to help.</PanelHeading>
-      <p className="text-base md:text-lg leading-relaxed text-ink/85 mb-8 md:mb-10 max-w-2xl">
+      <p className="text-base md:text-lg leading-relaxed text-ink/85 mb-3 md:mb-4 max-w-2xl">
         Have a question about our products or upcoming San Diego pop-ups? Drop us a line! You can
         reach us directly at <MailLink /> or fill out the form below. We are proudly based in San
         Diego, California, and aim to respond to all inquiries within 24–48 hours.
       </p>
 
-      <form onSubmit={handleSubmit} className="space-y-5 max-w-xl">
+      <form onSubmit={handleSubmit} className="space-y-2 max-w-xl">
         <div>
-          <label htmlFor="support-name" className="block text-sm font-semibold mb-2">
+          <label htmlFor="support-name" className="block text-sm font-semibold mb-1.5">
             Name
           </label>
           <input
@@ -192,7 +197,7 @@ function ContactPanel() {
         </div>
 
         <div>
-          <label htmlFor="support-email" className="block text-sm font-semibold mb-2">
+          <label htmlFor="support-email" className="block text-sm font-semibold mb-1.5">
             Email
           </label>
           <input
@@ -207,20 +212,20 @@ function ContactPanel() {
         </div>
 
         <div>
-          <label htmlFor="support-message" className="block text-sm font-semibold mb-2">
+          <label htmlFor="support-message" className="block text-sm font-semibold mb-1.5">
             Message
           </label>
           <textarea
             id="support-message"
             name="message"
             required
-            rows={5}
+            rows={2}
             placeholder="How can we help?"
             className={`${fieldBase} rounded-3xl resize-none`}
           />
         </div>
 
-        <div className="pt-2">
+        <div className="pt-1">
           <button
             type="submit"
             disabled={sending}
