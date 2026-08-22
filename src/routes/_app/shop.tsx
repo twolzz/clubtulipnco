@@ -77,10 +77,10 @@ function ShopPage() {
 
   return (
     <>
-      <section className="px-4 sm:px-5 md:px-8 py-10 sm:py-16 md:py-24">
-        <div className="max-w-7xl mx-auto">
+      <section className="px-4 sm:px-5 md:px-8 pt-8 sm:pt-10 md:pt-14 pb-6 sm:pb-8 md:pb-10 flex-1 flex flex-col">
+        <div className="max-w-7xl mx-auto w-full flex flex-col flex-1">
           <div>
-            <span className="inline-block px-3 py-1 mb-4 sm:mb-6 rounded-full bg-sun border-[3px] border-ink text-sm font-bold">
+            <span className="inline-block px-3 py-1 mb-3 sm:mb-4 rounded-full bg-sun border-[3px] border-ink text-sm font-bold">
               The Shop
             </span>
             <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold tracking-tight leading-[1.05] md:leading-[1.02]">
@@ -91,7 +91,7 @@ function ShopPage() {
           {/* ---------- Collection filter ---------- */}
           <nav
             aria-label="Filter by collection"
-            className="mt-8 sm:mt-12 flex flex-wrap items-center gap-2 sm:gap-3"
+            className="mt-5 sm:mt-6 flex flex-wrap items-center gap-2 sm:gap-3"
           >
             {filters.map((f) => {
               const isActive = f.slug === active;
@@ -119,9 +119,14 @@ function ShopPage() {
             {activeLabel ? ` in ${activeLabel}` : ""}
           </p>
 
-          {/* ---------- Grid ---------- */}
+          {/* ---------- Grid ----------
+              flex-1 + content-start: the grid claims any leftover height
+              down to the footer (so a single product doesn't leave a bare
+              gap below it), but content-start keeps row heights natural
+              instead of stretching cards to fill that space. Scales from
+              one item up to a full catalog without changing shape. */}
           {visible.length === 0 ? (
-            <div className="mt-10 sm:mt-14 py-12 text-center">
+            <div className="flex-1 flex flex-col items-center justify-center mt-10 sm:mt-14 py-12 text-center">
               <p className="text-lg font-semibold text-ink/70">
                 Nothing in this collection right now.
               </p>
@@ -130,7 +135,7 @@ function ShopPage() {
               </Link>
             </div>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mt-6 sm:mt-8">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 content-start gap-4 sm:gap-6 lg:gap-8 mt-6 sm:mt-8 flex-1">
               {visible.map((p) => (
                 <ProductCard key={p.id} product={p} />
               ))}

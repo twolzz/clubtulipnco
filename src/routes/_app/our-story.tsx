@@ -3,6 +3,7 @@
 
 import { createFileRoute } from "@tanstack/react-router";
 import { JoinClubDialog } from "@/components/JoinClubDialog";
+import { useScrollReveal } from "@/hooks/use-scroll-reveal";
 
 export const Route = createFileRoute("/_app/our-story")({
   head: () => ({
@@ -23,6 +24,9 @@ export const Route = createFileRoute("/_app/our-story")({
 });
 
 function OurStoryPage() {
+  const quote = useScrollReveal<HTMLDivElement>();
+  const meetUs = useScrollReveal<HTMLDivElement>();
+
   return (
     <>
       {/* Hero */}
@@ -65,7 +69,10 @@ function OurStoryPage() {
           </div>
 
           {/* Pull quote */}
-          <div className="tc-card tc-card-poppy bg-sun p-6 md:p-8">
+          <div
+            ref={quote.ref}
+            className={`tc-card tc-card-poppy bg-sun p-6 md:p-8 tc-reveal ${quote.visible ? "tc-reveal-visible" : ""}`}
+          >
             <p className="font-display text-2xl md:text-3xl font-extrabold leading-tight text-ink">
               "one quiet moment at a time."
             </p>
@@ -92,7 +99,10 @@ function OurStoryPage() {
 
       {/* CTA */}
       <section className="px-5 md:px-8 pb-20 md:pb-28">
-        <div className="max-w-3xl mx-auto tc-card tc-card-sage bg-denim text-white p-8 md:p-12 text-center">
+        <div
+          ref={meetUs.ref}
+          className={`max-w-3xl mx-auto tc-card tc-card-sage bg-denim text-white p-8 md:p-12 text-center tc-reveal ${meetUs.visible ? "tc-reveal-visible" : ""}`}
+        >
           <h2 className="text-3xl md:text-4xl font-extrabold">Meet us in person.</h2>
           <p className="mt-3 text-white/90 max-w-xl mx-auto">
             Find our next San Diego pop-up, or join the Club for early access to drops.

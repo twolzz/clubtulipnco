@@ -237,7 +237,10 @@ export function SiteLayout({ children }: { children: ReactNode }) {
         <MobileMenuPanel open={menuOpen} onClose={() => setMenuOpen(false)} />
       </div>
 
-      <main className="flex-1 tc-page">{children}</main>
+      {/* flex flex-col: lets a page's own last section opt into flex-1 and
+          absorb any leftover height, instead of it collecting as dead space
+          between short content and the footer (see /support, /blog). */}
+      <main className="flex-1 tc-page flex flex-col">{children}</main>
 
       {/* Trust & compliance footer */}
       <footer className="bg-cream border-t-4 border-ink mt-16">

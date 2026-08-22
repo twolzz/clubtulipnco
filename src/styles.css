@@ -493,4 +493,17 @@ main.tc-page {
   .tc-shimmer {
     animation: tc-shimmer 1.4s var(--ease-glide) infinite;
   }
+
+  /* Scroll-triggered fade + rise, driven by useScrollReveal. Transform/
+     opacity only — never a layout-triggering property. */
+  .tc-reveal {
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 450ms ease-out, transform 450ms ease-out;
+    will-change: opacity, transform;
+  }
+  .tc-reveal-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

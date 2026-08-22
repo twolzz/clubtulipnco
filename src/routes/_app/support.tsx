@@ -60,8 +60,8 @@ function SupportPage() {
 
   return (
     <>
-      <section className="px-4 sm:px-5 md:px-8 pt-8 md:pt-14 pb-16 md:pb-28">
-        <div className="max-w-6xl mx-auto">
+      <section className="px-4 sm:px-5 md:px-8 pt-8 md:pt-14 pb-16 md:pb-28 flex-1 flex flex-col">
+        <div className="max-w-6xl mx-auto w-full flex flex-col flex-1">
           {/* Breadcrumb */}
           <nav aria-label="Breadcrumb" className="text-sm font-semibold text-ink/70 mb-5 md:mb-6">
             <Link to="/" className="hover:text-denim transition-colors">
@@ -75,7 +75,7 @@ function SupportPage() {
             Support
           </h1>
 
-          <div className="grid md:grid-cols-12 gap-6 md:gap-10">
+          <div className="grid md:grid-cols-12 gap-6 md:gap-10 flex-1">
             {/* Tab menu — wraps on mobile (no horizontal scroll), stacks on desktop */}
             <aside className="md:col-span-4 lg:col-span-3 min-w-0">
               <div className="md:sticky md:top-32">
@@ -106,9 +106,12 @@ function SupportPage() {
               </div>
             </aside>
 
-            {/* Content container */}
-            <div className="md:col-span-8 lg:col-span-9 min-w-0">
-              <div className="bg-[#F6F2E7] border-[3px] sm:border-4 border-ink rounded-2xl p-5 sm:p-8 md:p-12 shadow-[5px_5px_0_var(--ink)] sm:shadow-[8px_8px_0_var(--ink)]">
+            {/* Content container — stretches to match the sidebar's row height
+                (CSS Grid's default align-items: stretch) so the card fills
+                whatever vertical space is available instead of leaving a
+                bare gap above the footer on short tabs. */}
+            <div className="md:col-span-8 lg:col-span-9 min-w-0 flex flex-col">
+              <div className="flex-1 bg-[#F6F2E7] border-[3px] sm:border-4 border-ink rounded-2xl p-5 sm:p-8 md:p-12 shadow-[5px_5px_0_var(--ink)] sm:shadow-[8px_8px_0_var(--ink)]">
                 {active === "contact" && <ContactPanel />}
                 {active === "shipping" && <ShippingPanel />}
                 {active === "privacy" && <PrivacyPanel />}

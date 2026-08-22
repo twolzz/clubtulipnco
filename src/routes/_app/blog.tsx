@@ -49,23 +49,26 @@ function BlogPage() {
   return (
     <>
       {/* Hero */}
-      <section className="px-5 md:px-8 py-16 md:py-24">
+      <section className="px-5 md:px-8 pt-10 md:pt-16 pb-6 md:pb-10">
         <div className="max-w-3xl mx-auto">
-          <span className="inline-block px-3 py-1 mb-6 rounded-full bg-sage border-[3px] border-ink text-sm font-bold text-white">
+          <span className="inline-block px-3 py-1 mb-4 sm:mb-6 rounded-full bg-sage border-[3px] border-ink text-sm font-bold text-white">
             The Journal
           </span>
-          <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight leading-[1.02]">
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold tracking-tight leading-[1.05] md:leading-[1.02]">
             Quiet stories from the <span className="text-denim">studio</span>
           </h1>
-          <p className="mt-6 text-lg md:text-xl text-ink/80 max-w-2xl">
+          <p className="mt-4 sm:mt-6 text-lg md:text-xl text-ink/80 max-w-2xl">
             Essays on De Stijl, Dick Bruna, and the small joys of minimal design.
           </p>
         </div>
       </section>
 
-      {/* Articles grid */}
-      <section className="px-5 md:px-8 pb-20 md:pb-28">
-        <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-8 md:gap-10">
+      {/* Articles grid — flex-1 + justify-center so a short list (today: two
+          articles) sits centered in the available height instead of leaving
+          a bare gap above the footer; a no-op once enough posts fill the
+          viewport on their own. */}
+      <section className="px-5 md:px-8 pb-16 md:pb-24 flex-1 flex flex-col justify-center">
+        <div className="max-w-5xl mx-auto w-full grid md:grid-cols-2 gap-8 md:gap-10">
           {ARTICLES.map((a) => (
             <Link
               key={a.slug}
