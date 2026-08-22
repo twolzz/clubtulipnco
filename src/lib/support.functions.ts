@@ -36,7 +36,7 @@ export const sendSupportMessage = createServerFn({ method: "POST" })
   .handler(async ({ data }): Promise<SupportResult> => {
     const resendKey = process.env.RESEND_API_KEY;
     if (!resendKey) {
-      console.error("[support] ALERT: missing RESEND_API_KEY — message dropped", {
+      console.error("[support] ALERT: missing RESEND_API_KEY, message dropped", {
         from: data.email,
       });
       return { ok: false, error: "server" };
@@ -91,7 +91,7 @@ export const sendSupportMessage = createServerFn({ method: "POST" })
           to: [INBOX],
           // Hitting reply in the inbox answers the customer, not the robot.
           reply_to: data.email,
-          subject: `Support — ${data.name}`,
+          subject: `Support: ${data.name}`,
           html,
           text,
         }),

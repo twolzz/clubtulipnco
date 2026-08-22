@@ -19,15 +19,15 @@ const popUpsQO = queryOptions({
 export const Route = createFileRoute("/_app/pop-ups")({
   head: () => ({
     meta: [
-      { title: "Pop-ups — Tulip & Co." },
+      { title: "Pop-ups | Tulip & Co." },
       {
         name: "description",
-        content: "Find Tulip & Co. live at San Diego weekend markets and pop-up festivals.",
+        content: "Find authentic Miffy goods at our pop-ups around San Diego.",
       },
-      { property: "og:title", content: "Pop-ups — Tulip & Co." },
+      { property: "og:title", content: "Pop-ups | Tulip & Co." },
       {
         property: "og:description",
-        content: "Find Tulip & Co. live at San Diego weekend markets.",
+        content: "Find authentic Miffy goods at our pop-ups around San Diego.",
       },
     ],
   }),
@@ -37,7 +37,7 @@ export const Route = createFileRoute("/_app/pop-ups")({
   errorComponent: () => (
     <>
       <section className="px-5 md:px-8 py-24 text-center font-display text-2xl">
-        Calendar loading — please refresh.
+        Calendar loading. Please refresh.
       </section>
     </>
   ),
@@ -80,14 +80,13 @@ function PopUpsPage() {
         <div className="max-w-6xl mx-auto grid lg:grid-cols-[1.4fr_1fr] gap-10 items-center">
           <div>
             <span className="inline-block px-3 py-1 mb-6 rounded-full bg-sun border-[3px] border-ink text-sm font-bold">
-              Live Calendar
+              Find Us Soon
             </span>
             <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight leading-[1.02]">
-              Meet us at the <span className="text-poppy">market</span>
+              Come find us <span className="text-poppy">in person</span>
             </h1>
             <p className="mt-6 text-lg md:text-xl text-ink/80 max-w-xl">
-              Take home a piece of quiet Dutch design —
-              hand-delivered at pop-ups around San Diego.
+              Meet us in person, and take a piece of Miffy home with you.
             </p>
           </div>
           <div className="tc-card tc-card-poppy bg-cream p-8 md:p-10">
@@ -121,7 +120,7 @@ function PopUpsPage() {
           <h2 className="text-4xl md:text-5xl font-extrabold mb-10">Upcoming Pop-ups</h2>
           {events.length === 0 ? (
             <p className="text-ink/80 text-lg">
-              New dates coming soon — join the Club for first notice.
+              Nothing on the calendar yet. Join the Club and we'll let you know.
             </p>
           ) : (
             <ol className="flex flex-col gap-6">

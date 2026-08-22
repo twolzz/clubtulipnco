@@ -12,9 +12,9 @@ import { ProductMedia, formatPrice } from "@/components/ProductCard";
 export const Route = createFileRoute("/_app/cart")({
   head: () => ({
     meta: [
-      { title: "Cart — Tulip & Co." },
+      { title: "Cart | Tulip & Co." },
       { name: "description", content: "Review the quiet Dutch design in your cart." },
-      { property: "og:title", content: "Cart — Tulip & Co." },
+      { property: "og:title", content: "Cart | Tulip & Co." },
       { property: "og:description", content: "Review your cart." },
     ],
   }),

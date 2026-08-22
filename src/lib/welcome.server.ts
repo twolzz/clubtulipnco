@@ -87,7 +87,7 @@ function renderHtml(firstName: string, email: string) {
                 <tr>
                   <td style="border-top: 2px solid #000000; padding-top: 30px;">
                     <p style="color: #000000; font-size: 12px; line-height: 1.6; margin: 0; font-weight: 500;">
-                      Tulip &amp; Co. — San Diego, CA.<br><br>
+                      Tulip &amp; Co. San Diego, CA.<br><br>
                       <a href="${unsubUrl}" style="color: #000000; text-decoration: underline;">Unsubscribe</a>
                     </p>
                   </td>
@@ -121,7 +121,7 @@ function renderText(firstName: string, email: string) {
     `Thimo`,
     ``,
     `--`,
-    `Tulip & Co. — San Diego, CA.`,
+    `Tulip & Co. San Diego, CA.`,
     `Unsubscribe: ${unsubUrl}`,
   ].join("\n");
 }
@@ -130,14 +130,14 @@ export async function sendWelcomeEmail(firstName: string, email: string): Promis
   try {
     const resendKey = process.env.RESEND_API_KEY;
     if (!resendKey) {
-      const msg = `[welcome] ALERT: missing RESEND_API_KEY — cannot send welcome email.`;
+      const msg = `[welcome] ALERT: missing RESEND_API_KEY, cannot send welcome email.`;
       console.error(msg);
       return { ok: false, skipped: true, error: msg };
     }
 
     const to = email.trim().toLowerCase();
     if (!to) {
-      console.warn("[welcome] empty email — skipping.");
+      console.warn("[welcome] empty email, skipping.");
       return { ok: false, skipped: true, error: "empty email" };
     }
 

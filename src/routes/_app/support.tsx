@@ -13,17 +13,17 @@ export const Route = createFileRoute("/_app/support")({
   validateSearch: (search) => tabSchema.parse(search),
   head: () => ({
     meta: [
-      { title: "Support — Tulip & Co." },
+      { title: "Customer Care | Tulip & Co." },
       {
         name: "description",
         content:
-          "Customer care & legal hub — contact us, shipping & returns, privacy policy, and terms of service for Tulip & Co.",
+          "Contact us, shipping and returns, privacy policy, and terms of service, all in one place.",
       },
-      { property: "og:title", content: "Support — Tulip & Co." },
+      { property: "og:title", content: "Customer Care | Tulip & Co." },
       {
         property: "og:description",
         content:
-          "Contact us, shipping & returns, privacy policy, and terms of service — all in one place.",
+          "Contact us, shipping and returns, privacy policy, and terms of service, all in one place.",
       },
     ],
   }),
@@ -150,7 +150,7 @@ function ContactPanel() {
     try {
       const res = await send({ data: payload });
       if (res.ok) {
-        toast.success("Thanks — we'll be in touch within 24–48 hours.");
+        toast.success("Thanks! We'll be in touch within 24–48 hours.");
         form.reset();
       } else {
         toast.error("We couldn't send that. Please email hello@tulipnco.com directly.");
@@ -168,7 +168,7 @@ function ContactPanel() {
 
   return (
     <div>
-      <PanelHeading>Let's chat.</PanelHeading>
+      <PanelHeading>We're here to help.</PanelHeading>
       <p className="text-base md:text-lg leading-relaxed text-ink/85 mb-8 md:mb-10 max-w-2xl">
         Have a question about our products or upcoming San Diego pop-ups? Drop us a line! You can
         reach us directly at <MailLink /> or fill out the form below. We are proudly based in San
@@ -261,7 +261,7 @@ function ShippingPanel() {
         <li>
           <span className="font-bold text-ink">3. If you've changed your mind:</span> We'll refund
           the price of the item to your original payment method. The original shipping charge (if
-          any was applied) isn't refunded, and return shipping — getting the item back to us — is
+          any was applied) isn't refunded, and return shipping, getting the item back to us, is
           your responsibility.
         </li>
         <li>
@@ -283,23 +283,23 @@ function PrivacyPanel() {
     <div className="max-w-2xl">
       <PanelHeading>Privacy Policy.</PanelHeading>
       <p className="text-base md:text-lg leading-relaxed text-ink/85 mb-2 font-semibold">
-        Authentic Dutch design, with fiercely protected privacy.
+        Fiercely protected privacy.
       </p>
       <p className="text-sm text-ink/60 mb-6 md:mb-8">Last updated: August 2026</p>
       <ol className="space-y-6 text-base md:text-lg leading-relaxed text-ink/85 list-none">
         <li>
           <span className="font-bold text-ink">1. Information we collect:</span> When you join our
           club, we collect your first name and email address. When you place an order, we collect
-          your email, shipping address, and the items you purchased — your payment card details go
+          your email, shipping address, and the items you purchased. Your payment card details go
           directly to our payment processor and never touch our servers. Your shopping cart is
           stored locally in your own browser and is not saved on our servers until you check out. If
-          you contact us through our support form, we receive your name, email, and message by email
-          — that message is not stored in our database.
+          you contact us through our support form, we receive your name, email, and message by email.
+          That message is not stored in our database.
         </li>
         <li>
           <span className="font-bold text-ink">2. How we use your information:</span> We use your
           information to process and ship your orders, send order confirmations, respond to
-          questions you send us, and — only if you've joined the club — send you occasional emails
+          questions you send us, and, only if you've joined the club, send you occasional emails
           about upcoming San Diego pop-up dates and new arrivals. We do not use tracking cookies or
           analytics scripts to follow you across the web, and we do not sell your personal
           information to anyone.
@@ -307,9 +307,9 @@ function PrivacyPanel() {
         <li>
           <span className="font-bold text-ink">3. Who we share it with:</span> We share information
           only with the services that let us run Tulip &amp; Co., and only as much as each one needs
-          to do its job: Stripe (payment processing — they receive your payment details directly; we
+          to do its job: Stripe (payment processing, they receive your payment details directly; we
           never see your full card number), Supabase (our secure database host), Resend (delivering
-          our emails), PirateShip (generating shipping labels — they receive your shipping address),
+          our emails), PirateShip (generating shipping labels, they receive your shipping address),
           and Cloudflare (our website hosting). We do not sell, rent, or trade your personal
           information to third parties for marketing purposes.
         </li>
@@ -329,7 +329,7 @@ function PrivacyPanel() {
           <span className="font-bold text-ink">6. Your rights:</span> You can ask us what
           information we hold about you, ask us to correct it, or ask us to delete it, at any time.
           California residents have additional rights under state law to know, delete, or opt out of
-          the sale of personal information — though as noted above, we don't sell personal
+          the sale of personal information, though as noted above, we don't sell personal
           information in the first place. To make any request, email us at <MailLink />.
         </li>
         <li>
@@ -370,15 +370,15 @@ function TermsPanel() {
           use the site.
         </li>
         <li>
-          <span className="font-bold text-ink">2. Products:</span> We carry genuine, authentic Dutch
-          design goods and collectibles, purchased through authorized wholesale channels. Tulip
+          <span className="font-bold text-ink">2. Products:</span> We carry authentic Miffy
+          goods and collectibles, purchased through authorized wholesale channels. Tulip
           &amp; Co. is not an official partner, licensee, or affiliate of the manufacturer. Product
           availability, descriptions, and pricing may change without notice, and we reserve the
           right to limit quantities on any item.
         </li>
         <li>
           <span className="font-bold text-ink">3. Pricing &amp; payment:</span> All prices are
-          listed in US dollars. Payment is processed securely by Stripe at checkout — we never see
+          listed in US dollars. Payment is processed securely by Stripe at checkout. We never see
           or store your full card details. We reserve the right to correct pricing errors, and to
           cancel or refuse any order we reasonably suspect to be fraudulent.
         </li>

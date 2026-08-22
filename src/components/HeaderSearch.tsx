@@ -93,7 +93,7 @@ export function HeaderSearch() {
               <ul className="mt-4 space-y-2">
                 {results.length === 0 ? (
                   <li className="text-sm font-semibold text-ink/60 px-2">
-                    No matches — try "Miffy", "journal", or "pen".
+                    No matches. Try "Miffy", "journal", or "pen".
                   </li>
                 ) : (
                   results.map((p) => (

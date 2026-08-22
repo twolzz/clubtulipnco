@@ -7,15 +7,15 @@ import { JoinClubDialog } from "@/components/JoinClubDialog";
 export const Route = createFileRoute("/_app/our-story")({
   head: () => ({
     meta: [
-      { title: "Our Story — Tulip & Co." },
+      { title: "Our Story | Tulip & Co." },
       {
         name: "description",
-        content: "Why we started Tulip & Co. — authentic Dutch design in San Diego.",
+        content: "Why we started Tulip & Co., authentic Dutch design in San Diego.",
       },
-      { property: "og:title", content: "Our Story — Tulip & Co." },
+      { property: "og:title", content: "Our Story | Tulip & Co." },
       {
         property: "og:description",
-        content: "Why we started Tulip & Co. — authentic Dutch design in San Diego.",
+        content: "Why we started Tulip & Co., authentic Dutch design in San Diego.",
       },
     ],
   }),
@@ -57,7 +57,7 @@ function OurStoryPage() {
               noise of mass-market retail.
             </p>
             <p>
-              I started Tulip &amp; Co. to offer something different — a personal touch. As someone
+              I started Tulip &amp; Co. to offer something different, a personal touch. As someone
               who grew up with Nijntje, I wanted to go beyond simple transactions and build a real
               community: a place for people to meet, share stories, and discover Nijntje and Dutch
               culture.
@@ -95,7 +95,7 @@ function OurStoryPage() {
         <div className="max-w-3xl mx-auto tc-card tc-card-sage bg-denim text-white p-8 md:p-12 text-center">
           <h2 className="text-3xl md:text-4xl font-extrabold">Meet us in person.</h2>
           <p className="mt-3 text-white/90 max-w-xl mx-auto">
-            Find our next San Diego pop-up — or join the Club for early access to drops.
+            Find our next San Diego pop-up, or join the Club for early access to drops.
           </p>
           <JoinClubDialog className="tc-btn tc-btn-sun mt-6 inline-flex">
             Join the Club!

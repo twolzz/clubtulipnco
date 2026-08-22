@@ -24,7 +24,7 @@ const ARTICLES: Record<string, Article> = {
     shadow: "tc-card-poppy",
     body: [
       "If you have been following Tulip & Co., you know that our curated collections lean heavily into the world of Miffy. But why has this little white rabbit captivated both children and design-conscious adults around the world for decades? The answer lies in the brilliance of her creator, Dutch artist Dick Bruna, and his absolute mastery of minimalist design.",
-      "Dick Bruna did not view himself strictly as a children's book illustrator; instead, he considered himself a 'graphic artist'. Heavily influenced by the De Stijl movement and modern art icons like Henri Matisse and Piet Mondrian, Bruna stripped away all unnecessary details from his work. He famously utilized a technique of 'drawing with scissors,' cutting out shapes from custom-mixed colored paper to create his scenes. He restricted his palette almost entirely to primary colors — a warm red, yellow, blue, and green — along with black, white, brown, and grey.",
+      "Dick Bruna did not view himself strictly as a children's book illustrator; instead, he considered himself a 'graphic artist'. Heavily influenced by the De Stijl movement and modern art icons like Henri Matisse and Piet Mondrian, Bruna stripped away all unnecessary details from his work. He famously utilized a technique of 'drawing with scissors,' cutting out shapes from custom-mixed colored paper to create his scenes. He restricted his palette almost entirely to primary colors, a warm red, yellow, blue, and green, along with black, white, brown, and grey.",
       "But perhaps the most fascinating aspect of Miffy's design is her face. Miffy is drawn with just two black dots for eyes and a small, diagonal cross for a mouth. By avoiding complex or hyper-expressive detailing, Bruna achieved a state of 'emotional neutrality'. Because Miffy's face does not force a specific emotion onto the reader, it functions as a psychological mirror. If you are happy, Miffy looks quietly content; if you are sad, she appears watchful and understanding. This allows readers of all ages to project their own feelings onto her, creating a deep, personal connection.",
       "Furthermore, Miffy almost always faces directly forward. This direct frontal gaze arrests the reader's attention, establishing an immediate, unmediated face-to-face connection that psychological research shows triggers a positive emotional response.",
       "At Tulip & Co., we believe that this precise, uncluttered design is exactly why Miffy fits so perfectly into modern, cozy aesthetics. She is a reminder that sometimes, less truly is more.",
@@ -57,10 +57,10 @@ export const Route = createFileRoute("/_app/blog_/$slug")({
   },
   head: ({ loaderData }) => {
     const a = loaderData?.article;
-    if (!a) return { meta: [{ title: "Article — Tulip & Co." }] };
+    if (!a) return { meta: [{ title: "Article | Tulip & Co." }] };
     return {
       meta: [
-        { title: `${a.title} — Tulip & Co.` },
+        { title: `${a.title} | Tulip & Co.` },
         { name: "description", content: a.body[0].slice(0, 155) },
         { property: "og:type", content: "article" },
         { property: "og:title", content: a.title },

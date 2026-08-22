@@ -30,7 +30,7 @@ const STRIPE_FONTS = [
 export const Route = createFileRoute("/_app/checkout/")({
   head: () => ({
     meta: [
-      { title: "Checkout — Tulip & Co." },
+      { title: "Checkout | Tulip & Co." },
       { name: "description", content: "Complete your order." },
     ],
   }),

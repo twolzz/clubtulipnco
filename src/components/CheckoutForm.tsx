@@ -85,7 +85,7 @@ export function CheckoutForm({
       setMessage(
         err instanceof Error && err.message
           ? err.message
-          : "We could not start your order. No charge was made — please try again.",
+          : "We could not start your order. No charge was made. Please try again.",
       );
       setSubmitting(false);
       return;
@@ -118,7 +118,7 @@ export function CheckoutForm({
     if (error.type === "card_error" || error.type === "validation_error") {
       setMessage(error.message ?? "That payment could not be completed.");
     } else {
-      setMessage("Something went wrong. No charge was made — please try again.");
+      setMessage("Something went wrong. No charge was made. Please try again.");
     }
     setSubmitting(false);
   }

@@ -293,7 +293,7 @@ export function SiteLayout({ children }: { children: ReactNode }) {
             </div>
             <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 text-sm text-ink/70">
               <span className="font-display font-extrabold text-ink">Tulip &amp; Co.</span>
-              <span>© {new Date().getFullYear()} — Authentic Dutch design, San Diego.</span>
+              <span>© {new Date().getFullYear()} Tulip &amp; Co. Authentic Miffy goods, San Diego.</span>
             </div>
           </div>
         </div>

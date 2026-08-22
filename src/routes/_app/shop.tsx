@@ -30,9 +30,9 @@ export const Route = createFileRoute("/_app/shop")({
   },
   head: () => ({
     meta: [
-      { title: "Shop — Tulip & Co." },
+      { title: "Shop | Tulip & Co." },
       { name: "description", content: "Curated Dutch plushies, stationery, and accessories." },
-      { property: "og:title", content: "Shop — Tulip & Co." },
+      { property: "og:title", content: "Shop | Tulip & Co." },
       {
         property: "og:description",
         content: "Curated Dutch plushies, stationery, and accessories.",
@@ -46,7 +46,7 @@ export const Route = createFileRoute("/_app/shop")({
     <>
       <section className="px-5 md:px-8 py-24 text-center">
         <p className="font-display text-3xl font-extrabold">
-          The shop is loading slowly — please refresh.
+          The shop is loading slowly. Please refresh.
         </p>
       </section>
     </>

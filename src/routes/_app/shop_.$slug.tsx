@@ -29,7 +29,7 @@ const productQO = (slug: string) =>
 export const Route = createFileRoute("/_app/shop_/$slug")({
   head: (ctx: any) => {
     const p = ctx?.loaderData as Product | null | undefined;
-    const title = p ? `${p.name} — Tulip & Co.` : "Product — Tulip & Co.";
+    const title = p ? `${p.name} | Tulip & Co.` : "Product | Tulip & Co.";
     const description =
       p?.description ?? "Curated Dutch design, shipped from San Diego by Tulip & Co.";
     return {
@@ -289,7 +289,7 @@ function ProductDetail({ product, related }: { product: Product; related: Produc
                 <li className="flex items-start gap-3">
                   <ShieldCheck size={20} strokeWidth={2.5} className="text-denim mt-0.5 shrink-0" />
                   <span className="text-sm font-semibold">
-                    Secure checkout — Visa, Mastercard, Amex, Klarna.
+                    Secure checkout: Visa, Mastercard, Amex, Klarna.
                   </span>
                 </li>
               </ul>

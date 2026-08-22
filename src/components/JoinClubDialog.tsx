@@ -9,8 +9,10 @@ type Props = {
   className?: string;
 };
 
-// Long enough to read "Welcome to the club!", short enough not to feel stuck.
-const AUTO_CLOSE_MS = 1800;
+// Long enough to actually read the success message, short enough not to feel
+// stuck. Bumped +2s from the original 1800ms — people weren't finishing the
+// message before it closed.
+const AUTO_CLOSE_MS = 3800;
 // Slightly longer than --dur-exit (280ms) so the fade/zoom-out finishes first.
 const EXIT_MS = 320;
 // Fallback only — see the transitionend-based focus effect below.

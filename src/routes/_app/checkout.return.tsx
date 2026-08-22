@@ -13,7 +13,7 @@ export const Route = createFileRoute("/_app/checkout/return")({
         : "",
   }),
   head: () => ({
-    meta: [{ title: "Order status — Tulip & Co." }],
+    meta: [{ title: "Order status | Tulip & Co." }],
   }),
   component: CheckoutReturnPage,
 });

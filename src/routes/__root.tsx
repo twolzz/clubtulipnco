@@ -87,7 +87,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
-      { title: "Tulip & Co. — Authentic Dutch Design" },
+      { title: "Tulip & Co. | Authentic Dutch Design" },
       {
         name: "description",
         content:
@@ -96,8 +96,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "author", content: "Tulip & Co." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { property: "og:title", content: "Tulip & Co. — Authentic Dutch Design" },
-      { name: "twitter:title", content: "Tulip & Co. — Authentic Dutch Design" },
+      { property: "og:title", content: "Tulip & Co. | Authentic Dutch Design" },
+      { name: "twitter:title", content: "Tulip & Co. | Authentic Dutch Design" },
       {
         property: "og:description",
         content:

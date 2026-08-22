@@ -9,16 +9,16 @@ import { JoinClubDialog } from "@/components/JoinClubDialog";
 export const Route = createFileRoute("/_app/")({
   head: () => ({
     meta: [
-      { title: "Tulip & Co. — Your Online Boutique for Dutch Design & Miffy Collectibles" },
+      { title: "Tulip & Co. | Your Home for Authentic Miffy" },
       {
         name: "description",
         content:
-          "Curated Dutch design and everyday Miffy magic—shipped nationwide straight to your door",
+          "Genuine, authentic Miffy plushies, stationery, and more. Shipped nationwide straight to your door.",
       },
-      { property: "og:title", content: "Tulip & Co. — Authentic Dutch Design & Miffy Goods" },
+      { property: "og:title", content: "Tulip & Co. | Your Home for Authentic Miffy" },
       {
         property: "og:description",
-        content: "Curated Dutch design and Miffy stationery & collectibles, shipped across the US",
+        content: "Genuine, authentic Miffy plushies, stationery, and more. Shipped nationwide straight to your door.",
       },
     ],
   }),
@@ -33,21 +33,21 @@ const COLLECTIONS = [
   {
     title: "Plushies",
     slug: "plushies",
-    blurb: "Eco-corduroy bunnies & friends",
+    blurb: "Things to keep Miffy in your home",
     color: "bg-poppy",
     shadow: "tc-card-sage",
   },
   {
     title: "Stationery",
     slug: "stationery",
-    blurb: "Journals, pens & desk goods",
+    blurb: "Things to have Miffy at the desk",
     color: "bg-denim",
     shadow: "tc-card-poppy",
   },
   {
     title: "Accessories",
     slug: "accessories",
-    blurb: "Keychains, pins & pouches",
+    blurb: "Things to carry Miffy with you",
     color: "bg-sage",
     shadow: "tc-card-denim",
   },
@@ -64,14 +64,14 @@ function Home() {
               Dutch design is coming to <span className="text-poppy">San Diego</span>
             </h1>
             <p className="mt-6 text-lg md:text-xl text-ink/80 max-w-2xl">
-              Tulip &amp; Co. is your curated online home for authentic Dutch design, Miffy plushies &amp; stationery — shipped nationwide straight to your door.
+              Genuine, authentic Miffy. Plushies, stationery, and small treasures. Shipped straight to your door.
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
               <JoinClubDialog className="tc-btn tc-btn-sun inline-flex">
                 Join the Club!
               </JoinClubDialog>
               <Link to="/shop" className="tc-btn tc-btn-cream">
-                Browse the Shop
+                Shop Miffy
               </Link>
             </div>
           </div>
@@ -95,7 +95,7 @@ function Home() {
       <section className="bg-sun border-y-4 border-ink py-16 md:py-24 px-5 md:px-8">
         <div className="max-w-6xl mx-auto">
           <div className="flex items-end justify-between flex-wrap gap-4 mb-8 md:mb-10">
-            <h2 className="text-4xl md:text-5xl font-extrabold">Curated Collections</h2>
+            <h2 className="text-4xl md:text-5xl font-extrabold">Find Your Favorite</h2>
             <Link to="/shop" className="tc-btn tc-btn-cream">
               Shop All
             </Link>
@@ -129,15 +129,15 @@ function Home() {
           <div className="grid md:grid-cols-[1fr_auto] gap-8 items-center">
             <div>
               <span className="inline-block px-3 py-1 mb-4 rounded-full bg-sun border-[3px] border-ink text-ink text-sm font-bold">
-                Live Calendar
+                Find Us Soon
               </span>
-              <h2 className="text-4xl md:text-5xl font-extrabold">Find Us Live in San Diego.</h2>
+              <h2 className="text-4xl md:text-5xl font-extrabold">We Pop Up Around San Diego.</h2>
               <p className="mt-4 text-white/90 max-w-xl text-lg">
                 New dates all year, all around San Diego. Come hang out with us!
               </p>
             </div>
             <Link to="/pop-ups" className="tc-btn tc-btn-sun whitespace-nowrap">
-              See Pop-up Calendar
+              See Upcoming Dates
             </Link>
           </div>
         </div>

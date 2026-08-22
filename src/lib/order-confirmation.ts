@@ -135,7 +135,7 @@ function renderHtml(
                 Your order is confirmed. We're getting it wrapped and on its way to you.
               </p>
               <p style="color: #000000; font-size: 16px; line-height: 1.7; font-weight: 500; margin: 0 0 40px 0;">
-                Order <strong>#${ref}</strong> — keep this handy if you need to reach us about it.
+                Order <strong>#${ref}</strong>. Keep this handy if you need to reach us about it.
               </p>
 
               <!-- order summary -->
@@ -169,7 +169,7 @@ function renderHtml(
               }
 
               <p style="color: #000000; font-size: 16px; line-height: 1.7; font-weight: 500; margin: 0 0 40px 0;">
-                We'll send another note the moment it ships. If anything looks wrong, just reply to this email — it comes straight to me.
+                We'll send another note the moment it ships. If anything looks wrong, just reply to this email. It comes straight to me.
               </p>
 
               <!-- simple pill button -->
@@ -190,7 +190,7 @@ function renderHtml(
                 <tr>
                   <td style="border-top: 2px solid #000000; padding-top: 30px;">
                     <p style="color: #000000; font-size: 12px; line-height: 1.6; margin: 0; font-weight: 500;">
-                      Tulip &amp; Co. — San Diego, CA.<br>
+                      Tulip &amp; Co. San Diego, CA.<br>
                       Questions? <a href="mailto:${REPLY_TO}" style="color: #000000; text-decoration: underline;">${REPLY_TO}</a>
                     </p>
                   </td>
@@ -219,7 +219,7 @@ function renderText(
 
   const itemLines = lines.map(
     (l) =>
-      `  ${l.product_name ?? "Item"} x${l.quantity} — ${money(
+      `  ${l.product_name ?? "Item"} x${l.quantity}: ${money(
         l.price_at_purchase * l.quantity,
       )}`,
   );
@@ -254,7 +254,7 @@ function renderText(
     `Total: ${money(amountCents)}`,
     ...ship,
     ``,
-    `We'll send another note the moment it ships. If anything looks wrong, just reply to this email — it comes straight to me.`,
+    `We'll send another note the moment it ships. If anything looks wrong, just reply to this email. It comes straight to me.`,
     ``,
     `Keep browsing:`,
     `  ${SITE_URL}/shop`,
@@ -263,7 +263,7 @@ function renderText(
     `Thimo`,
     ``,
     `--`,
-    `Tulip & Co. — San Diego, CA.`,
+    `Tulip & Co. San Diego, CA.`,
     `Questions? ${REPLY_TO}`,
   ].join("\n");
 }
@@ -280,14 +280,14 @@ export async function sendOrderConfirmationEmail(params: {
   try {
     const resendKey = process.env.RESEND_API_KEY;
     if (!resendKey) {
-      const msg = `[order-confirmation] ALERT: missing RESEND_API_KEY — cannot send receipt.`;
+      const msg = `[order-confirmation] ALERT: missing RESEND_API_KEY, cannot send receipt.`;
       console.error(msg);
       return { ok: false, skipped: true, error: msg };
     }
 
     const to = email.trim().toLowerCase();
     if (!to) {
-      console.warn("[order-confirmation] empty email — skipping.", { orderId });
+      console.warn("[order-confirmation] empty email, skipping.", { orderId });
       return { ok: false, skipped: true, error: "empty email" };
     }
 

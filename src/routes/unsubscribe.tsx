@@ -12,7 +12,7 @@ export const Route = createFileRoute("/unsubscribe")({
   validateSearch: searchSchema,
   head: () => ({
     meta: [
-      { title: "Unsubscribe — Tulip & Co." },
+      { title: "Unsubscribe | Tulip & Co." },
       { name: "description", content: "Manage your Tulip & Co. email preferences." },
       { name: "robots", content: "noindex" },
     ],

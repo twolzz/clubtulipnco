@@ -3,9 +3,9 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 export const Route = createFileRoute("/_app/blog")({
   head: () => ({
     meta: [
-      { title: "The Journal — Tulip & Co." },
+      { title: "The Journal | Tulip & Co." },
       { name: "description", content: "Stories about Dutch design, Miffy, and quiet living." },
-      { property: "og:title", content: "The Journal — Tulip & Co." },
+      { property: "og:title", content: "The Journal | Tulip & Co." },
       {
         property: "og:description",
         content: "Stories about Dutch design, Miffy, and quiet living.",
@@ -39,7 +39,7 @@ const ARTICLES: Article[] = [
     title: "From the Dutch Dunes to the World: The True Origin Story of Nijntje",
     image: "https://i.imgur.com/BKdgNKh.jpeg",
     excerpt:
-      "Before she was a global design icon, Miffy began as a bedtime story — sparked by a wild rabbit in the dunes of Egmond aan Zee, the summer of 1955.",
+      "Before she was a global design icon, Miffy began as a bedtime story, sparked by a wild rabbit in the dunes of Egmond aan Zee, the summer of 1955.",
     tag: "History",
     shadow: "tc-card-denim",
   },

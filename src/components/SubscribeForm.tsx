@@ -74,11 +74,11 @@ export const SubscribeForm = forwardRef<HTMLInputElement, SubscribeFormProps>(
         if (res.error === "duplicate") {
           toast.error("You're already on the list!");
         } else {
-          toast.error("Something went wrong — please try again.");
+          toast.error("Something went wrong. Please try again.");
         }
       } catch {
         setStatus("idle");
-        toast.error("Something went wrong — please try again.");
+        toast.error("Something went wrong. Please try again.");
       }
     }
 
@@ -104,7 +104,7 @@ export const SubscribeForm = forwardRef<HTMLInputElement, SubscribeFormProps>(
             Welcome to the club!
           </p>
           <p className="mt-3 text-ink/80">
-            Keep an eye on your inbox — we'll let you know the moment we open.
+            Keep an eye on your inbox. We'll let you know the moment we open.
           </p>
         </div>
       );

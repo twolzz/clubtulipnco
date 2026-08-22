@@ -92,7 +92,7 @@ function renderHtml(popUp: PopUpRow, unsubscribeUrl: string) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${name} — Tulip &amp; Co.</title>
+  <title>${name} | Tulip &amp; Co.</title>
 </head>
 <body style="margin: 0; padding: 0; background-color: #F9F6F0; font-family: Arial, Helvetica, sans-serif; -webkit-font-smoothing: antialiased;">
   <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background-color: #F9F6F0;">
@@ -152,7 +152,7 @@ function renderHtml(popUp: PopUpRow, unsubscribeUrl: string) {
                 <tr>
                   <td style="border-top: 2px solid #000000; padding-top: 30px;">
                     <p style="color: #000000; font-size: 12px; line-height: 1.6; margin: 0; font-weight: 500;">
-                      Tulip &amp; Co. — San Diego, CA.<br><br>
+                      Tulip &amp; Co. San Diego, CA.<br><br>
                       <a href="${unsubscribeUrl}" style="color: #000000; text-decoration: underline;">Unsubscribe</a>
                     </p>
                   </td>
@@ -182,7 +182,7 @@ function renderText(popUp: PopUpRow, unsubscribeUrl: string) {
     `  ${directionsUrlFor(popUp.location)}`,
     ``,
     `--`,
-    `Tulip & Co. — San Diego, CA.`,
+    `Tulip & Co. San Diego, CA.`,
     `unsubscribe: ${unsubscribeUrl}`,
   ].join("\n");
 }
@@ -213,11 +213,11 @@ export async function sendPopUpAnnouncement(popUp: PopUpRow): Promise<AnnounceRe
   const emails = (subs ?? []).map((s: { email: string }) => s.email).filter(Boolean);
 
   if (emails.length === 0) {
-    console.warn("[pop-up-announce] 0 opted-in subscribers — nothing to send for:", popUp.id);
+    console.warn("[pop-up-announce] 0 opted-in subscribers, nothing to send for:", popUp.id);
     return { ok: true, sentTo: 0 };
   }
 
-  const subject = `new san diego pop-up — ${fmtDate(popUp.event_date)}`;
+  const subject = `new san diego pop-up: ${fmtDate(popUp.event_date)}`;
   const oneClickEndpoint = `${siteUrl()}/api/public/unsubscribe`;
 
   // Resend's batch endpoint accepts up to 100 emails per call.
