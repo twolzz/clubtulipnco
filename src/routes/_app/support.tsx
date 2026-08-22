@@ -60,10 +60,12 @@ function SupportPage() {
 
   return (
     <>
-      <section className="px-4 sm:px-5 md:px-8 pt-3 md:pt-4 pb-10 md:pb-16 flex-1 flex flex-col">
+      <section className="px-4 sm:px-5 md:px-8 pt-8 sm:pt-10 md:pt-14 pb-10 md:pb-16 flex-1 flex flex-col">
         <div className="max-w-6xl mx-auto w-full flex flex-col flex-1">
-          {/* Breadcrumb */}
-          <nav aria-label="Breadcrumb" className="text-sm font-semibold text-ink/70 mb-2 md:mb-3">
+          {/* Breadcrumb — plays the badge/tag role in this page's hero block,
+              so it takes the same mb-3 sm:mb-4 rhythm as the badge pill on
+              Shop/Blog/Pop-ups. */}
+          <nav aria-label="Breadcrumb" className="text-sm font-semibold text-ink/70 mb-3 sm:mb-4">
             <Link to="/" className="hover:text-denim transition-colors">
               Home
             </Link>
@@ -71,7 +73,7 @@ function SupportPage() {
             <span className="text-ink">Support</span>
           </nav>
 
-          <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold tracking-tight leading-[1.05] md:leading-[1.02] mb-2 md:mb-3">
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold tracking-tight leading-[1.05] md:leading-[1.02] mb-5 sm:mb-6">
             Support
           </h1>
 

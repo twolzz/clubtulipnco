@@ -49,15 +49,15 @@ function BlogPage() {
   return (
     <>
       {/* Hero */}
-      <section className="px-5 md:px-8 pt-3 md:pt-4 pb-2 md:pb-3">
+      <section className="px-5 md:px-8 pt-8 sm:pt-10 md:pt-14 pb-6 sm:pb-8 md:pb-10">
         <div className="max-w-3xl mx-auto">
-          <span className="inline-block px-3 py-1 mb-2 sm:mb-3 rounded-full bg-sage border-[3px] border-ink text-sm font-bold text-white">
+          <span className="inline-block px-3 py-1 mb-3 sm:mb-4 rounded-full bg-sage border-[3px] border-ink text-sm font-bold text-white">
             The Journal
           </span>
           <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold tracking-tight leading-[1.05] md:leading-[1.02]">
             Quiet stories from the <span className="text-denim">studio</span>
           </h1>
-          <p className="mt-2 sm:mt-3 text-lg md:text-xl text-ink/80 max-w-2xl">
+          <p className="mt-5 sm:mt-6 text-lg md:text-xl text-ink/80 max-w-2xl">
             Essays on De Stijl, Dick Bruna, and the small joys of minimal design.
           </p>
         </div>
